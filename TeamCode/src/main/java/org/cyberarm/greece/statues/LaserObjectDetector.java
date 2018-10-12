@@ -3,12 +3,15 @@ package org.cyberarm.greece.statues;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.cyberarm.engine.CyberarmEngine;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.ArrayList;
 
 public class LaserObjectDetector {
+  private final DistanceSensor laserDistanceSensor2, laserDistanceSensor3;
   private ArrayList<DistanceSensor> distanceSensors;
+  private ArrayList<Double> allDistances;
   private ArrayList<Double> readings;
 
   private double distanceKP = 5;
@@ -27,14 +30,27 @@ public class LaserObjectDetector {
   private int SPHERE_MAX_HEIGHT= 70; // mm
   private int SPHERE_MIN_HEIGHT= 60; // mm
 
-  public LaserObjectDetector(ArrayList<DistanceSensor> distanceSensors) {
-    this.distanceSensors = distanceSensors;
+  private int loops = 0;
+
+  public LaserObjectDetector(CyberarmEngine cyberarmEngine) {
+    laserDistanceSensor2 = cyberarmEngine.hardwareMap.get(DistanceSensor.class, "distance2");
+    laserDistanceSensor3 = cyberarmEngine.hardwareMap.get(DistanceSensor.class, "distance3");
+
+    distanceSensors = new ArrayList<>();
+    distanceSensors.add(laserDistanceSensor2);
+    distanceSensors.add(laserDistanceSensor3);
+
+    this.allDistances = new ArrayList<>();
     this.readings = new ArrayList<>();
 
     this.averageHeight = averageDistance();
   }
 
+  // I update
   public void update() {
+    allDistances.clear();
+    storeDistances();
+
     if (objectDetected()) {
       senseObject();
     } else {
@@ -44,6 +60,14 @@ public class LaserObjectDetector {
 
       noObjectDetected();
     }
+
+    loops+=1;
+  }
+
+  private void storeDistances() {
+    for (int i = 0; i < distanceSensors.size(); i++) {
+      allDistances.add(mmDistance(distanceSensors.get(i)));
+    }
   }
 
   public void telemetry(OpMode opmode) {
@@ -51,6 +75,16 @@ public class LaserObjectDetector {
     opmode.telemetry.addLine("Laser Object Detector");
     opmode.telemetry.addData("Sensing Object", detectingObject);
     opmode.telemetry.addData("Last Detected Object", objectType(lastDetectedObject));
+    opmode.telemetry.addData("Highest Sensor", getHighestSensor());
+    opmode.telemetry.addData("Average", averageHeight);
+    opmode.telemetry.addLine();
+
+    for (int i = 0; i < allDistances.size(); i++) {
+      opmode.telemetry.addData("allDistances"+i, allDistances.get(i));
+    }
+
+    opmode.telemetry.addLine();
+    opmode.telemetry.addData("Loops", loops);
     opmode.telemetry.addLine();
   }
 
@@ -84,7 +118,7 @@ public class LaserObjectDetector {
 
   // Are we detecting an object?
   private boolean objectDetected() {
-    if (getHighestSensor() >= distanceKP *2) {
+    if (getHighestSensor() >= distanceKP * 2) {
       return true;
     } else {
       return false;
@@ -106,19 +140,33 @@ public class LaserObjectDetector {
       else if (read > most) {most = read; }
     }
 
-    // detect sphere
-    if (most - distanceKP >= SPHERE_MIN_HEIGHT  && most + distanceKP <= SPHERE_MAX_HEIGHT) {
-      isUnknown = false;
+    // detect unknown
+    if (most - distanceKP > SPHERE_MAX_HEIGHT) {
       isBlock   = false;
+      isSphere  = false;
 
-      isSphere  = true;
-    }
-    // detect block
-    if (most - distanceKP >= BLOCK_MIN_HEIGHT  && most + distanceKP <= BLOCK_MAX_HEIGHT) {
+      isUnknown = true;
+
+    // detect sphere
+    } else if (most - distanceKP >= SPHERE_MIN_HEIGHT) {
+      isUnknown = false;
+      isBlock = false;
+
+      isSphere = true;
+
+      // detect block
+    } else if (most - distanceKP >= BLOCK_MIN_HEIGHT) {
       isUnknown = false;
       isSphere  = false;
 
       isBlock   = true;
+
+      // detect unknown
+    } else if (most - distanceKP < BLOCK_MIN_HEIGHT - distanceKP) {
+      isBlock   = false;
+      isSphere  = false;
+
+      isUnknown = true;
     }
 
     if (isSphere) {
@@ -137,8 +185,8 @@ public class LaserObjectDetector {
   private double getHighestSensor() {
     double highest = 0;
 
-    for (int i = 0; i < distanceSensors.size(); i++) {
-      double sensedHeight = mmDistance(distanceSensors.get(i));
+    for (int i = 0; i < allDistances.size(); i++) {
+      double sensedHeight = allDistances.get(i);
       if ((sensedHeight) > highest) {
         highest = sensedHeight;
       }
@@ -148,9 +196,10 @@ public class LaserObjectDetector {
   }
 
   public double mmDistance(DistanceSensor sensor) {
-    return (sensor.getDistance(DistanceUnit.MM)-averageHeight)*-1;
+    return Math.abs(averageHeight-sensor.getDistance(DistanceUnit.MM));
   }
 
+  // Should only be called once
   private double averageDistance() {
     double total = 0;
 
