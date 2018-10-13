@@ -1,5 +1,6 @@
 package org.timecrafters.temptingreality.states;
 
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -15,12 +16,9 @@ import org.timecrafters.engine.State;
  */
 
 public class revDistancesensorTest extends State {
-public DistanceSensor distanceSensor1;
-public DistanceSensor distanceSensor2;
-public DistanceSensor distanceSensor3;
-public DistanceSensor distanceSensor4;
+    private DcMotor motor1;
+    private DcMotor motor2;
 public boolean firstrun = true;
-public double distanceHightZero = 0.0;
     public revDistancesensorTest(Engine engine)
 
 
@@ -32,27 +30,15 @@ public double distanceHightZero = 0.0;
     @Override
     public void init() {
         super.init();
-        distanceSensor1 = engine.hardwareMap.get(DistanceSensor.class,"distance0");
-        distanceSensor2 = engine.hardwareMap.get(DistanceSensor.class,"distance1");
-        distanceSensor3 = engine.hardwareMap.get(DistanceSensor.class,"distance2");
-        distanceSensor4 = engine.hardwareMap.get(DistanceSensor.class,"distance3");
+      motor1 = engine.hardwareMap.dcMotor.get("leftDrive");
+      motor2 = engine.hardwareMap.dcMotor.get("righDrive");
+
 
     }
 
     @Override
     public void exec() {
-        if (firstrun == true){
-           distanceHightZero = (distanceSensor1.getDistance(DistanceUnit.MM)+distanceSensor2.getDistance(DistanceUnit.MM)+distanceSensor3.getDistance(DistanceUnit.MM)+distanceSensor4.getDistance(DistanceUnit.MM))/4;
-           firstrun = false;
-        }
-    }
-    public void telemetry() {
-        engine.telemetry.addData("distance 1",distanceSensor1.getDistance(DistanceUnit.MM));
-        engine.telemetry.addData("distance 2",distanceSensor2.getDistance(DistanceUnit.MM));
-        engine.telemetry.addData("distance 3",distanceSensor3.getDistance(DistanceUnit.MM));
-        engine.telemetry.addData("distance 4",distanceSensor4.getDistance(DistanceUnit.MM));
-        engine.telemetry.addData("distance zero",distanceHightZero);
-        engine.telemetry.addData("distance - hight",distanceHightZero-distanceSensor1.getDistance(DistanceUnit.MM));
-        engine.telemetry.update();
+motor1.setPower(engine.gamepad1.right_stick_y*-1);
+motor2.setPower(engine.gamepad1.left_stick_y);
     }
 }
