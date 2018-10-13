@@ -36,7 +36,7 @@ public abstract class CyberarmState implements Runnable {
   public void run() {
     while (!isFinished) {
       exec();
-      sleep(1);
+//      sleep(1);
     }
   }
 

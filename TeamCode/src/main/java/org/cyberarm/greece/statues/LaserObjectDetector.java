@@ -141,7 +141,7 @@ public class LaserObjectDetector {
     }
 
     // detect unknown
-    if (most - distanceKP > SPHERE_MAX_HEIGHT) {
+    if (most > SPHERE_MAX_HEIGHT + distanceKP) {
       isBlock   = false;
       isSphere  = false;
 

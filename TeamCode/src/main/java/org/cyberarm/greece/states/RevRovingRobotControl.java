@@ -33,6 +33,7 @@ public class RevRovingRobotControl extends CyberarmState {
   private int block = 22, // MM // 45 for Flat face, ~22 for waffle
               sphere= 65, // MM
               distanceKP=5;//MM
+  private long lastUpdateMS = System.currentTimeMillis();
 
   public RevRovingRobotControl() {
     leftDrive  = cyberarmEngine.hardwareMap.dcMotor.get("leftDrive");
@@ -65,6 +66,7 @@ public class RevRovingRobotControl extends CyberarmState {
 
     speedKP = Range.clip(speedKP, 0.1, 1.0);
 
+    lastUpdateMS = System.currentTimeMillis();
   }
 
 
@@ -80,6 +82,10 @@ public class RevRovingRobotControl extends CyberarmState {
     cyberarmEngine.telemetry.addData("Left Drive Position", leftDrive.getCurrentPosition());
     cyberarmEngine.telemetry.addData("Right Drive Position", rightDrive.getCurrentPosition());
     cyberarmEngine.telemetry.addData("Steering Position", steering.getPosition());
+
+    cyberarmEngine.telemetry.addLine();
+    cyberarmEngine.telemetry.addData("Last loop took", System.currentTimeMillis()-lastUpdateMS+"ms");
+    cyberarmEngine.telemetry.addLine();
 
     laserObjectDetector.telemetry(cyberarmEngine);
 
@@ -113,6 +119,15 @@ public class RevRovingRobotControl extends CyberarmState {
 //    }
 //    cyberarmEngine.telemetry.addData("Block Found", foundBlock);
 //    cyberarmEngine.telemetry.addData("Sphere Found", foundSphere);
+  }
+
+  private int distanceInMMToTicks(double distanceMM) {
+    int oneRotation = 288; // ticks per full rotation on Rev Core Hex Motor
+    double wheelRadius = 50.8; // mm
+    double wheelCircumference = 319.2; // mm
+    double oneMM = wheelCircumference / 288;
+
+    return (0);
   }
 
   @Override
