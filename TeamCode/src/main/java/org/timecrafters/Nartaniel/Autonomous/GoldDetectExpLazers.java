@@ -1,4 +1,4 @@
-package org.Nartaniel;
+package org.timecrafters.Nartaniel.Autonomous;
 
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
@@ -21,6 +21,7 @@ public class GoldDetectExpLazers extends State {
     private double GoldDetectThreshold;
     private double ObjectDetectThreshhold;
     public boolean isGold;
+    public boolean isSilver;
     private boolean ScanCommence;
     private ArrayList<Double> HightValues;
     private double HighestValue;
@@ -41,6 +42,8 @@ public class GoldDetectExpLazers extends State {
         distanceSensor2 = engine.hardwareMap.get(DistanceSensor.class,"distance2");
         distanceSensor3 = engine.hardwareMap.get(DistanceSensor.class,"distance3");
 
+        isGold = false;
+
     }
 
     @Override
@@ -50,6 +53,7 @@ public class GoldDetectExpLazers extends State {
         Hight2 = BuildHeightMM - distanceSensor2.getDistance(DistanceUnit.MM);
         Hight3 = BuildHeightMM - distanceSensor3.getDistance(DistanceUnit.MM);
         isGold = false;
+        isSilver = false;
 
         if (Hight0 >= ObjectDetectThreshhold || Hight1 >= ObjectDetectThreshhold || Hight2 >= ObjectDetectThreshhold || Hight3 >= ObjectDetectThreshhold) {
             ScanCommence = true;
@@ -62,7 +66,7 @@ public class GoldDetectExpLazers extends State {
             HightValues.add(Hight3);
         }
 
-        if (ScanCommence && Hight0 < ObjectDetectThreshhold && Hight1 < ObjectDetectThreshhold && Hight2 < ObjectDetectThreshhold && Hight3 < ObjectDetectThreshhold) {
+        if (ScanCommence &&  Hight0 < ObjectDetectThreshhold && Hight1 < ObjectDetectThreshhold && Hight2 < ObjectDetectThreshhold && Hight3 < ObjectDetectThreshhold) {
             for (int value = 0; value < HightValues.size(); value++) {
                 if (HightValues.get(value) > HighestValue ) {
                     HighestValue = HightValues.get(value);
@@ -70,10 +74,12 @@ public class GoldDetectExpLazers extends State {
             }
 
             if (HighestValue >= GoldDetectThreshold ) {
+                isSilver = true;
                 isGold = false;
             }
             else {
                 isGold = true;
+                isSilver = false;
             }
         }
 
