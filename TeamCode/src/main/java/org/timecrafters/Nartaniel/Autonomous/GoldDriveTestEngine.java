@@ -10,8 +10,9 @@ import org.timecrafters.engine.Engine;
 public class GoldDriveTestEngine extends Engine {
     @Override
     public void setProcesses() {
-        addState(new LazerArmToggle(this, false));
+        addState(new LazerArmToggle(this, true, 500));
         addState(new Drive(this, 0.5, 50, 4));
+        addState(new LazerArmToggle(this, false, 0));
 
     }
 }

@@ -43,6 +43,12 @@ public class Drive extends State {
     }
 
 
+    public void StopDrive() {
+        RightDrive.setPower(0);
+        LeftDrive.setPower(0);
+        setFinished(true);
+    }
+
     @Override
     public void exec() {
         RightCurrentTick = RightDrive.getCurrentPosition();

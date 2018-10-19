@@ -7,11 +7,13 @@ import org.timecrafters.engine.State;
 
 public class LazerArmToggle extends State {
     private Servo LazerArmServo;
-    private boolean GoIn;
+    private boolean GoOut;
+    private int SleepTime;
 
-    public LazerArmToggle(Engine engine, boolean goIn) {
+    public LazerArmToggle(Engine engine, boolean goOut, int sleepTime) {
         this.engine = engine;
-        this.GoIn = goIn;
+        this.GoOut = goOut;
+        this.SleepTime = sleepTime;
     }
 
     public void init() {
@@ -21,13 +23,13 @@ public class LazerArmToggle extends State {
 
     @Override
     public void exec() throws InterruptedException {
-        if (GoIn) {
-            LazerArmServo.setPosition(0);
+        if (GoOut) {
+            LazerArmServo.setPosition(1);
         } else {
-            LazerArmServo.setPosition(0.5);
+            LazerArmServo.setPosition(-1);
 
         }
-        sleep(100);
+        sleep(SleepTime);
         setFinished(true);
     }
 }
