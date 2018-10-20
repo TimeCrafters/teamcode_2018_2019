@@ -9,10 +9,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.ArrayList;
 
 public class GoldDetectExpLazers extends State {
+    private boolean FirstRun = true;
     private DistanceSensor distanceSensor0;
     private DistanceSensor distanceSensor1;
     private DistanceSensor distanceSensor2;
     private DistanceSensor distanceSensor3;
+    private LazerArmCalibrate Calibration;
     public double BuildHeightMM;
     private double Hight0;
     private double Hight1;
@@ -20,20 +22,24 @@ public class GoldDetectExpLazers extends State {
     private double Hight3;
     private double GoldDetectThreshold;
     private double ObjectDetectThreshhold;
-    public boolean isGold;
-    public boolean isSilver;
+    public boolean ParticleAisGold;
+    public boolean ParticleBisGold;
+    public boolean ParticleCisGold;
+    private int ScanNumber;
+    //public boolean isGold;
     private boolean ScanCommence;
     private ArrayList<Double> HightValues;
     private double HighestValue;
 
 
 
-    public GoldDetectExpLazers(Engine engine, double buildHeightMM, double goldDetectThreshold, double objectDetectThreshhold) {
+    public GoldDetectExpLazers(Engine engine, LazerArmCalibrate Calibration, double goldDetectThreshold, double objectDetectThreshhold) {
+        this.Calibration = Calibration;
         this.engine = engine;
-        BuildHeightMM = buildHeightMM;
         GoldDetectThreshold = goldDetectThreshold;
         ObjectDetectThreshhold = objectDetectThreshhold;
         HightValues = new ArrayList<>();
+
     }
 
     public void  init() {
@@ -42,21 +48,24 @@ public class GoldDetectExpLazers extends State {
         distanceSensor2 = engine.hardwareMap.get(DistanceSensor.class,"distance2");
         distanceSensor3 = engine.hardwareMap.get(DistanceSensor.class,"distance3");
 
-        isGold = false;
+       // isGold = false;
 
     }
 
     @Override
     public void exec() {
+        if (FirstRun) {BuildHeightMM = Calibration.BuildHeightMM;}
+
         Hight0 = BuildHeightMM - distanceSensor0.getDistance(DistanceUnit.MM);
         Hight1 = BuildHeightMM - distanceSensor1.getDistance(DistanceUnit.MM);
         Hight2 = BuildHeightMM - distanceSensor2.getDistance(DistanceUnit.MM);
         Hight3 = BuildHeightMM - distanceSensor3.getDistance(DistanceUnit.MM);
-        isGold = false;
-        isSilver = false;
+
 
         if (Hight0 >= ObjectDetectThreshhold || Hight1 >= ObjectDetectThreshhold || Hight2 >= ObjectDetectThreshhold || Hight3 >= ObjectDetectThreshhold) {
+            HightValues.clear();
             ScanCommence = true;
+            ScanNumber++;
         }
 
         if (ScanCommence) {
@@ -73,13 +82,33 @@ public class GoldDetectExpLazers extends State {
                 }
             }
 
-            if (HighestValue >= GoldDetectThreshold ) {
-                isSilver = true;
-                isGold = false;
+            if (ScanNumber == 1) {
+
+                if (HighestValue >= GoldDetectThreshold) {
+                    ParticleAisGold = true;
+                } else {
+                    ParticleAisGold = false;
+                }
             }
-            else {
-                isGold = true;
-                isSilver = false;
+
+            if (ScanNumber == 2) {
+
+                if (HighestValue >= GoldDetectThreshold) {
+                    ParticleBisGold = true;
+                } else {
+                    ParticleBisGold = false;
+                }
+            }
+
+            if (ScanNumber == 3) {
+
+                if (HighestValue >= GoldDetectThreshold) {
+                    ParticleCisGold = true;
+                } else {
+                    ParticleCisGold = false;
+                }
+
+                setFinished(true);
             }
         }
 
@@ -94,6 +123,8 @@ public class GoldDetectExpLazers extends State {
         engine.telemetry.addData("Distance2", Hight2);
         engine.telemetry.addData("Distance3", Hight3);
         engine.telemetry.addData("MaxHight", HighestValue);
+
+        engine.telemetry.addData("Build Hight", BuildHeightMM);
 
     }
 }

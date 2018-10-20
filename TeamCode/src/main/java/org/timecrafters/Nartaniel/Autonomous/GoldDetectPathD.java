@@ -3,11 +3,11 @@ package org.timecrafters.Nartaniel.Autonomous;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
-public class GoldDetectPathB extends SubEngine {
+public class GoldDetectPathD extends SubEngine {
 public GoldDetectExpLazers goldDetect;
 public Engine engine;
 
-    public GoldDetectPathB(Engine engine, GoldDetectExpLazers goldDetect) {
+    public GoldDetectPathD(Engine engine, GoldDetectExpLazers goldDetect) {
         this.goldDetect = goldDetect;
         this.engine = engine;
 
@@ -20,6 +20,11 @@ public Engine engine;
 
     @Override
     public void evaluate() {
-       if (goldDetect.ParticleBisGold && !goldDetect.ParticleAisGold && !goldDetect.ParticleCisGold) {setRunable(true);}
+        int ThuthsNumber = 0;
+        if (goldDetect.ParticleAisGold) {ThuthsNumber++;}
+        if (goldDetect.ParticleBisGold) {ThuthsNumber++;}
+        if (goldDetect.ParticleCisGold) {ThuthsNumber++;}
+
+       if (ThuthsNumber == 0 || ThuthsNumber > 1) {setRunable(true);}
     }
 }
