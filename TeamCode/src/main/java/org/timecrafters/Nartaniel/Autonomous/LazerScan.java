@@ -8,8 +8,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.ArrayList;
 
-public class GoldDetectExpLazers extends State {
+public class LazerScan extends State {
     private boolean FirstRun = true;
+    private long StartTime;
+    private long TimeOutTime;
     private DistanceSensor distanceSensor0;
     private DistanceSensor distanceSensor1;
     private DistanceSensor distanceSensor2;
@@ -33,7 +35,7 @@ public class GoldDetectExpLazers extends State {
 
 
 
-    public GoldDetectExpLazers(Engine engine, LazerArmCalibrate Calibration, double goldDetectThreshold, double objectDetectThreshhold) {
+    public LazerScan(Engine engine, LazerArmCalibrate Calibration, double goldDetectThreshold, double objectDetectThreshhold, long timeOutTime) {
         this.Calibration = Calibration;
         this.engine = engine;
         GoldDetectThreshold = goldDetectThreshold;
@@ -54,7 +56,11 @@ public class GoldDetectExpLazers extends State {
 
     @Override
     public void exec() {
-        if (FirstRun) {BuildHeightMM = Calibration.BuildHeightMM;}
+        if (FirstRun) {
+            BuildHeightMM = Calibration.BuildHeightMM;
+            StartTime = System.currentTimeMillis();
+            FirstRun = false;
+        }
 
         Hight0 = BuildHeightMM - distanceSensor0.getDistance(DistanceUnit.MM);
         Hight1 = BuildHeightMM - distanceSensor1.getDistance(DistanceUnit.MM);
@@ -110,6 +116,11 @@ public class GoldDetectExpLazers extends State {
 
                 setFinished(true);
             }
+
+            //Time Out
+            if (System.currentTimeMillis() > StartTime + 1000) {
+                setFinished(true);
+            }
         }
 
 
@@ -125,6 +136,10 @@ public class GoldDetectExpLazers extends State {
         engine.telemetry.addData("MaxHight", HighestValue);
 
         engine.telemetry.addData("Build Hight", BuildHeightMM);
+
+        engine.telemetry.addData("Paticle A", ParticleAisGold);
+        engine.telemetry.addData("Paticle B", ParticleBisGold);
+        engine.telemetry.addData("Paticle C", ParticleCisGold);
 
     }
 }

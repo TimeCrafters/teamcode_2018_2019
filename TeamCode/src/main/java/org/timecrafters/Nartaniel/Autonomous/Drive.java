@@ -7,6 +7,7 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class Drive extends State {
+    private boolean StartRun = true;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
     private double Power;
@@ -19,7 +20,7 @@ public class Drive extends State {
     public Drive(Engine engine, double power, int distanceIN, int whealCircumferenceXPi) {
         this.engine = engine;
         this.Power = power;
-        this.distanceIN = distanceIN;
+        this.distanceIN = Math.abs(distanceIN);
         this.whealCircumference = whealCircumferenceXPi;
 
 
@@ -36,6 +37,8 @@ public class Drive extends State {
         LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         DistanceConverter();
+
+        if (Power < 0) {distanceIN = - distanceIN;}
     }
 
     private void DistanceConverter() {
@@ -51,13 +54,15 @@ public class Drive extends State {
 
     @Override
     public void exec() {
+        if (StartRun) {
+            RightDrive.setPower(Power);
+            LeftDrive.setPower(Power);
+        }
+
         RightCurrentTick = RightDrive.getCurrentPosition();
         LeftCurrentTick = LeftDrive.getCurrentPosition();
 
-        if (RightCurrentTick <= distanceTicks) {
-            RightDrive.setPower(Power);
-            LeftDrive.setPower(Power);
-        }else {
+        if (Math.abs(RightCurrentTick) >= distanceTicks) {
             RightDrive.setPower(0);
             LeftDrive.setPower(0);
             setFinished(true);

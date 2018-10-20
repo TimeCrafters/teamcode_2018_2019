@@ -4,10 +4,10 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
 public class GoldDetectPathC extends SubEngine {
-public GoldDetectExpLazers goldDetect;
+public LazerScan goldDetect;
 public Engine engine;
 
-    public GoldDetectPathC(Engine engine, GoldDetectExpLazers goldDetect) {
+    public GoldDetectPathC(Engine engine, LazerScan goldDetect) {
         this.goldDetect = goldDetect;
         this.engine = engine;
 
@@ -15,7 +15,7 @@ public Engine engine;
 
     @Override
     public void setProcesses() {
-        addState(new TelemetryState(engine,"PathB"));
+        addState(new Drive(engine, -0.7, 3, 4));
     }
 
     @Override

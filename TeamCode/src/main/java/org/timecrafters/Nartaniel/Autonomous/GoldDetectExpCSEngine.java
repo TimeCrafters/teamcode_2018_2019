@@ -11,7 +11,7 @@ public class GoldDetectExpCSEngine extends Engine {
     @Override
     public void setProcesses() {
 
-        /*GoldDetectExpLazers goldDetect = new GoldDetectExpLazers(this, 57.5, 27.5);
+        /*LazerScan goldDetect = new LazerScan(this, 57.5, 27.5);
         addState(goldDetect);
         addSubEngine(new GoldDetectPathA(this, goldDetect));
         addState(goldDetect);
