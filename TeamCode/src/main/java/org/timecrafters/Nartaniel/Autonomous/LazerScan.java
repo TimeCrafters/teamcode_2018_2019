@@ -6,6 +6,7 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class LazerScan extends State {
@@ -24,6 +25,8 @@ public class LazerScan extends State {
     private double Hight3;
     private double GoldDetectThreshold;
     private double ObjectDetectThreshhold;
+    private double ScanStartVal;
+    private double ScanEndVal;
     public boolean ParticleAisGold;
     public boolean ParticleBisGold;
     public boolean ParticleCisGold;
@@ -41,6 +44,7 @@ public class LazerScan extends State {
         GoldDetectThreshold = goldDetectThreshold;
         ObjectDetectThreshhold = objectDetectThreshhold;
         HightValues = new ArrayList<>();
+        TimeOutTime = timeOutTime;
 
     }
 
@@ -49,6 +53,9 @@ public class LazerScan extends State {
         distanceSensor1 = engine.hardwareMap.get(DistanceSensor.class,"distance1");
         distanceSensor2 = engine.hardwareMap.get(DistanceSensor.class,"distance2");
         distanceSensor3 = engine.hardwareMap.get(DistanceSensor.class,"distance3");
+
+
+        ScanEndVal = ObjectDetectThreshhold - 7.5;
 
        // isGold = false;
 
@@ -68,10 +75,11 @@ public class LazerScan extends State {
         Hight3 = BuildHeightMM - distanceSensor3.getDistance(DistanceUnit.MM);
 
 
-        if (Hight0 >= ObjectDetectThreshhold || Hight1 >= ObjectDetectThreshhold || Hight2 >= ObjectDetectThreshhold || Hight3 >= ObjectDetectThreshhold) {
+        if (!ScanCommence && Hight0 >= ObjectDetectThreshhold || Hight1 >= ObjectDetectThreshhold || Hight2 >= ObjectDetectThreshhold || Hight3 >= ObjectDetectThreshhold) {
             HightValues.clear();
+            HighestValue = 0;
             ScanCommence = true;
-            ScanNumber++;
+
         }
 
         if (ScanCommence) {
@@ -81,12 +89,19 @@ public class LazerScan extends State {
             HightValues.add(Hight3);
         }
 
-        if (ScanCommence &&  Hight0 < ObjectDetectThreshhold && Hight1 < ObjectDetectThreshhold && Hight2 < ObjectDetectThreshhold && Hight3 < ObjectDetectThreshhold) {
+        if (ScanCommence &&  Hight0 < ScanEndVal && Hight1 < ScanEndVal && Hight2 < ScanEndVal && Hight3 < ScanEndVal ) {
+       /* if (ScanCommence && HightValues.get(HightValues.size() - 1) < ObjectDetectThreshhold
+                )
+            */
             for (int value = 0; value < HightValues.size(); value++) {
                 if (HightValues.get(value) > HighestValue ) {
                     HighestValue = HightValues.get(value);
                 }
+                ScanCommence = false;
+
             }
+
+            ScanNumber++;
 
             if (ScanNumber == 1) {
 
@@ -95,6 +110,7 @@ public class LazerScan extends State {
                 } else {
                     ParticleAisGold = false;
                 }
+                engine.telemetry.addData("Paticle A", ParticleAisGold);
             }
 
             if (ScanNumber == 2) {
@@ -104,6 +120,7 @@ public class LazerScan extends State {
                 } else {
                     ParticleBisGold = false;
                 }
+                engine.telemetry.addData("Paticle B", ParticleBisGold);
             }
 
             if (ScanNumber == 3) {
@@ -112,13 +129,14 @@ public class LazerScan extends State {
                     ParticleCisGold = true;
                 } else {
                     ParticleCisGold = false;
-                }
 
-                setFinished(true);
+                }
+                engine.telemetry.addData("Paticle C", ParticleCisGold);
+                //setFinished(true);
             }
 
             //Time Out
-            if (System.currentTimeMillis() > StartTime + 1000) {
+            if (System.currentTimeMillis() > StartTime + TimeOutTime) {
                 setFinished(true);
             }
         }
@@ -136,6 +154,8 @@ public class LazerScan extends State {
         engine.telemetry.addData("MaxHight", HighestValue);
 
         engine.telemetry.addData("Build Hight", BuildHeightMM);
+
+        engine.telemetry.addData("Scan #", ScanNumber);
 
         engine.telemetry.addData("Paticle A", ParticleAisGold);
         engine.telemetry.addData("Paticle B", ParticleBisGold);

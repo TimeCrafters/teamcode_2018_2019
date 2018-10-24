@@ -13,7 +13,7 @@ public class GoldDriveTestEngine extends Engine {
         LazerArmCalibrate Calibration = (new LazerArmCalibrate(this, 250) );
         addState(Calibration);
         //addState(new Drive(this, 0.25, 50, 4));
-        LazerScan goldDetect = (new LazerScan(this, Calibration, 57.5, 15));
+        LazerScan goldDetect = (new LazerScan(this, Calibration, 60, 20 , 25000));
         //addThreadedState(goldDetect);
         addState(goldDetect);
 
