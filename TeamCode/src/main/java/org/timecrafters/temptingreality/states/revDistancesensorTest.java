@@ -18,6 +18,7 @@ import org.timecrafters.engine.State;
 public class revDistancesensorTest extends State {
     private DcMotor motor1;
     private DcMotor motor2;
+    
 public boolean firstrun = true;
     public revDistancesensorTest(Engine engine)
 
@@ -38,7 +39,7 @@ public boolean firstrun = true;
 
     @Override
     public void exec() {
-motor1.setPower(engine.gamepad1.right_stick_y*-1);
-motor2.setPower(engine.gamepad1.left_stick_y);
+motor1.setPower(engine.gamepad1.left_stick_y*-1);
+motor2.setPower(engine.gamepad1.right_stick_y);
     }
 }
