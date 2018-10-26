@@ -52,7 +52,7 @@ public abstract class CyberarmStateV2 implements Runnable {
 
   /**
    * Place telemetry calls in here instead of inside exec() to have them displayed correctly on the Driver Station
-   * (States update thousands of times per second, resulting in missing or weirdly formatting telemetry if telemetry is added in exec())
+   * (States update thousands of times per second, resulting in missing or weirdly formatted telemetry if telemetry is added in exec())
    */
   public void telemetry() {
   }
