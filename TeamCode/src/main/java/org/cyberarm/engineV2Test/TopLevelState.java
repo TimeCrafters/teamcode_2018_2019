@@ -4,6 +4,11 @@ import org.cyberarm.engine.V2.CyberarmStateV2;
 
 public class TopLevelState extends CyberarmStateV2 {
   int updatesSinceLastTelemetryRead = 0;
+  String name;
+  public TopLevelState(String name) {
+    this.name = name;
+  }
+
   @Override
   public void init() {
 
@@ -22,7 +27,7 @@ public class TopLevelState extends CyberarmStateV2 {
   @Override
   public void telemetry() {
     cyberarmEngine.telemetry.addLine();
-    cyberarmEngine.telemetry.addLine("Hello From TopLevelState");
+    cyberarmEngine.telemetry.addLine("Hello From TopLevelState: "+name);
     cyberarmEngine.telemetry.addData("Runtime", runTime());
     cyberarmEngine.telemetry.addData("Updates", updatesSinceLastTelemetryRead);
     cyberarmEngine.telemetry.addData("Finished?", getHasFinished());

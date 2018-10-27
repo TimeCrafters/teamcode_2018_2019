@@ -8,6 +8,7 @@ import org.cyberarm.engine.V2.CyberarmEngineV2;
 public class TestEngineV2 extends CyberarmEngineV2 {
   @Override
   public void setup() {
-    addState(new TopLevelState());
+    addState(new TopLevelState("One"));
+    addState(new TopLevelState("Two"));
   }
 }

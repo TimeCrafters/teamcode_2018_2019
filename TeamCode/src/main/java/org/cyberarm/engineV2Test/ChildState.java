@@ -7,6 +7,7 @@ public class ChildState extends CyberarmStateV2 {
   public void exec() {
     if (runTime() > 2_000) {
       setHasFinished(true);
+      cyberarmEngine.addState(new ChildState());
     }
   }
 

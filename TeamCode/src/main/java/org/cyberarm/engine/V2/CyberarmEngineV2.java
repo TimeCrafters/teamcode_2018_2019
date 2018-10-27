@@ -86,8 +86,13 @@ public abstract class CyberarmEngineV2 extends OpMode {
     telemetry.addLine();
 
     if (state.getHasFinished() && state.childrenHaveFinished()) {
-      runState(state);
       activeStateIndex++;
+
+      try {
+        state = cyberarmStates.get(activeStateIndex);
+        runState(state);
+      } catch(IndexOutOfBoundsException e) { /* loop will handle this in a few milliseconds */ }
+
     } else {
       stateTelemetry(state);
     }
@@ -151,13 +156,13 @@ public abstract class CyberarmEngineV2 extends OpMode {
    */
   private void runState(CyberarmStateV2 state) {
     final CyberarmStateV2 finalState = state;
-
-    state.start();
-    state.startTime = System.currentTimeMillis();
+//    if (state.isRunning()) { return; } // Assume that we have already started running this state
 
     new Thread(new Runnable() {
       @Override
       public void run() {
+        finalState.start();
+        finalState.startTime = System.currentTimeMillis();
         finalState.run();
       }
     }).start();

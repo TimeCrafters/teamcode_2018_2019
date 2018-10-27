@@ -9,13 +9,15 @@ import java.util.ArrayList;
  */
 public abstract class CyberarmStateV2 implements Runnable {
 
-  private volatile boolean hasFinished;
+  private volatile boolean isRunning, hasFinished;
   public static String TAG = "PROGRAM.STATE";
   public org.cyberarm.engine.V2.CyberarmEngineV2 cyberarmEngine = CyberarmEngineV2.instance;
   public ArrayList<CyberarmStateV2> children;
   public long startTime;
 
   protected CyberarmStateV2() {
+    startTime   = 0;
+    isRunning   = false;
     hasFinished = false;
 
     children   = new ArrayList<>();
@@ -45,9 +47,11 @@ public abstract class CyberarmStateV2 implements Runnable {
    */
   @Override
   public void run() {
+    isRunning = true;
     while (!hasFinished) {
       exec();
     }
+    isRunning = false;
   }
 
   /**
@@ -132,6 +136,14 @@ public abstract class CyberarmStateV2 implements Runnable {
    */
   public boolean getHasFinished() {
     return hasFinished;
+  }
+
+  /**
+   *
+   * @return Get value of isRunning
+   */
+  public boolean isRunning() {
+    return isRunning;
   }
 
   /**
