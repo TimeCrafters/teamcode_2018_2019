@@ -64,7 +64,7 @@ public abstract class CyberarmStateV2 implements Runnable {
   }
 
   /**
-   * Add a state which runs in parallel to this one
+   * Add a state which runs in parallel with this one
    */
   public void addParallelState(CyberarmStateV2 state) {
     Log.i(TAG, "Adding " + state.getClass() + " to " + this.getClass());

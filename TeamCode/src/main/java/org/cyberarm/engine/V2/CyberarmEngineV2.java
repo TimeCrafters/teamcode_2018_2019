@@ -15,8 +15,9 @@ public abstract class CyberarmEngineV2 extends OpMode {
 
   public static CyberarmEngineV2 instance;
   //Array To Hold States
-  public ArrayList<CyberarmStateV2> cyberarmStates = new ArrayList<>();
-  public int activeStateIndex = 0;
+  private ArrayList<CyberarmStateV2> cyberarmStates = new ArrayList<>();
+  private int activeStateIndex = 0;
+  private boolean isRunning;
 
   private static String TAG = "PROGRAM.ENGINE: ";
 
@@ -26,13 +27,30 @@ public abstract class CyberarmEngineV2 extends OpMode {
    */
   public void init() {
     CyberarmEngineV2.instance = this;
+    isRunning = false;
 
     setup();
+
+    isRunning = true;
 
     for (CyberarmStateV2 state: cyberarmStates) {
       initState(state);
     }
   }
+
+  /**
+   * Setup states for engine to use
+   * For example:
+   * <pre>
+   * @<code>
+   *   public void setup() {
+   *     addState(new TestState());
+   *     addState(new AnotherState(100, 500));
+   *   }
+   * </code>
+   * </pre>
+   */
+  public abstract void setup();
 
   /**
    * Called when START button on Driver Station is pushed
@@ -51,6 +69,7 @@ public abstract class CyberarmEngineV2 extends OpMode {
   public void loop() {
     CyberarmStateV2 state;
 
+    // Try to set state to the current state, if it fails assume that there are no states to run
     try {
        state = cyberarmStates.get(activeStateIndex);
     } catch(IndexOutOfBoundsException e) {
@@ -61,6 +80,8 @@ public abstract class CyberarmEngineV2 extends OpMode {
       telemetry.addLine();
       return;
     }
+
+      // Add telemetry to show currently running state
     telemetry.addLine("Running state: " + activeStateIndex + " of " + (cyberarmStates.size()-1));
     telemetry.addLine();
 
@@ -69,6 +90,16 @@ public abstract class CyberarmEngineV2 extends OpMode {
       activeStateIndex++;
     } else {
       stateTelemetry(state);
+    }
+  }
+
+  /**
+   * Stops every known state
+   */
+  @Override
+  public void stop() {
+    for (CyberarmStateV2 state: cyberarmStates) {
+      stopState(state);
     }
   }
 
@@ -101,8 +132,6 @@ public abstract class CyberarmEngineV2 extends OpMode {
     }
   }
 
-
-
   /**
    * Called when programs ends or STOP button on Driver Station is pressed
    * Recursively stop states
@@ -122,6 +151,8 @@ public abstract class CyberarmEngineV2 extends OpMode {
    */
   private void runState(CyberarmStateV2 state) {
     final CyberarmStateV2 finalState = state;
+
+    state.start();
     state.startTime = System.currentTimeMillis();
 
     new Thread(new Runnable() {
@@ -131,46 +162,35 @@ public abstract class CyberarmEngineV2 extends OpMode {
       }
     }).start();
 
-    state.start();
-
     for (CyberarmStateV2 kid : state.children) {
       runState(kid);
     }
   }
 
   /**
-   * Stops every known state
-   */
-  @Override
-  public void stop() {
-    for (CyberarmStateV2 state: cyberarmStates) {
-      stopState(state);
-    }
-  }
-
-  /**
-   *
-   */
-  public abstract void setup();
-
-  /**
-   * Add state
+   * Add state to queue, will call init() on state if engine is running
    * @param state State to add to queue
    */
   public void addState(CyberarmStateV2 state) {
     Log.i(TAG, "Adding cyberarmState "+ state.getClass());
     cyberarmStates.add(state);
+
+    if (isRunning()) { state.init(); }
   }
 
   /**
-   * Dynamically add state after main loop has started (Robot is active)
-   * Calls init() immediately
-   * @param state State to add to queue
+   * This will return false while Engine.setup() is executing, and be true after.
+   * @return Whether the engine main loop is running
    */
-  public void addStateAtRuntime(CyberarmStateV2 state) {
-    Log.i(TAG, "Adding cyberarmState (AT RUNTIME) "+ state.getClass());
+  public boolean isRunning() {
+    return isRunning;
+  }
 
-    cyberarmStates.add(state);
-    state.init();
+  /**
+   *
+   * @return The index used to lookup the current state from cyberarmStates
+   */
+  public int getActiveStateIndex() {
+    return activeStateIndex;
   }
 }
