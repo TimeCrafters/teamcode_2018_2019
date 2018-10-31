@@ -4,22 +4,27 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
 public class GoldDetectPathB extends SubEngine {
-public LazerScan goldDetect;
+public LazerScanv2 goldDetect;
+//public Drive ScanDrive;
 public Engine engine;
 
-    public GoldDetectPathB(Engine engine, LazerScan goldDetect) {
+    public GoldDetectPathB(Engine engine, LazerScanv2 goldDetect, Drive scanDrive) {
         this.goldDetect = goldDetect;
         this.engine = engine;
+//        this.ScanDrive = scanDrive;
 
     }
 
     @Override
     public void setProcesses() {
-        addState(new Drive(engine, -0.7, 15, 4));
+
     }
 
     @Override
     public void evaluate() {
-       if (goldDetect.ParticleBisGold && !goldDetect.ParticleAisGold && !goldDetect.ParticleCisGold) {setRunable(true);}
+       if (goldDetect.isGold && goldDetect.ScanNumber == 1) {
+           setRunable(true);
+//           ScanDrive.stop();
+       }
     }
 }

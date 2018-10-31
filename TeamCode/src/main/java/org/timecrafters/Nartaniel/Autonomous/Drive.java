@@ -46,7 +46,7 @@ public class Drive extends State {
     }
 
 
-    public void StopDrive() {
+    public void stop() {
         RightDrive.setPower(0);
         LeftDrive.setPower(0);
         setFinished(true);

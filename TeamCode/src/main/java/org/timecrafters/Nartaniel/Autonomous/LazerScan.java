@@ -87,6 +87,8 @@ public class LazerScan extends State {
             HightValues.add(Hight1);
             HightValues.add(Hight2);
             HightValues.add(Hight3);
+
+
         }
 
         if (ScanCommence &&  Hight0 < ScanEndVal && Hight1 < ScanEndVal && Hight2 < ScanEndVal && Hight3 < ScanEndVal ) {
