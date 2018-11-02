@@ -1,5 +1,7 @@
 package org.timecrafters.Nartaniel.Autonomous;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -52,6 +54,16 @@ public class Drive extends State {
         setFinished(true);
     }
 
+    public void pause(boolean pause) {
+        if (pause) {
+            RightDrive.setPower(0);
+            LeftDrive.setPower(0);
+        } else {
+            RightDrive.setPower(Power);
+            LeftDrive.setPower(Power);
+        }
+    }
+
     @Override
     public void exec() {
         if (StartRun) {
@@ -63,9 +75,7 @@ public class Drive extends State {
         LeftCurrentTick = LeftDrive.getCurrentPosition();
 
         if (Math.abs(RightCurrentTick) >= distanceTicks) {
-            RightDrive.setPower(0);
-            LeftDrive.setPower(0);
-            setFinished(true);
+            stop();
         }
 
 

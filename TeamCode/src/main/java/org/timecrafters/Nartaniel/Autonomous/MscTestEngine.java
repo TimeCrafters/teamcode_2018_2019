@@ -9,9 +9,10 @@ public class MscTestEngine extends Engine {
 
     @Override
     public void setProcesses() {
-        addState(new LazerArmToggle(this, true, 1000));
-        LazerArmCalibrate Calibration = (new LazerArmCalibrate(this, 250) );
-        addState(Calibration);
-        //addState(new LazerScanv2(this, Calibration, , 40, 20, 25000));
+        addState(new LazerArmSetPos(this, 0, 2000));
+        addState(new LazerArmSetPos(this, 1.5, 2000));
+        addState(new LazerArmSetPos(this, 0.5, 2000));
+        addState(new LazerArmSetPos(this, 1.0, 2000));
+
     }
 }
