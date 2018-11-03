@@ -19,6 +19,7 @@ public class BlinkinLedDriverCyberarmState extends CyberarmState {
   int min_pwm_target = 1005;
   int pwm_step_size = 10;
   private long next_time;
+  private long lastButtonMS;
 
   @Override
   public void init() {
@@ -39,7 +40,7 @@ public class BlinkinLedDriverCyberarmState extends CyberarmState {
 
   @Override
   public void exec() {
-    if ((System.currentTimeMillis()) - cyberarmEngine.gamepad1.timestamp > 10_000) {
+    if ((System.currentTimeMillis()) - lastButtonMS > 10_000) {
       if (System.currentTimeMillis() > next_time) {
         pwm_target += pwm_step_size;
         if (pwm_target > max_pwm_target) {
@@ -51,10 +52,13 @@ public class BlinkinLedDriverCyberarmState extends CyberarmState {
     
     
     if (inputChecker.check("y")) {
+      lastButtonMS = System.currentTimeMillis();
       pwm_target+=pwm_step_size;
     } else if (inputChecker.check("a")) {
+      lastButtonMS = System.currentTimeMillis();
       pwm_target-=pwm_step_size;
     }
+
     if (pwm_target < min_pwm_target) {
       pwm_target = min_pwm_target;
     } else if (pwm_target > max_pwm_target) {

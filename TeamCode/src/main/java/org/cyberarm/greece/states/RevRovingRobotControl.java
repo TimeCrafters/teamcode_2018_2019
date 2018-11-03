@@ -1,6 +1,5 @@
 package org.cyberarm.greece.states;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -9,7 +8,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.cyberarm.container.InputChecker;
 import org.cyberarm.engine.CyberarmState;
+import org.cyberarm.greece.statues.LaserObjectDetector;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.ArrayList;
 
 public class RevRovingRobotControl extends CyberarmState {
   private final DcMotor leftDrive, rightDrive;
@@ -24,6 +26,14 @@ public class RevRovingRobotControl extends CyberarmState {
                          laserDistanceSensor1,
                          laserDistanceSensor2,
                          laserDistanceSensor3;
+  private ArrayList<DistanceSensor> distanceSensors;
+
+  private LaserObjectDetector laserObjectDetector;
+
+  private int block = 22, // MM // 45 for Flat face, ~22 for waffle
+              sphere= 65, // MM
+              distanceKP=5;//MM
+  private long lastUpdateMS = System.currentTimeMillis();
 
   public RevRovingRobotControl() {
     leftDrive  = cyberarmEngine.hardwareMap.dcMotor.get("leftDrive");
@@ -33,33 +43,15 @@ public class RevRovingRobotControl extends CyberarmState {
     steering   = cyberarmEngine.hardwareMap.servo.get("svSteering");
     inputChecker = new InputChecker(cyberarmEngine.gamepad1);
 
-    laserDistanceSensor0 = cyberarmEngine.hardwareMap.get(DistanceSensor.class, "distance0");
-    laserDistanceSensor1 = cyberarmEngine.hardwareMap.get(DistanceSensor.class, "distance1");
-    laserDistanceSensor2 = cyberarmEngine.hardwareMap.get(DistanceSensor.class, "distance2");
-    laserDistanceSensor3 = cyberarmEngine.hardwareMap.get(DistanceSensor.class, "distance3");
+    laserObjectDetector = new LaserObjectDetector(cyberarmEngine);
   }
-
-  public boolean getDistances(double distance) {
-    int sensors = 0;
-
-    if (mmDistance(laserDistanceSensor0) > distance)  { sensors++;}
-    if (mmDistance(laserDistanceSensor1) > distance)  { sensors++;}
-    if (mmDistance(laserDistanceSensor2) > distance)  { sensors++;}
-    if (mmDistance(laserDistanceSensor3) > distance)  { sensors++;}
-
-    if (sensors == 4) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public double mmDistance(DistanceSensor sensor) { return sensor.getDistance(DistanceUnit.MM); }
 
   @Override
   public void exec() {
     inputChecker.update();
     drivePower = cyberarmEngine.gamepad1.left_stick_y * speedKP;
+
+    laserObjectDetector.update();
 
     leftDrive.setPower(drivePower);
     rightDrive.setPower(drivePower);
@@ -74,15 +66,16 @@ public class RevRovingRobotControl extends CyberarmState {
 
     speedKP = Range.clip(speedKP, 0.1, 1.0);
 
-    averageSensors();
+    lastUpdateMS = System.currentTimeMillis();
   }
 
-  private void averageSensors() {
-
-  }
 
   @Override
   public void telemetry() {
+    boolean foundBlock = false;
+    boolean foundSphere = false;
+    double highestPoint = 0;
+
     cyberarmEngine.telemetry.addLine();
 
     cyberarmEngine.telemetry.addLine("Rev Roving Robot");
@@ -91,10 +84,50 @@ public class RevRovingRobotControl extends CyberarmState {
     cyberarmEngine.telemetry.addData("Steering Position", steering.getPosition());
 
     cyberarmEngine.telemetry.addLine();
-    cyberarmEngine.telemetry.addData("Laser Distance Sensor 0", ""+laserDistanceSensor0.getDistance(DistanceUnit.MM)+" MM");
-    cyberarmEngine.telemetry.addData("Laser Distance Sensor 1", ""+laserDistanceSensor1.getDistance(DistanceUnit.MM)+" MM");
-    cyberarmEngine.telemetry.addData("Laser Distance Sensor 2", ""+laserDistanceSensor2.getDistance(DistanceUnit.MM)+" MM");
-    cyberarmEngine.telemetry.addData("Laser Distance Sensor 3", ""+laserDistanceSensor3.getDistance(DistanceUnit.MM)+" MM");
+    cyberarmEngine.telemetry.addData("Last loop took", System.currentTimeMillis()-lastUpdateMS+"ms");
+    cyberarmEngine.telemetry.addLine();
+
+    laserObjectDetector.telemetry(cyberarmEngine);
+
+//    cyberarmEngine.telemetry.addLine();
+//    for (int i = 0; i < distanceSensors.size(); i++) {
+//      cyberarmEngine.telemetry.addData("LaserDistanceSensor"+i, mmDistance(distanceSensors.get(i)));
+//    }
+//
+//    cyberarmEngine.telemetry.addLine();
+
+//    for (int i = 0; i < distanceSensors.size(); i++) {
+//      double d = (mmDistance(distanceSensors.get(i))-average)*-1;
+//      cyberarmEngine.telemetry.addData("LaserDistanceSensor"+i, d);
+//      if (d > highestPoint) { highestPoint = d; }
+//    }
+
+//    cyberarmEngine.telemetry.addLine();
+
+//    for (int i = 0; i < distanceSensors.size(); i++) {
+//      cyberarmEngine.telemetry.addData("LaserDistanceSensor"+i, (mmDistance(distanceSensors.get(i))-averageDistance())*-1);
+//    }
+//    cyberarmEngine.telemetry.addData("Average Distance (1 sample)", average);
+//
+//    cyberarmEngine.telemetry.addLine();
+//    cyberarmEngine.telemetry.addData("Highest Point", highestPoint);
+//
+//    if (sphere >= (highestPoint - distanceKP) && sphere <= (highestPoint + distanceKP)) {
+//      foundSphere = true;
+//    } else if (block >= (highestPoint - distanceKP) && block <= (highestPoint + distanceKP)) {
+//      foundBlock = true;
+//    }
+//    cyberarmEngine.telemetry.addData("Block Found", foundBlock);
+//    cyberarmEngine.telemetry.addData("Sphere Found", foundSphere);
+  }
+
+  private int distanceInMMToTicks(double distanceMM) {
+    int oneRotation = 288; // ticks per full rotation on Rev Core Hex Motor
+    double wheelRadius = 50.8; // mm
+    double wheelCircumference = 319.2; // mm
+    double oneMM = wheelCircumference / 288;
+
+    return (0);
   }
 
   @Override
