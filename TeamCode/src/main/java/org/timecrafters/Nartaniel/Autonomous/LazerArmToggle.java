@@ -26,7 +26,7 @@ public class LazerArmToggle extends State {
         if (GoOut) {
             LazerArmServo.setPosition(1);
         } else {
-            LazerArmServo.setPosition(-1);
+            LazerArmServo.setPosition(0);
 
         }
         sleep(SleepTime);

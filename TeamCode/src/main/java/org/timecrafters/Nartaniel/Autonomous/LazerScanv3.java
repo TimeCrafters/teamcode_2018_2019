@@ -10,12 +10,14 @@ import org.timecrafters.engine.State;
 import java.util.ArrayList;
 
 public class LazerScanv3 extends State {
+    private long CurrentTime;
     private boolean FirstRun = true;
+    private double ArmWaveAmount;
     private long StartTime;
     private long TimeOutTime;
     private ArrayList <DistanceSensor> DistanceSensors;
     private LazerArmCalibrate Calibration;
-    private Servo LazerArmSevero;
+    private Servo LazerArmServo;
     private Drive Drive;
     public double BuildHeightMM;
     private int NumberOfDati;
@@ -30,15 +32,15 @@ public class LazerScanv3 extends State {
     private ArrayList<Double> HightValues;
 
 
-    public LazerScanv3(Engine engine, LazerArmCalibrate calibration, Drive drive, double goldDetectThreshold, double objectDetectThreshhold, long timeOutTime) {
+    public LazerScanv3(Engine engine, LazerArmCalibrate calibration, Drive drive, double goldDetectThreshold, double objectDetectThreshhold, double armWaveAmount) {
         this.engine = engine;
-        this.TimeOutTime = timeOutTime;
         this.Calibration = calibration;
         this.GoldDetectThreshold = goldDetectThreshold;
         this.ObjectDetectThreshhold = objectDetectThreshhold;
         this.HightValues = new ArrayList<>();
         this.DistanceSensors = new ArrayList<>();
         this.Drive = drive;
+        this.ArmWaveAmount = armWaveAmount;
 
     }
 
@@ -62,19 +64,21 @@ public class LazerScanv3 extends State {
     @Override
     public void exec() throws InterruptedException {
 
+        CurrentTime = System.currentTimeMillis();
+
         //First Run:
         if (FirstRun) {
             BuildHeightMM = Calibration.BuildHeightMM;
-            StartTime = System.currentTimeMillis();
-            LastSecond = System.currentTimeMillis();
+            StartTime = CurrentTime;
+            LastSecond = CurrentTime;
             FirstRun = false;
         }
 
         /*Number of Dati detection
 
 
-        if (LastSecond + 1000 >= System.currentTimeMillis()) {
-            LastSecond = System.currentTimeMillis();
+        if (LastSecond + 1000 >= CurrentTime) {
+            LastSecond = CurrentTime;
             DatiPerSec = NumberOfDati;
             NumberOfDati = 0;
         }
@@ -88,19 +92,34 @@ public class LazerScanv3 extends State {
         if (!ScanCommence && HightValues.get(0) >= ObjectDetectThreshhold || HightValues.get(1) >= ObjectDetectThreshhold || HightValues.get(2) >= ObjectDetectThreshhold || HightValues.get(3) >= ObjectDetectThreshhold) {
             ScanCommence = true;
             NumberOfDati = 0;
+            Drive.pause(true);
+
+            LastSecond = CurrentTime;
         }
 
-        //Store Highest value while Scaning
+        
         if (ScanCommence) {
+            //Store Highest value while Scaning
             for (int value = 0; value < (HightValues.size() - 2); value++) {
                 if (HightValues.get(value) > HightValues.get(HightValues.size()-1)) {
                     HightValues.set(HightValues.size() - 1, HightValues.get(value));
                 }
+                
             }
-
+            
+            //Waves Scan arm every second for more unique values
+            if (CurrentTime - LastSecond >= 1) {
+                if (LazerArmServo.getPosition() <= 1) {
+                    LazerArmServo.setPosition(1 + ArmWaveAmount);
+                } else {
+                    LazerArmServo.setPosition(1 - ArmWaveAmount);
+                }
+            }
+            
+            //Counts the number of unique data values detected in scan.
             for (DistanceSensor sensor : DistanceSensors) {
-                for (double HightValue : HightValues) {
-                    if  (hightsFromGround(sensor) != HightValue) {
+                for (double PrevDataValue : HightValues) {
+                    if  (hightsFromGround(sensor) != PrevDataValue) {
                         NumberOfDati++;
                     }
                 }
@@ -122,7 +141,7 @@ public class LazerScanv3 extends State {
 
         //Time Out
         /*
-        if (System.currentTimeMillis() > StartTime + TimeOutTime) {
+        if (CurrentTime > StartTime + TimeOutTime) {
             setFinished(true);
         }
 */
