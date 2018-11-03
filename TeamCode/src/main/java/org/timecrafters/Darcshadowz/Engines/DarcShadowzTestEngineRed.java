@@ -1,6 +1,7 @@
 package org.timecrafters.Darcshadowz.Engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.Darcshadowz.SubEngines.Red.RedFrontCenterColumn;
 import org.timecrafters.Darcshadowz.SubEngines.Red.RedFrontLeftColumn;
@@ -29,6 +30,7 @@ import org.timecrafters.gfp.state.util.Sleep;
 
 
 @Autonomous(name = "DYLAN RED FRONT")
+@Disabled
 public class DarcShadowzTestEngineRed extends Engine {
 
     private ReadCam readCam;

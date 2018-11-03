@@ -14,7 +14,7 @@ public class GoldDriveTestEngine extends Engine {
         addState(Calibration);
         Drive ScanDrive = (new Drive(this, 0.15, 50, 4));
         addState(ScanDrive);
-        LazerScanv3 goldDetect = (new LazerScanv3(this, Calibration, ScanDrive,40, 20,0.2));
+        LazerScanv3 goldDetect = (new LazerScanv3(this, Calibration, ScanDrive,40, 20,0.1, 10, 200));
         addThreadedState(goldDetect);
 
 

@@ -67,6 +67,7 @@ public class Drive extends State {
     @Override
     public void exec() {
         if (StartRun) {
+            StartRun = false;
             RightDrive.setPower(Power);
             LeftDrive.setPower(Power);
         }

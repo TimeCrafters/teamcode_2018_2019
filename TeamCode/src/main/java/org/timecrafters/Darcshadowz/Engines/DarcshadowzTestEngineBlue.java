@@ -1,6 +1,7 @@
 package org.timecrafters.Darcshadowz.Engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.Darcshadowz.State.RightGrabber;
 import org.timecrafters.Darcshadowz.SubEngines.Blue.BlueFrontCenter;
@@ -28,6 +29,7 @@ import org.timecrafters.gfp.state.util.Sleep;
  * Created by Dylan on 12/17/2017.
  */
 @Autonomous(name = "DYLAN BLUE FRONT")
+@Disabled
 public class DarcshadowzTestEngineBlue extends Engine {
 
     private ReadCam readCam;

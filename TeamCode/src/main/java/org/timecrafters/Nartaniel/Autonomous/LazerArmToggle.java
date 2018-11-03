@@ -24,7 +24,7 @@ public class LazerArmToggle extends State {
     @Override
     public void exec() throws InterruptedException {
         if (GoOut) {
-            LazerArmServo.setPosition(1);
+            LazerArmServo.setPosition(0.6);
         } else {
             LazerArmServo.setPosition(0);
 
