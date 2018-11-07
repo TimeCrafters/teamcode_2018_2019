@@ -1,15 +1,14 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class PostDropUTurn extends State {
     private boolean FirstRun = true;
-    public ArchitectureControl Control;
+    public AutoDepot1.ArchitectureControl Control;
 
 
-    public PostDropUTurn(Engine engine, ArchitectureControl control) {
+    public PostDropUTurn(Engine engine, AutoDepot1.ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }

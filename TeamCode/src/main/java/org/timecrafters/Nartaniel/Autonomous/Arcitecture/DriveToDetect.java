@@ -1,15 +1,14 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class DriveToDetect extends State {
     private boolean FirstRun = true;
-    public ArchitectureControl Control;
+    public AutoDepot1.ArchitectureControl Control;
 
 
-    public DriveToDetect(Engine engine, ArchitectureControl control) {
+    public DriveToDetect(Engine engine, AutoDepot1.ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
@@ -29,7 +28,7 @@ public class DriveToDetect extends State {
     }
 
     public void stop() {
-        engine.telemetry.addLine("Completed DriveToDetect" );
+        engine.telemetry.addLine("Completed DriveToDetect_" );
         sleep(1000);
         setFinished(true);
     }

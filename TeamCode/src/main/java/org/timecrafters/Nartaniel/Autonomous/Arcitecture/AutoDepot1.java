@@ -2,8 +2,8 @@ package org.timecrafters.Nartaniel.Autonomous.Arcitecture;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1.ArchitectureControl;
 import org.timecrafters.engine.Engine;
+import org.timecrafters.engine.State;
 
 @Autonomous (name = "Autonomous Position: Depot")
 public class AutoDepot1 extends Engine {
@@ -24,5 +24,28 @@ public class AutoDepot1 extends Engine {
         addState(new DriveToPark_fromMK(this, control));
         addState(new DriveToPark_fromTMP( this, control));
 
+    }
+
+    public static class ArchitectureControl extends State {
+
+        public boolean RunDropRobot = true;
+        public boolean RunPostDropUTurn = true;
+        public boolean RunDriveToDetect = true;
+        public boolean RunMineralDetect = true;
+        public boolean RunMineralKick = true;
+        public boolean RunTeamMarkerDrive = true;
+        public boolean RunTeamMarkerPlace = true;
+        public boolean RunDriveToPark_fromTMP = true;
+        public boolean RunDriveToPark_fromMK = true;
+
+        public ArchitectureControl(Engine engine) {
+            this.engine = engine;
+        }
+
+        @Override
+        public void exec() throws InterruptedException {
+
+
+        }
     }
 }

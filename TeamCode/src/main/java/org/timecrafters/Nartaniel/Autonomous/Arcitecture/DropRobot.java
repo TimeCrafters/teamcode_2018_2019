@@ -1,15 +1,14 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class DropRobot extends State {
     private boolean FirstRun = true;
-    public ArchitectureControl Control;
+    public AutoDepot1.ArchitectureControl Control;
 
 
-    public DropRobot(Engine engine, ArchitectureControl control) {
+    public DropRobot(Engine engine, AutoDepot1.ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }

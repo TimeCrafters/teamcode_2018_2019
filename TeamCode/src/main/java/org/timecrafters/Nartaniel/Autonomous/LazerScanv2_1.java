@@ -1,9 +1,6 @@
 package org.timecrafters.Nartaniel.Autonomous;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.timecrafters.engine.Engine;
@@ -11,22 +8,17 @@ import org.timecrafters.engine.State;
 
 import java.util.ArrayList;
 
-public class LazerScanv3 extends State {
-    private long CurrentTime;
-    private boolean ServoDirection;
+public class LazerScanv2_1 extends State {
     private boolean FirstRun = true;
-    private double ArmWaveAmount;
-    private long ArmWavePeriod;
     private long StartTime;
     private long TimeOutTime;
     private ArrayList <DistanceSensor> DistanceSensors;
     private LazerArmCalibrate Calibration;
-    private Servo LazerArmServo;
     private Drive Drive;
     public double BuildHeightMM;
     private int NumberOfDati;
     private int DatiPerSec;
-    private long PreviousTriggerTime;
+    private long LastSecond;
     private double GoldDetectThreshold;
     private double ObjectDetectThreshhold;
     private double ScanEndVal;
@@ -34,23 +26,17 @@ public class LazerScanv3 extends State {
     public boolean isGold;
     private boolean ScanCommence;
     private ArrayList<Double> HightValues;
-    private int DatiRequirement;
-    private double ServoCurrentPos;
 
 
-    public LazerScanv3(Engine engine, LazerArmCalibrate calibration, Drive drive, double goldDetectThreshold, double objectDetectThreshhold, double armWaveAmount, long armWavePeriod, int datiRequirement) {
+    public LazerScanv2_1(Engine engine, LazerArmCalibrate calibration, Drive drive, double goldDetectThreshold, double objectDetectThreshhold, long timeOutTime) {
         this.engine = engine;
+        this.TimeOutTime = timeOutTime;
         this.Calibration = calibration;
         this.GoldDetectThreshold = goldDetectThreshold;
         this.ObjectDetectThreshhold = objectDetectThreshhold;
         this.HightValues = new ArrayList<>();
         this.DistanceSensors = new ArrayList<>();
         this.Drive = drive;
-        this.ArmWaveAmount = armWaveAmount;
-        this.ArmWavePeriod = armWavePeriod;
-        this.DatiRequirement = datiRequirement;
-
-
     }
 
     public void init() {
@@ -58,7 +44,6 @@ public class LazerScanv3 extends State {
         DistanceSensors.add(engine.hardwareMap.get(DistanceSensor.class,"distance1"));
         DistanceSensors.add(engine.hardwareMap.get(DistanceSensor.class,"distance2"));
         DistanceSensors.add(engine.hardwareMap.get(DistanceSensor.class,"distance3"));
-        LazerArmServo = engine.hardwareMap.servo.get("lazerArmServo");
         HightValues.add(0.0);
         HightValues.add(0.0);
         HightValues.add(0.0);
@@ -74,13 +59,11 @@ public class LazerScanv3 extends State {
     @Override
     public void exec() throws InterruptedException {
 
-        CurrentTime = System.currentTimeMillis();
-
         //First Run:
         if (FirstRun) {
             BuildHeightMM = Calibration.BuildHeightMM;
-            StartTime = CurrentTime;
-            PreviousTriggerTime = CurrentTime;
+            StartTime = System.currentTimeMillis();
+            LastSecond = System.currentTimeMillis();
             FirstRun = false;
         }
 
@@ -89,76 +72,35 @@ public class LazerScanv3 extends State {
         HightValues.set(2, hightsFromGround(DistanceSensors.get(2)));
         HightValues.set(3, hightsFromGround(DistanceSensors.get(3)));
 
-
+        //Scan Start if object detected
         if (!ScanCommence) {
-            //Checks the 4 hight values to see if an object is present and act accordingly
             for (int index = 0; index < (HightValues.size() - 2); index++) {
                 if (HightValues.get(index) >= ObjectDetectThreshhold) {
                     ScanCommence = true;
                     NumberOfDati = 0;
-                    Drive.pause(true);
-                    ServoDirection = true;
-                    PreviousTriggerTime = CurrentTime;
                 }
             }
         }
 
-
-
-        //Scan Start if object detected
-//        if (!ScanCommence && HightValues.get(0) >= ObjectDetectThreshhold || HightValues.get(1) >= ObjectDetectThreshhold || HightValues.get(2) >= ObjectDetectThreshhold || HightValues.get(3) >= ObjectDetectThreshhold) {
-//            ScanCommence = true;
-//            NumberOfDati = 0;
-//            Drive.pause(true);
-//            ServoDirection = true;
-//            PreviousTriggerTime = CurrentTime;
-//        }
-
-        
+        //Store Highest value while Scaning
         if (ScanCommence) {
-            //Store Highest value while Scaning
-            for (int index = 0; index < (HightValues.size() - 2); index++) {
-                if (HightValues.get(index) > HightValues.get(HightValues.size() - 1)) {
-                    HightValues.set(HightValues.size() - 1, HightValues.get(index));
+            for (int value = 0; value < (HightValues.size() - 2); value++) {
+                if (HightValues.get(value) > HightValues.get(HightValues.size()-1)) {
+                    HightValues.set(HightValues.size() - 1, HightValues.get(value));
                 }
-
-            }
-        }
-            
-            //Waves Scan arm every second for more unique values
-
-            if (ScanCommence && CurrentTime - PreviousTriggerTime >= ArmWavePeriod) {
-
-                ServoCurrentPos = LazerArmServo.getPosition();
-
-               if (ServoDirection && ServoCurrentPos <= 0.6 + ArmWaveAmount) {
-                   LazerArmServo.setPosition(ServoCurrentPos + 0.01);
-               } else if (!ServoDirection && ServoCurrentPos >= 0.6 - ArmWaveAmount) {
-                   LazerArmServo.setPosition(ServoCurrentPos - 0.01);
-               } else if (ServoDirection && ServoCurrentPos >= 0.6 + ArmWaveAmount) {
-                   ServoDirection = false;
-               } else if (!ServoDirection && ServoCurrentPos <= 0.6 - ArmWaveAmount) {
-                   ServoDirection = true;
-               }
-
-                PreviousTriggerTime = CurrentTime;
             }
 
-            if (ScanCommence) {
-                //Counts the number of unique data values detected in scan.
-                for (DistanceSensor sensor : DistanceSensors) {
-                    for (double PrevDataValue : HightValues) {
-                        if (hightsFromGround(sensor) != PrevDataValue) {
-                            NumberOfDati++;
-                        }
+            for (DistanceSensor sensor : DistanceSensors) {
+                for (double HightValue : HightValues) {
+                    if  (hightsFromGround(sensor) != HightValue) {
+                        NumberOfDati++;
                     }
                 }
             }
+        }
 
-
-        //When Enough Dati are gathered, determine if gold and act accordingly.
-        if (ScanCommence &&  NumberOfDati >= DatiRequirement) {
-            Log.i("Y", "reset "+NumberOfDati);
+        //When Object no longer being detected, finish scan and determine if gold
+        if (ScanCommence &&  HightValues.get(0) < ScanEndVal && HightValues.get(1) < ScanEndVal && HightValues.get(2) < ScanEndVal && HightValues.get(3) < ScanEndVal ) {
             ScanCommence = false;
             if (HightValues.get(HightValues.size() - 1) <= GoldDetectThreshold) {
                 isGold = true;
@@ -167,9 +109,15 @@ public class LazerScanv3 extends State {
             } else {
                 ScanNumber++;
                 resetHights();
-                Drive.pause(false);
             }
         }
+
+        //Time Out
+        /*
+        if (System.currentTimeMillis() > StartTime + TimeOutTime) {
+            setFinished(true);
+        }
+*/
 
     }
 
@@ -191,14 +139,8 @@ public class LazerScanv3 extends State {
 
         engine.telemetry.addData("Scan #", ScanNumber);
 
-        engine.telemetry.addData("Arm Position", LazerArmServo.getPosition());
-
-        for (double sensor: HightValues) {
-            engine.telemetry.addData("Hight Value", sensor);
-        }
-        engine.telemetry.addData("Current Time", CurrentTime);
-        engine.telemetry.addData("Previous Trigger Time", PreviousTriggerTime);
         engine.telemetry.addData("Max Hight", HightValues.get(HightValues.size() - 1));
+        //engine.telemetry.addData("Dati Per Second", DatiPerSec);
         engine.telemetry.addData("Dati in one Scan", NumberOfDati);
         if (isGold) {engine.telemetry.addLine("IS GOLD!!!");}
         if (ScanCommence) {engine.telemetry.addLine("Object Detected");}
