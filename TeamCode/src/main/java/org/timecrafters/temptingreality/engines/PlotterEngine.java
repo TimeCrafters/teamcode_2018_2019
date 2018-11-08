@@ -10,7 +10,7 @@ import org.timecrafters.temptingreality.states.PlotterDriveMotor2;
 /**
  * Created by t420-1 on 5/5/2018.
  */
-@TeleOp(name = "plotter test")
+@TeleOp(name = "plotter test", group = "Testing")
 public class PlotterEngine extends Engine {
 
     @Override

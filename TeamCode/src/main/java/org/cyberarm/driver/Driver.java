@@ -3,6 +3,7 @@ package org.cyberarm.driver;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -15,7 +16,8 @@ import org.cyberarm.plotter.TCPServer.Server;
 import java.io.IOException;
 
 
-@TeleOp(name = "Plotter Driver")
+@TeleOp(name = "Plotter Driver", group = "Testing")
+@Disabled
 public class Driver extends CyberarmEngine {
   Decompiler decompiler;
   public Server server;

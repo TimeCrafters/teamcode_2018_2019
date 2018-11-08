@@ -1,5 +1,6 @@
 package org.timecrafters.gfp.engines;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.timecrafters.engine.Engine;
@@ -16,6 +17,7 @@ import org.timecrafters.gfp.config.HardWareConfig;
  * Created by t420 on 10/5/2017.
  */
 @TeleOp(name="Main Teleop")
+@Disabled
 public class TeleopEngine extends Engine {
 
     public void setProcesses(){

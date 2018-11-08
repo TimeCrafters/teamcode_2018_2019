@@ -1,6 +1,7 @@
 package org.timecrafters.Liv.engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.Liv.SubEngines.RedBackCenter;
 import org.timecrafters.Liv.SubEngines.RedBackLeft;
@@ -22,6 +23,7 @@ import org.timecrafters.gfp.state.util.Sleep;
 
 
 @Autonomous(name="Red Back")
+@Disabled
 public class RedBack extends Engine {
 
 

@@ -76,13 +76,13 @@ public abstract class CyberarmEngineV2 extends OpMode {
       // The engine is now out of states.
       stop();
 
-      telemetry.addLine("" + this.getClass() + " is out of states to run!");
+      telemetry.addLine("" + this.getClass().getSimpleName() + " is out of states to run!");
       telemetry.addLine();
       return;
     }
 
       // Add telemetry to show currently running state
-    telemetry.addLine("Running state: " + activeStateIndex + " of " + (cyberarmStates.size()-1));
+    telemetry.addLine("Running state: " +state.getClass().getSimpleName() + ". State: " + activeStateIndex + " of " + (cyberarmStates.size()-1));
     telemetry.addLine();
 
     if (state.getHasFinished() && state.childrenHaveFinished()) {
