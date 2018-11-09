@@ -4,11 +4,11 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class DriveToDetect extends State {
-    private boolean FirstRun = true;
-    public AutoDepot1.ArchitectureControl Control;
+    private boolean Complete = false;
+    public ArchitectureControl Control;
 
 
-    public DriveToDetect(Engine engine, AutoDepot1.ArchitectureControl control) {
+    public DriveToDetect(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
@@ -19,17 +19,21 @@ public class DriveToDetect extends State {
 
     @Override
     public void exec() throws InterruptedException {
-        if (FirstRun) {
-            FirstRun = false;
-            if (!Control.RunDropRobot) { stop(); }
+        if (Complete) {
+            sleep(1000);
+            setFinished(true);
+        }
 
+
+
+    }
+    public void telemetry() {
+        if (!Control.RunDropRobot) {
+            engine.telemetry.addLine("Completed PostDropUTurn");
+            Complete = true;
         }
 
     }
 
-    public void stop() {
-        engine.telemetry.addLine("Completed DriveToDetect_" );
-        sleep(1000);
-        setFinished(true);
-    }
+
 }

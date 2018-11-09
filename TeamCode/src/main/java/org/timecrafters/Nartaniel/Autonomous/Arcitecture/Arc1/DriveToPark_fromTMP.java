@@ -1,14 +1,14 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.AutoDepot1;
+import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
 public class DriveToPark_fromTMP extends SubEngine {
     public Engine engine;
-    public AutoDepot1.ArchitectureControl Control;
+    public ArchitectureControl Control;
 
-    public DriveToPark_fromTMP(Engine engine, AutoDepot1.ArchitectureControl control) {
+    public DriveToPark_fromTMP(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         Control = control;
     }

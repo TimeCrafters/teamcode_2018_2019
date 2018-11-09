@@ -4,11 +4,11 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
 public class GoldDetectPathB extends SubEngine {
-public LazerScanv3 goldDetect;
+public LazerScanv2_1 goldDetect;
 //public Drive ScanDrive;
 public Engine engine;
 
-    public GoldDetectPathB(Engine engine, LazerScanv3 goldDetect, Drive scanDrive) {
+    public GoldDetectPathB(Engine engine, LazerScanv2_1 goldDetect, Drive scanDrive) {
         this.goldDetect = goldDetect;
         this.engine = engine;
 //        this.ScanDrive = scanDrive;

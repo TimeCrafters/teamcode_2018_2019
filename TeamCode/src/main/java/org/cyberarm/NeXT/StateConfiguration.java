@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-class StateConfiguration {
+public class StateConfiguration {
   public class DataStruct {
     public String name;
     public boolean enabled;
@@ -58,7 +58,12 @@ class StateConfiguration {
   }
 
   public boolean allow(String key) {
-    return get(key).enabled;
+    try {
+      return get(key).enabled;
+    } catch (NullPointerException e) {
+      Log.e("TC_CONFIG", ""+key+" is not found!");
+      return false;
+    }
   }
 
   private boolean loadJSON() {
