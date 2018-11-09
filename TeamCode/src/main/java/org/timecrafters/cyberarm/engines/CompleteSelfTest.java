@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
  * Created by Cyberarm on 1/27/2018.
  */
 
-@Autonomous(name = "~!Complete Self Test!~")
+@Autonomous(name = "~!Complete Self Test!~", group = "Testing")
 public class CompleteSelfTest extends OpMode {
     DcMotor dcFrontRight; DcMotor dcFrontLeft;
     DcMotor dcBackRight;  DcMotor dcBackLeft;

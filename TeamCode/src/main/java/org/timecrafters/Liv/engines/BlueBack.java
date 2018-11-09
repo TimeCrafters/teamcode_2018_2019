@@ -1,6 +1,7 @@
 package org.timecrafters.Liv.engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.Darcshadowz.State.RightGrabber;
 import org.timecrafters.Liv.SubEngines.BlueBackCenter;
@@ -30,6 +31,7 @@ import org.timecrafters.gfp.state.util.Sleep;
  */
 
   @Autonomous(name="Blue Back")
+  @Disabled
   public class BlueBack extends Engine {
 
 

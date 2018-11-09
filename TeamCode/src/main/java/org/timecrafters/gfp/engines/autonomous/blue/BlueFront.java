@@ -1,6 +1,7 @@
 package org.timecrafters.gfp.engines.autonomous.blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.engine.Engine;
 import org.timecrafters.gfp.state.drive.DriveStraightForward;
@@ -11,6 +12,7 @@ import org.timecrafters.gfp.state.ultrasonic.UltraSonic;
  */
 
 @Autonomous(name="Blue Front")
+@Disabled
 public class BlueFront extends Engine {
 
     public void setProcesses(){
