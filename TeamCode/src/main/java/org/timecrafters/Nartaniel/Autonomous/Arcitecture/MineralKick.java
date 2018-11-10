@@ -1,11 +1,10 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class MineralKick extends State {
-    private boolean FirstRun = true;
+    private boolean Complete = false;
     public ArchitectureControl Control;
 
 
@@ -20,17 +19,21 @@ public class MineralKick extends State {
 
     @Override
     public void exec() throws InterruptedException {
-        if (FirstRun) {
-            FirstRun = false;
-            if (!Control.RunDropRobot) { stop(); }
+        if (Complete) {
+            sleep(1000);
+            setFinished(true);
+        }
 
+
+
+    }
+    public void telemetry() {
+        if (!Control.RunDropRobot) {
+            engine.telemetry.addLine("Completed MineralKick");
+            Complete = true;
         }
 
     }
 
-    public void stop() {
-        engine.telemetry.addLine("Completed MineralKick" );
-        sleep(1000);
-        setFinished(true);
-    }
+
 }

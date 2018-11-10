@@ -3,13 +3,13 @@ package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class CompleteStepIndicator extends State {
+public class CompleteStepIndicator_ extends State {
     private String Step;
     private long StartTime;
     private long PauseTime;
     private boolean FirstRun;
 
-    public CompleteStepIndicator(Engine engine, String step, long pauseTime) {
+    public CompleteStepIndicator_(Engine engine, String step, long pauseTime) {
         this.Step = step;
         this.engine = engine;
         this.PauseTime = pauseTime;

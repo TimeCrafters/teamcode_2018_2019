@@ -1,5 +1,6 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
+import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
@@ -15,7 +16,7 @@ public class MineralKick extends SubEngine {
     @Override
     public void setProcesses() {
 
-        addState(new CompleteStepIndicator(engine, "Mineral Kick", 1));
+        addState(new CompleteStepIndicator_(engine, "Mineral Kick", 1));
     }
 
     @Override

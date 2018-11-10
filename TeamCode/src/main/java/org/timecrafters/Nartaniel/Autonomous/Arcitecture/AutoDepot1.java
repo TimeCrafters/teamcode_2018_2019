@@ -2,7 +2,6 @@ package org.timecrafters.Nartaniel.Autonomous.Arcitecture;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 
 @Autonomous (name = "Autonomous Position: Depot")
@@ -25,4 +24,5 @@ public class AutoDepot1 extends Engine {
         addState(new DriveToPark_fromTMP( this, control));
 
     }
+
 }
