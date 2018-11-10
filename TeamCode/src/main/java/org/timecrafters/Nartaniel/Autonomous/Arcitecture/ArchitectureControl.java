@@ -5,23 +5,26 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class ArchitectureControl extends State {
+
     private StateConfiguration AppReader;
-    public boolean RunDropRobot = false;
-    public boolean RunPostDropUTurn = false;
-    public boolean RunDriveToDetect = false;
-    public boolean RunMineralDetect = false;
-    public boolean RunMineralKick = false;
-    public boolean RunTeamMarkerDrive = false;
-    public boolean RunTeamMarkerPlace = false;
-    public boolean RunDriveToPark_fromTMP = false;
-    public boolean RunDriveToPark_fromMK = false;
+    public boolean RunDropRobot;
+    public boolean RunPostDropUTurn;
+    public boolean RunDriveToDetect;
+    public boolean RunMineralDetect;
+    public boolean RunMineralKick;
+    public boolean RunTeamMarkerDrive;
+    public boolean RunTeamMarkerPlace;
+    public boolean RunDriveToPark_fromTMP;
+    public boolean RunDriveToPark_fromMK;
 
     public ArchitectureControl(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
     }
 
-    public void init() {
+    @Override
+    public void exec() {
+
         RunDropRobot = AppReader.allow("RunDropRobot");
         RunPostDropUTurn = AppReader.allow("RunPostDropUTurn");
         RunDriveToDetect = AppReader.allow("RunDriveToDetect");
@@ -31,11 +34,7 @@ public class ArchitectureControl extends State {
         RunTeamMarkerPlace = AppReader.allow("RunTeamMarkerPlace");
         RunDriveToPark_fromTMP = AppReader.allow("RunDriveToPark_fromTMP");
         RunDriveToPark_fromMK = AppReader.allow("RunDriveToPark_fromMK");
-    }
-
-    @Override
-    public void exec() throws InterruptedException {
-
+        setFinished(true);
 
     }
 

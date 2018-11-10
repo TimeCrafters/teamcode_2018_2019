@@ -1,27 +1,39 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
+
 import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
-import org.timecrafters.engine.SubEngine;
+import org.timecrafters.engine.State;
 
-public class DriveToPark_fromMK extends SubEngine {
-    public Engine engine;
+public class DriveToPark_fromMK extends State {
+    private boolean Complete = false;
     public ArchitectureControl Control;
+
 
     public DriveToPark_fromMK(Engine engine, ArchitectureControl control) {
         this.engine = engine;
-        Control = control;
+        this.Control = control;
+    }
+
+    public void init() {
+
     }
 
     @Override
-    public void setProcesses() {
+    public void exec() {
 
-
-        addState(new CompleteStepIndicator_(engine, "Drive To Park (from MK)", 1));
+        if (Control.RunDriveToPark_fromMK) {
+            Complete = true;
+            if (Complete) {
+                engine.telemetry.addLine("Completed DriveToPark_fromMK");
+                engine.telemetry.update();
+                sleep(1000);
+                setFinished(true);
+            }
+        } else {
+            setFinished(true);
+        }
     }
 
-    @Override
-    public void evaluate() {
-        setRunable(Control.RunDriveToPark_fromMK);
-    }
+
 }

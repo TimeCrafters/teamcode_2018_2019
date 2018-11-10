@@ -1,4 +1,6 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
+package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc2;
+
+import android.util.Log;
 
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
@@ -7,7 +9,7 @@ public class CompleteStepIndicator_ extends State {
     private String Step;
     private long StartTime;
     private long PauseTime;
-    private boolean FirstRun;
+    private boolean FirstRun = true;
 
     public CompleteStepIndicator_(Engine engine, String step, long pauseTime) {
         this.Step = step;
@@ -16,12 +18,16 @@ public class CompleteStepIndicator_ extends State {
 
     }
 
-    @Override
-    public void exec() throws InterruptedException {
+
+
+
+    public void exec() {
+
         if (FirstRun) {
-            StartTime = System.currentTimeMillis();
             FirstRun = false;
+            StartTime = System.currentTimeMillis();
         }
+
 
         if (System.currentTimeMillis() - StartTime >= 1000 * PauseTime) {
             setFinished(true);
@@ -32,5 +38,9 @@ public class CompleteStepIndicator_ extends State {
 
     public void telemetry() {
         engine.telemetry.addData("Completed", Step);
+        engine.telemetry.addData("time", (System.currentTimeMillis() - StartTime));
+        engine.telemetry.addData("Start Time", StartTime);
+        engine.telemetry.addData("FirstRun", FirstRun);
+
     }
 }

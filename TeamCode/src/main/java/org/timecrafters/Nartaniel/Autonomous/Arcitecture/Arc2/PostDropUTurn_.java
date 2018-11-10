@@ -1,14 +1,14 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
+package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc2;
 
 import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
-public class DriveToDetect_ extends SubEngine {
-    public Engine engine;
+public class PostDropUTurn_ extends SubEngine {
+    Engine engine;
     public ArchitectureControl Control;
 
-    public DriveToDetect_(Engine engine, ArchitectureControl control) {
+    public PostDropUTurn_(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         Control = control;
     }
@@ -16,11 +16,11 @@ public class DriveToDetect_ extends SubEngine {
     @Override
     public void setProcesses() {
 
-        addState(new CompleteStepIndicator_(engine, "Drive to Detect", 1));
+        addState(new CompleteStepIndicator_(engine, "Pos-Drop Uturn", 1));
     }
 
     @Override
     public void evaluate() {
-        setRunable(Control.RunDriveToDetect);
+        setRunable(Control.RunPostDropUTurn);
     }
 }

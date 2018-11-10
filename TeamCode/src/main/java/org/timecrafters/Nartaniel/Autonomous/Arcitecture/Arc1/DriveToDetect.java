@@ -4,12 +4,12 @@ import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class TeamMarkerPlace extends State {
+public class DriveToDetect extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
 
 
-    public TeamMarkerPlace(Engine engine, ArchitectureControl control) {
+    public DriveToDetect(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
@@ -20,10 +20,10 @@ public class TeamMarkerPlace extends State {
 
     @Override
     public void exec() {
-        if (Control.RunTeamMarkerPlace) {
+        if (Control.RunDriveToDetect) {
             Complete = true;
             if (Complete) {
-                engine.telemetry.addLine("Completed TeamMarkerPlace");
+                engine.telemetry.addLine("Completed DriveToDetect");
                 engine.telemetry.update();
                 sleep(1000);
                 setFinished(true);

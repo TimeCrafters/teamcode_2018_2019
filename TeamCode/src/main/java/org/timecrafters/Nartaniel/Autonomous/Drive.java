@@ -1,7 +1,5 @@
 package org.timecrafters.Nartaniel.Autonomous;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -9,7 +7,7 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class Drive extends State {
-    private boolean StartRun = true;
+    private boolean FirstRun = true;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
     private double Power;
@@ -66,8 +64,8 @@ public class Drive extends State {
 
     @Override
     public void exec() {
-        if (StartRun) {
-            StartRun = false;
+        if (FirstRun) {
+            FirstRun = false;
             RightDrive.setPower(Power);
             LeftDrive.setPower(Power);
         }

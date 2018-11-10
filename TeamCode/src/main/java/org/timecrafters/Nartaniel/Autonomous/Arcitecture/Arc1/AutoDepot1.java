@@ -1,7 +1,8 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture;
+package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 
 @Autonomous (name = "Autonomous Position: Depot")

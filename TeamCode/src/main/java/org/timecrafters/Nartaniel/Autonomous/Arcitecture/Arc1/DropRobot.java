@@ -1,27 +1,53 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
-import org.timecrafters.engine.Engine;
-import org.timecrafters.engine.SubEngine;
+import com.qualcomm.robotcore.hardware.Servo;
 
-public class DropRobot extends SubEngine {
-    public Engine engine;
+import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
+import org.timecrafters.temptingreality.states.servoController;
+import org.timecrafters.engine.Engine;
+import org.timecrafters.engine.State;
+
+public class DropRobot extends State {
+    private boolean Complete = false;
     public ArchitectureControl Control;
+    private Servo servoRight;
+    private Servo servoLeft;
+
+
 
     public DropRobot(Engine engine, ArchitectureControl control) {
         this.engine = engine;
-        Control = control;
+        this.Control = control;
+    }
+
+    public void init() {
+        servoLeft = engine.hardwareMap.servo.get("servoLeft");
+        servoRight = engine.hardwareMap.servo.get("servoRight");
+        servoLeft.setPosition(1);
+        servoRight.setPosition(0);
     }
 
     @Override
-    public void setProcesses() {
+    public void exec() {
+        if (Control.RunDropRobot) {
 
+            servoLeft.setPosition(.1);
+            servoRight.setPosition(1);
+            sleep(1500);
+            servoLeft.setPosition(1);
+            servoRight.setPosition(0);
+            Complete = true;
 
-        addState(new CompleteStepIndicator_(engine, "Drop Robot", 1));
+            if (Complete) {
+                engine.telemetry.addLine("Completed DropRobot");
+                engine.telemetry.update();
+                sleep(1000);
+                Complete = false;
+                setFinished(true);
+            }
+        } else {
+            setFinished(true);
+        }
     }
 
-    @Override
-    public void evaluate() {
-        setRunable(Control.RunDropRobot);
-    }
 }

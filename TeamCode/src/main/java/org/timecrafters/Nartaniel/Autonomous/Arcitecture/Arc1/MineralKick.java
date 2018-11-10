@@ -2,25 +2,36 @@ package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
 import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
-import org.timecrafters.engine.SubEngine;
+import org.timecrafters.engine.State;
 
-public class MineralKick extends SubEngine {
-    public Engine engine;
+public class MineralKick extends State {
+    private boolean Complete = false;
     public ArchitectureControl Control;
+
 
     public MineralKick(Engine engine, ArchitectureControl control) {
         this.engine = engine;
-        Control = control;
+        this.Control = control;
+    }
+
+    public void init() {
+
     }
 
     @Override
-    public void setProcesses() {
-
-        addState(new CompleteStepIndicator_(engine, "Mineral Kick", 1));
+    public void exec() {
+        if (Control.RunMineralKick) {
+            Complete = true;
+            if (Complete) {
+                engine.telemetry.addLine("Completed MineralKick");
+                engine.telemetry.update();
+                sleep(1000);
+                setFinished(true);
+            }
+        } else {
+            setFinished(true);
+        }
     }
 
-    @Override
-    public void evaluate() {
-        setRunable(Control.RunMineralKick);
-    }
+
 }
