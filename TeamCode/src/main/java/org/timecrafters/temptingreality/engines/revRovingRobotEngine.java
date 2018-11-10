@@ -3,7 +3,8 @@ package org.timecrafters.temptingreality.engines;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.timecrafters.engine.Engine;
-import org.timecrafters.temptingreality.states.revRovingRobot;
+import org.timecrafters.temptingreality.states.revRovingRobotGame1;
+import org.timecrafters.temptingreality.states.revRovingRobotGame2;
 
 /**
  * Created by t420-1 on 10/2/2018.
@@ -12,6 +13,8 @@ import org.timecrafters.temptingreality.states.revRovingRobot;
 public class revRovingRobotEngine extends Engine {
     @Override
     public void setProcesses() {
-        addState(new revRovingRobot(this));
+        addThreadedState(new revRovingRobotGame1(this));
+        addThreadedState(new revRovingRobotGame2(this));
     }
+
 }
