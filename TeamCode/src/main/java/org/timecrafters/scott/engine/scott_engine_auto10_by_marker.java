@@ -21,7 +21,8 @@ public class scott_engine_auto10_by_marker extends Engine {
      *  6. drop team marker
      *  7. drive to crater
      * History:
-     *  11/13/18 DSB - original
+     *  11/13/18 DSB - add updates to top of history example
+     *  11/12/18 DSB - original
      **********************************************************************************************/
 
     /* define variables */
