@@ -16,20 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class StateConfiguration {
-  public class DataStruct {
-    public String name;
-    public boolean enabled;
-
-    public DataStruct() {
-    }
-
-    public DataStruct(String name, boolean enabled) {
-      this.name = name;
-      this.enabled = enabled;
-    }
-  }
-
-
   private boolean loadSuccessful = false;
   private ArrayList<DataStruct> dataStructs;
   private HashMap<String, DataStruct> actions;
@@ -55,6 +41,10 @@ public class StateConfiguration {
 
   public DataStruct get(String key) {
     return actions.get(key);
+  }
+
+  public <T> T get_variable(String key, String variable) throws NullPointerException {
+    return DataStruct.valueOf(get(key).variables().get(variable));
   }
 
   public boolean allow(String key) {
