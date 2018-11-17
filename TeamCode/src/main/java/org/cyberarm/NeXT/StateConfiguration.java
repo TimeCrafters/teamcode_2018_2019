@@ -20,8 +20,6 @@ public class StateConfiguration {
   private ArrayList<DataStruct> dataStructs;
   private HashMap<String, DataStruct> actions;
 
-//  public boolean allowDrop, allowPostDropUTurn, allowMineralPositioning;
-
   public StateConfiguration() {
     dataStructs = new ArrayList<>();
     actions = new HashMap<>();
@@ -39,21 +37,12 @@ public class StateConfiguration {
     }
   }
 
-  public DataStruct get(String key) {
+  public DataStruct get(String key) throws NullPointerException {
     return actions.get(key);
   }
 
-  public <T> T get_variable(String key, String variable) throws NullPointerException {
-    return DataStruct.valueOf(get(key).variables().get(variable));
-  }
-
-  public boolean allow(String key) {
-    try {
-      return get(key).enabled;
-    } catch (NullPointerException e) {
-      Log.e("TC_CONFIG", ""+key+" is not found!");
-      return false;
-    }
+  public boolean allow(String key) throws NullPointerException {
+    return get(key).enabled;
   }
 
   private boolean loadJSON() {
