@@ -16,25 +16,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class StateConfiguration {
-  public class DataStruct {
-    public String name;
-    public boolean enabled;
-
-    public DataStruct() {
-    }
-
-    public DataStruct(String name, boolean enabled) {
-      this.name = name;
-      this.enabled = enabled;
-    }
-  }
-
-
   private boolean loadSuccessful = false;
   private ArrayList<DataStruct> dataStructs;
   private HashMap<String, DataStruct> actions;
-
-//  public boolean allowDrop, allowPostDropUTurn, allowMineralPositioning;
 
   public StateConfiguration() {
     dataStructs = new ArrayList<>();
@@ -53,17 +37,12 @@ public class StateConfiguration {
     }
   }
 
-  public DataStruct get(String key) {
+  public DataStruct get(String key) throws NullPointerException {
     return actions.get(key);
   }
 
-  public boolean allow(String key) {
-    try {
-      return get(key).enabled;
-    } catch (NullPointerException e) {
-      Log.e("TC_CONFIG", ""+key+" is not found!");
-      return false;
-    }
+  public boolean allow(String key) throws NullPointerException {
+    return get(key).enabled;
   }
 
   private boolean loadJSON() {
