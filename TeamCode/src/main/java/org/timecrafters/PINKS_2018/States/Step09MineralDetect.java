@@ -1,19 +1,16 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
+package org.timecrafters.PINKS_2018.States;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 import java.util.ArrayList;
 
-public class MineralDetect extends State {
+public class Step09MineralDetect extends State {
     private boolean Complete = false;
-    public ArchitectureControl Control;
+    public Step05ArchitectureControl Control;
     private long CurrentTime;
     private boolean ServoDirection;
     private boolean FirstRun = true;
@@ -35,7 +32,7 @@ public class MineralDetect extends State {
     
 
 
-    public MineralDetect(Engine engine, ArchitectureControl control) {
+    public Step09MineralDetect(Engine engine, Step05ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
         this.HightValues = new ArrayList<>();
@@ -43,11 +40,11 @@ public class MineralDetect extends State {
     }
 
     public void init() {
-        DistanceSensors.add(engine.hardwareMap.get(DistanceSensor.class,"distance0"));
-        DistanceSensors.add(engine.hardwareMap.get(DistanceSensor.class,"distance1"));
-        DistanceSensors.add(engine.hardwareMap.get(DistanceSensor.class,"distance2"));
-        DistanceSensors.add(engine.hardwareMap.get(DistanceSensor.class,"distance3"));
-        LazerArmServo = engine.hardwareMap.servo.get("lazerArmServo");
+        DistanceSensors.add(Control.PinksHardwareConfig.pMineralDetect0);
+        DistanceSensors.add(Control.PinksHardwareConfig.pMineralDetect1);
+        DistanceSensors.add(Control.PinksHardwareConfig.pMineralDetect2);
+        DistanceSensors.add(Control.PinksHardwareConfig.pMineralDetect3);
+        LazerArmServo = Control.PinksHardwareConfig.pLaserArmServo;
         HightValues.add(0.0);
         HightValues.add(0.0);
         HightValues.add(0.0);

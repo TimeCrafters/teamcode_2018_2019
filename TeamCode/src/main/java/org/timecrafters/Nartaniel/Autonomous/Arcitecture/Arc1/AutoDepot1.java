@@ -1,10 +1,11 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
-
+@Disabled
 @Autonomous (name = "Autonomous Position: Depot")
 public class AutoDepot1 extends Engine {
 

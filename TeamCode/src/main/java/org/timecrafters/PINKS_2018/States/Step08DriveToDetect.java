@@ -1,13 +1,13 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
+package org.timecrafters.PINKS_2018.States;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
@@ -21,9 +21,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
-public class DriveToDetect extends State {
+public class Step08DriveToDetect extends State {
     private boolean Complete = false;
-    public ArchitectureControl Control;
+    public Step05ArchitectureControl Control;
     VuforiaLocalizer Vuforia;
     VuforiaLocalizer.Parameters parameters;
     VuforiaTrackables visionTargets;
@@ -37,13 +37,18 @@ public class DriveToDetect extends State {
     final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
     final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
+    private static final float mmPerInch        = 25.4f;
+    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+    private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+
+
     OpenGLMatrix lastKnownLocation = null;
     OpenGLMatrix phoneLocation;
 
     public static final String VUFORIA_KEY = "AcU+kbn/////AAAAGWDmHA7mS0gCoiMy9pA5e1AVyLZeqKejLOtP9c3COfi9g9m4Cs1XuVQVdqRFhyrFkNUynXwrhQyV65hPnPkGgRky9MjHlLLCWuqdpHzDLJonuOSBh5zVO11PleXH+2utK1lCnbBxvOM+/OrB9EAHUBrcB0ItRxjzFQOe8TXrjGGe1IyjC/Ljke3lZf/LVVinej3zjGNqwsNQoZ0+ahxYNPCJOdzRFkXjyMDXJVDQYMtVQcWKpbEM6dJ9jQ9f0UFIVXANJ7CC8ZDyrl2DQ8o4sOX981OktCKWW0d4PH0IwAw/c2nGgt1t2V/7PwTwysBYM1N+SjVpMNRg52u9gNl9os4ulF6AZw+U2LcVj4kqGZDi";
 
 
-    public DriveToDetect(Engine engine, ArchitectureControl control) {
+    public Step08DriveToDetect(Engine engine, Step05ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
@@ -55,22 +60,24 @@ public class DriveToDetect extends State {
     @Override
     public void exec() {
         if (Control.RunDriveToDetect) {
-            targetVisible = false;
+            boolean LocaltargetVisible = false;
+
             for (VuforiaTrackable trackable : AllTargets) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    engine.telemetry.addData("Visible Target", trackable.getName());
-                    engine.telemetry.update();
-                    targetVisible = true;
+                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                    //engine.telemetry.addData("Visible Target", trackable.getName());
+                    LocaltargetVisible = true;
 
                     // getUpdatedRobotLocation() will return null if no new information is available since
                     // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                     if (robotLocationTransform != null) {
                         lastKnownLocation = robotLocationTransform;
                     }
                     break;
                 }
             }
+            targetVisible = LocaltargetVisible;
+
 
             if (Complete) {
                 engine.telemetry.addLine("Completed Step08DriveToDetect");
@@ -81,6 +88,23 @@ public class DriveToDetect extends State {
         } else {
             setFinished(true);
         }
+    }
+
+    public void telemetry() {
+        if (targetVisible) {
+            // express position (translation) of robot in inches.
+            VectorF translation = lastKnownLocation.getTranslation();
+            engine.telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+
+            // express the rotation of the robot in degrees.
+            Orientation rotation = Orientation.getOrientation(lastKnownLocation, EXTRINSIC, XYZ, DEGREES);
+            engine.telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+        }
+        else {
+            engine.telemetry.addData("Visible Target", "none");
+        }
+
     }
 
 
@@ -105,6 +129,30 @@ public class DriveToDetect extends State {
 
         AllTargets.addAll(visionTargets);
 
+        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
+                .translation(0, mmFTCFieldWidth, mmTargetHeight)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
+        blueRover.setLocation(blueRoverLocationOnField);
+
+        //Set Picture Locations on the field
+
+        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
+                .translation(0, -mmFTCFieldWidth, mmTargetHeight)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
+        redFootprint.setLocation(redFootprintLocationOnField);
+
+        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
+                .translation(-mmFTCFieldWidth, 0, mmTargetHeight)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+        frontCraters.setLocation(frontCratersLocationOnField);
+
+        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
+                .translation(mmFTCFieldWidth, 0, mmTargetHeight)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
+        backSpace.setLocation(backSpaceLocationOnField);
+
+        //set Camra position on Robot
+
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
@@ -118,4 +166,5 @@ public class DriveToDetect extends State {
         visionTargets.activate();
 
     }
+
 }

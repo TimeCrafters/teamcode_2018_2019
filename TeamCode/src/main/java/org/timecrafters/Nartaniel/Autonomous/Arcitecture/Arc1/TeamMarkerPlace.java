@@ -23,7 +23,7 @@ public class TeamMarkerPlace extends State {
         if (Control.RunTeamMarkerPlace) {
             Complete = true;
             if (Complete) {
-                engine.telemetry.addLine("Completed TeamMarkerPlace");
+                engine.telemetry.addLine("Completed Step12TeamMarkerPlace");
                 engine.telemetry.update();
                 sleep(1000);
                 setFinished(true);

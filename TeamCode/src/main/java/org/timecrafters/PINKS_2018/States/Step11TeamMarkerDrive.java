@@ -1,15 +1,14 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
+package org.timecrafters.PINKS_2018.States;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class MineralKick extends State {
+public class Step11TeamMarkerDrive extends State {
     private boolean Complete = false;
-    public ArchitectureControl Control;
+    public Step05ArchitectureControl Control;
 
 
-    public MineralKick(Engine engine, ArchitectureControl control) {
+    public Step11TeamMarkerDrive(Engine engine, Step05ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
@@ -20,10 +19,10 @@ public class MineralKick extends State {
 
     @Override
     public void exec() {
-        if (Control.RunMineralKick) {
+        if (Control.RunTeamMarkerDrive) {
             Complete = true;
             if (Complete) {
-                engine.telemetry.addLine("Completed Step10MineralKick");
+                engine.telemetry.addLine("Completed Step11TeamMarkerDrive");
                 engine.telemetry.update();
                 sleep(1000);
                 setFinished(true);

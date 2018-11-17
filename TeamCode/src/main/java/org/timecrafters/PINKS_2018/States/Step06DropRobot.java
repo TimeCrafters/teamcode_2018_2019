@@ -1,30 +1,26 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
+package org.timecrafters.PINKS_2018.States;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
-import org.timecrafters.temptingreality.states.servoController;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class DropRobot extends State {
+public class Step06DropRobot extends State {
     private boolean Complete = false;
-    public ArchitectureControl Control;
+    public Step05ArchitectureControl Control;
     private Servo servoRight;
     private Servo servoLeft;
 
 
 
-    public DropRobot(Engine engine, ArchitectureControl control) {
+    public Step06DropRobot(Engine engine, Step05ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
 
     public void init() {
-        servoLeft = engine.hardwareMap.servo.get("servoLeft");
-        servoRight = engine.hardwareMap.servo.get("servoRight");
-        servoLeft.setPosition(1);
-        servoRight.setPosition(0);
+        servoLeft = Control.PinksHardwareConfig.pDropLeft;
+        servoRight = Control.PinksHardwareConfig.pDropRight;
     }
 
     @Override

@@ -1,17 +1,14 @@
-package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
-
-import android.util.Log;
+package org.timecrafters.PINKS_2018.States;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.timecrafters.Nartaniel.Autonomous.Arcitecture.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class PostDropUTurn extends State {
+public class Step07PostDropUTurn extends State {
     private boolean Complete = false;
-    public ArchitectureControl Control;
+    public Step05ArchitectureControl Control;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
     private boolean FirstRun;
@@ -24,7 +21,7 @@ public class PostDropUTurn extends State {
     private double whealCircumference = 4;
 
 
-    public PostDropUTurn(Engine engine, ArchitectureControl control) {
+    public Step07PostDropUTurn(Engine engine, Step05ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
 
