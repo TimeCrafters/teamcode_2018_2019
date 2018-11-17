@@ -1,7 +1,5 @@
 package org.timecrafters.Nartaniel.Autonomous.Arcitecture.Arc1;
 
-import com.vuforia.Vuforia;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
@@ -25,7 +24,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 public class DriveToDetect extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
-    VuforiaLocalizer vuforiaLocalizer;
+    VuforiaLocalizer Vuforia;
     VuforiaLocalizer.Parameters parameters;
     VuforiaTrackables visionTargets;
     VuforiaTrackable target;
@@ -92,9 +91,9 @@ public class DriveToDetect extends State {
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
 
         parameters.cameraDirection = CAMERA_CHOICE;
-        vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters);
+        Vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("RoverRuckus");
+        visionTargets = Vuforia.loadTrackablesFromAsset("RoverRuckus");
         VuforiaTrackable blueRover = visionTargets.get(0);
         blueRover.setName("Blue-Rover");
         VuforiaTrackable redFootprint = visionTargets.get(1);
@@ -105,6 +104,11 @@ public class DriveToDetect extends State {
         backSpace.setName("Back-Space");
 
         AllTargets.addAll(visionTargets);
+
+        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
+                .translation(0, mmFTCFieldWidth, mmTargetHeight)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
+        blueRover.setLocation(blueRoverLocationOnField);
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
