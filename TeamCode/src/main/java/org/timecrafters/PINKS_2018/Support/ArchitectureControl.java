@@ -1,15 +1,15 @@
-package org.timecrafters.PINKS_2018.States;
+package org.timecrafters.PINKS_2018.Support;
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class Step05ArchitectureControl extends State {
+public class ArchitectureControl extends State {
 
     public PinksHardwareConfig PinksHardwareConfig;
 
-    private StateConfiguration AppReader;
+    public StateConfiguration AppReader;
     public boolean RunDropRobot;
     public boolean RunPostDropUTurn;
     public boolean RunDriveToDetect;
@@ -20,7 +20,7 @@ public class Step05ArchitectureControl extends State {
     public boolean RunDriveToPark_fromTMP;
     public boolean RunDriveToPark_fromMK;
 
-    public Step05ArchitectureControl(Engine engine) {
+    public ArchitectureControl(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);

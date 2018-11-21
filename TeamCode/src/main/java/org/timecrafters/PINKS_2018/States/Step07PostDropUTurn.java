@@ -3,12 +3,13 @@ package org.timecrafters.PINKS_2018.States;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.timecrafters.PINKS_2018.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class Step07PostDropUTurn extends State {
     private boolean Complete = false;
-    public Step05ArchitectureControl Control;
+    public ArchitectureControl Control;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
     private boolean FirstRun;
@@ -21,7 +22,7 @@ public class Step07PostDropUTurn extends State {
     private double whealCircumference = 4;
 
 
-    public Step07PostDropUTurn(Engine engine, Step05ArchitectureControl control) {
+    public Step07PostDropUTurn(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
 

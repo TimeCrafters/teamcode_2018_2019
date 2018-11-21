@@ -1,15 +1,17 @@
 package org.timecrafters.PINKS_2018.States;
 
-
+import org.timecrafters.PINKS_2018.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class Step13aDriveToPark_fromMK extends State {
+public class Step13OptionBDriveToPark_fromTMP extends State {
     private boolean Complete = false;
-    public Step05ArchitectureControl Control;
+    public ArchitectureControl Control;
 
 
-    public Step13aDriveToPark_fromMK(Engine engine, Step05ArchitectureControl control) {
+
+
+    public Step13OptionBDriveToPark_fromTMP(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
@@ -20,11 +22,10 @@ public class Step13aDriveToPark_fromMK extends State {
 
     @Override
     public void exec() {
-
-        if (Control.RunDriveToPark_fromMK) {
+        if (Control.RunDriveToPark_fromTMP) {
             Complete = true;
             if (Complete) {
-                engine.telemetry.addLine("Completed Step13aDriveToPark_fromMK");
+                engine.telemetry.addLine("Completed Step13OptionBDriveToPark_fromTMP");
                 engine.telemetry.update();
                 sleep(1000);
                 setFinished(true);
@@ -33,6 +34,5 @@ public class Step13aDriveToPark_fromMK extends State {
             setFinished(true);
         }
     }
-
 
 }

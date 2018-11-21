@@ -1,14 +1,15 @@
 package org.timecrafters.PINKS_2018.States;
 
+import org.timecrafters.PINKS_2018.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 public class Step10MineralKick extends State {
     private boolean Complete = false;
-    public Step05ArchitectureControl Control;
+    public ArchitectureControl Control;
 
 
-    public Step10MineralKick(Engine engine, Step05ArchitectureControl control) {
+    public Step10MineralKick(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }

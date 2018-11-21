@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.timecrafters.PINKS_2018.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
@@ -23,7 +24,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class Step08DriveToDetect extends State {
     private boolean Complete = false;
-    public Step05ArchitectureControl Control;
+    public ArchitectureControl Control;
     VuforiaLocalizer Vuforia;
     VuforiaLocalizer.Parameters parameters;
     VuforiaTrackables visionTargets;
@@ -33,9 +34,10 @@ public class Step08DriveToDetect extends State {
     private List<VuforiaTrackable> AllTargets = new ArrayList<VuforiaTrackable>();
     private boolean targetVisible;
 
-    final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-    final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-    final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+
+    int CAMERA_FORWARD_DISPLACEMENT;  // eg: Camera is 110 mm in front of robot center
+    int CAMERA_VERTICAL_DISPLACEMENT; // eg: Camera is 200 mm above ground
+    int CAMERA_LEFT_DISPLACEMENT; // eg: Camera is ON the robot's center line
 
     private static final float mmPerInch        = 25.4f;
     private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
@@ -48,9 +50,12 @@ public class Step08DriveToDetect extends State {
     public static final String VUFORIA_KEY = "AcU+kbn/////AAAAGWDmHA7mS0gCoiMy9pA5e1AVyLZeqKejLOtP9c3COfi9g9m4Cs1XuVQVdqRFhyrFkNUynXwrhQyV65hPnPkGgRky9MjHlLLCWuqdpHzDLJonuOSBh5zVO11PleXH+2utK1lCnbBxvOM+/OrB9EAHUBrcB0ItRxjzFQOe8TXrjGGe1IyjC/Ljke3lZf/LVVinej3zjGNqwsNQoZ0+ahxYNPCJOdzRFkXjyMDXJVDQYMtVQcWKpbEM6dJ9jQ9f0UFIVXANJ7CC8ZDyrl2DQ8o4sOX981OktCKWW0d4PH0IwAw/c2nGgt1t2V/7PwTwysBYM1N+SjVpMNRg52u9gNl9os4ulF6AZw+U2LcVj4kqGZDi";
 
 
-    public Step08DriveToDetect(Engine engine, Step05ArchitectureControl control) {
+    public Step08DriveToDetect(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
+        CAMERA_FORWARD_DISPLACEMENT  = Control.AppReader.get("RunDriveToDetect").variable("CamraForward");
+        CAMERA_VERTICAL_DISPLACEMENT = Control.AppReader.get("RunDriveToDetect").variable("CamraVertical");
+        CAMERA_LEFT_DISPLACEMENT     = Control.AppReader.get("RunDriveToDetect").variable("CamraLeft");
     }
 
     public void init() {
@@ -91,6 +96,9 @@ public class Step08DriveToDetect extends State {
     }
 
     public void telemetry() {
+
+
+
         if (targetVisible) {
             // express position (translation) of robot in inches.
             VectorF translation = lastKnownLocation.getTranslation();
