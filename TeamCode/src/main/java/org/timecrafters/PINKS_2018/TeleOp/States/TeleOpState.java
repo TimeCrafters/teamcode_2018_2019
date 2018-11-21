@@ -41,19 +41,27 @@ public class TeleOpState extends State {
     @Override
     public void exec() throws InterruptedException {
         ButtonUpCheck1.update();
+        ButtonUpCheck2.update();
+
+        //Sets Motors to Changeable Power
         RightDrive.setPower(engine.gamepad1.right_stick_y * SpeedMultiplier);
         LeftDrive.setPower(engine.gamepad1.left_stick_y * SpeedMultiplier);
+
+        //A "Sprint" button
         if (engine.gamepad1.left_bumper) {SpeedMultiplier = 1;}
 
+        //A "Sneak" Toggle
         if (ButtonUpCheck1.check("right_bumper")) {
             SlowToggle = !SlowToggle;
             if (SlowToggle) {SpeedMultiplier = 0.3;}
         }
 
+        //Sets to Original speed
         if (!SlowToggle && !engine.gamepad1.left_bumper) {
             SpeedMultiplier = 0.7;
         }
 
+        //Collection Toggle
         if (ButtonUpCheck2.check("a")) {
             CollectionToggle = !CollectionToggle;
             if (CollectionToggle) {
@@ -63,6 +71,7 @@ public class TeleOpState extends State {
             }
         }
 
+        //Arm Control with joysticks
         Shoulder.setPower(engine.gamepad2.left_stick_y);
         ElbowServo.setPower(engine.gamepad2.right_stick_x);
 
