@@ -13,10 +13,14 @@ public class Step11TeamMarkerDrive extends State {
     private boolean FirstRun = true;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
-    private double Power;
+    private double LeftPower;
+    private double RightPower;
     private int RightCurrentTick;
     private int LeftCurrentTick;
-    private int distanceTicks;
+    private int distanceINRight;
+    private int distanceINLeft;
+    private int distanceTicksRight;
+    private int distanceTicksLeft;
 
 
 
@@ -28,15 +32,44 @@ public class Step11TeamMarkerDrive extends State {
     public void init() {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
+        LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         DriveStep = 1;
     }
 
     @Override
     public void exec() {
         if (Control.RunTeamMarkerDrive) {
-            
+
+            RightCurrentTick = RightDrive.getCurrentPosition();
+            LeftCurrentTick = LeftDrive.getCurrentPosition();
+
             if (DriveStep == 1) {
 
+                LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftPowerArc");
+                RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable("RightPowerArc");
+                distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInArc");
+                distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInArc");
+
+                Drive(LeftPower, RightPower, distanceINLeft, distanceTicksRight);
+            }
+
+            if (DriveStep == 2) {
+
+                LeftPower = -1;
+                RightPower = -1;
+
+                distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInRevers");
+                distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInRevers");
+
+                Drive(LeftPower, RightPower, distanceINLeft, distanceTicksRight);
+            }
+
+            if (DriveStep == 3) {
+                Complete = true;
             }
 
             if (Complete) {
@@ -54,6 +87,34 @@ public class Step11TeamMarkerDrive extends State {
 
     private int DistanceConverter(int distanceIN, int whealCircumference) {
         return (int) ((distanceIN * 288) / (whealCircumference * Math.PI));
+    }
+
+    private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
+
+        distanceTicksLeft = DistanceConverter(distanceINLeft,4);
+        distanceTicksRight = DistanceConverter(distanceINRight,4);
+
+        LeftDrive.setPower(LeftPower);
+        RightDrive.setPower(RightPower);
+
+        if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
+            RightDrive.setPower(0);
+        }
+
+        if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            LeftDrive.setPower(0);
+        }
+
+        if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            DriveStep++;
+
+            LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
     }
 
 
