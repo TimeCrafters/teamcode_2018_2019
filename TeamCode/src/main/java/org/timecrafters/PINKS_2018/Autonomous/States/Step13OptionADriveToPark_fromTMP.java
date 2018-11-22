@@ -1,13 +1,15 @@
 package org.timecrafters.PINKS_2018.Autonomous.States;
 
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class Step13OptionADriveToPark_fromMK extends State {
+public class Step13OptionADriveToPark_fromTMP extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
     private int DriveStep;
@@ -23,7 +25,7 @@ public class Step13OptionADriveToPark_fromMK extends State {
     private int distanceTicksLeft;
 
 
-    public Step13OptionADriveToPark_fromMK(Engine engine, ArchitectureControl control) {
+    public Step13OptionADriveToPark_fromTMP(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
     }
@@ -42,14 +44,23 @@ public class Step13OptionADriveToPark_fromMK extends State {
 
     @Override
     public void exec() {
-        if (Control.RunDriveToPark_fromMK) {
+        engine.telemetry.addLine("Running DriveToPark_fromTMP");
+        engine.telemetry.addData("Drive Step", DriveStep);
+        engine.telemetry.addData("distanceInLeft", distanceINLeft);
+        engine.telemetry.addData("distanceInRight", distanceINRight);
+        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
+        engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);
+        engine.telemetry.update();
+        if (Control.RunDriveToPark_fromTMP) {
+
+            RightCurrentTick = RightDrive.getCurrentPosition();
+            LeftCurrentTick = LeftDrive.getCurrentPosition();
 
             if (DriveStep == 1) {
-
-                LeftPower = Control.AppReader.get("RunDriveToPark_fromMK").variable("LeftPowerTurn");
-                RightPower = Control.AppReader.get("RunDriveToPark_fromMK").variable("RightPowerTurn");
-                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromMK").variable("LeftInTurn");
-                distanceINRight = Control.AppReader.get("RunDriveToPark_fromMK").variable("RightInTurn");
+                LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftPowerTurn");
+                RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightPowerTurn");
+                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftInTurn");
+                distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightInTurn");
 
                 Drive(LeftPower, RightPower, distanceINLeft, distanceTicksRight);
 
@@ -57,10 +68,10 @@ public class Step13OptionADriveToPark_fromMK extends State {
 
             if (DriveStep == 2) {
 
-                LeftPower = Control.AppReader.get("RunDriveToPark_fromMK").variable("LeftPowerDrive");
-                RightPower = Control.AppReader.get("RunDriveToPark_fromMK").variable("RightPowerDrive");
-                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromMK").variable("LeftInDrive");
-                distanceINRight = Control.AppReader.get("RunDriveToPark_fromMK").variable("RightInDrive");
+                LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftPowerDrive");
+                RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightPowerDrive");
+                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftInDrive");
+                distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightInDrive");
 
                 Drive(LeftPower, RightPower, distanceINLeft, distanceTicksRight);
 
@@ -71,7 +82,7 @@ public class Step13OptionADriveToPark_fromMK extends State {
             }
 
             if (Complete) {
-                engine.telemetry.addLine("Completed Step13OptionADriveToPark_fromMK");
+                engine.telemetry.addLine("Completed RunDriveToPark_fromTMP");
                 engine.telemetry.update();
                 sleep(1000);
                 setFinished(true);
@@ -86,7 +97,7 @@ public class Step13OptionADriveToPark_fromMK extends State {
     }
 
     private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
-
+        Log.i("driveMethodRunning", "Drive Running");
         distanceTicksLeft = DistanceConverter(distanceINLeft,4);
         distanceTicksRight = DistanceConverter(distanceINRight,4);
 
@@ -109,11 +120,12 @@ public class Step13OptionADriveToPark_fromMK extends State {
             RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             DriveStep++;
 
+
         }
     }
 
     @Override
     public void telemetry() {
-        engine.telemetry.addLine("Running DriveToPark_fromMK");
+
     }
 }

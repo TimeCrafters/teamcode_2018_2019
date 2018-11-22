@@ -42,6 +42,14 @@ public class Step11TeamMarkerDrive extends State {
 
     @Override
     public void exec() {
+        engine.telemetry.addLine("Running RunTeamMarkerDrive");
+        engine.telemetry.addData("Drive Step", DriveStep);
+        engine.telemetry.addData("distanceInLeft", distanceINLeft);
+        engine.telemetry.addData("distanceInRight", distanceINRight);
+        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
+        engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);
+        engine.telemetry.update();
+
         if (Control.RunTeamMarkerDrive) {
 
             RightCurrentTick = RightDrive.getCurrentPosition();
@@ -59,8 +67,8 @@ public class Step11TeamMarkerDrive extends State {
 
             if (DriveStep == 2) {
 
-                LeftPower = -1;
-                RightPower = -1;
+                LeftPower = -0.7;
+                RightPower = -0.7;
 
                 distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInReverse");
                 distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInReverse");
@@ -119,7 +127,7 @@ public class Step11TeamMarkerDrive extends State {
 
     @Override
     public void telemetry() {
-        engine.telemetry.addLine("Running DriveToPark_fromMK");
+
     }
 
 }
