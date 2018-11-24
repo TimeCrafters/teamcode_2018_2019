@@ -28,7 +28,7 @@ public class Step06DropRobot extends State {
     public void exec() {
         if (Control.RunDropRobot) {
 
-            servoLeft.setPosition(.1);
+            servoLeft.setPosition(.2);
             servoRight.setPosition(1);
             sleep(1500);
             servoLeft.setPosition(1);

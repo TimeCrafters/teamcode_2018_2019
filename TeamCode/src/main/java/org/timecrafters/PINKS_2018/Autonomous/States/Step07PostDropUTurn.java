@@ -44,33 +44,16 @@ public class Step07PostDropUTurn extends State {
         LeftPower = Control.AppReader.get("RunPostDropUTurn").variable("LeftPower");
         RightPower = Control.AppReader.get("RunPostDropUTurn").variable("RightPower");
 
-        distanceTicksLeft = DistanceConverter(distanceINLeft, 4);
-        distanceTicksRight = DistanceConverter(distanceINRight, 4);
-
     }
 
     @Override
     public void exec() {
         if (Control.RunPostDropUTurn) {
 
-            RightDrive.setPower(-RightPower);
-            LeftDrive.setPower(-LeftPower);
-
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
 
-
-            if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
-                RightDrive.setPower(0);
-            }
-
-            if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
-                LeftDrive.setPower(0);
-            }
-
-            if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
-                Complete = true;
-            }
+            Drive(-LeftPower, -RightPower, distanceINLeft, distanceINRight);
 
             if (Complete) {
                 engine.telemetry.addLine("Completed Step07PostDropUTurn");
@@ -87,6 +70,34 @@ public class Step07PostDropUTurn extends State {
         return (int) ((distanceIN * 288) / (whealCircumference * Math.PI));
     }
 
+    private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
+
+        distanceTicksLeft = DistanceConverter(distanceINLeft, 4);
+        distanceTicksRight = DistanceConverter(distanceINRight, 4);
+
+        LeftDrive.setPower(LeftPower);
+        RightDrive.setPower(RightPower);
+
+        if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
+            RightDrive.setPower(0);
+        }
+
+        if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            LeftDrive.setPower(0);
+        }
+
+        if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            Complete = true;
+
+
+            LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
     @Override
     public void telemetry() {
         engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);

@@ -1,5 +1,7 @@
 package org.timecrafters.PINKS_2018.Autonomous.States;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
@@ -42,13 +44,6 @@ public class Step11TeamMarkerDrive extends State {
 
     @Override
     public void exec() {
-        engine.telemetry.addLine("Running RunTeamMarkerDrive");
-        engine.telemetry.addData("Drive Step", DriveStep);
-        engine.telemetry.addData("distanceInLeft", distanceINLeft);
-        engine.telemetry.addData("distanceInRight", distanceINRight);
-        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
-        engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);
-        engine.telemetry.update();
 
         if (Control.RunTeamMarkerDrive) {
 
@@ -59,6 +54,7 @@ public class Step11TeamMarkerDrive extends State {
 
                 LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftPowerArc");
                 RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable("RightPowerArc");
+                RightPower = - RightPower;
                 distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInArc");
                 distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInArc");
 
@@ -67,8 +63,8 @@ public class Step11TeamMarkerDrive extends State {
 
             if (DriveStep == 2) {
 
-                LeftPower = -0.7;
-                RightPower = -0.7;
+                LeftPower = 0.7;
+                RightPower = 0.7;
 
                 distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInReverse");
                 distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInReverse");
@@ -116,6 +112,7 @@ public class Step11TeamMarkerDrive extends State {
         if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
             DriveStep++;
 
+
             LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -127,6 +124,12 @@ public class Step11TeamMarkerDrive extends State {
 
     @Override
     public void telemetry() {
+        engine.telemetry.addLine("Running RunTeamMarkerDrive");
+        engine.telemetry.addData("Drive Step", DriveStep);
+        engine.telemetry.addData("LeftPower", LeftPower);
+        engine.telemetry.addData("RightPower", RightPower);
+        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
+        engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);
 
     }
 

@@ -52,7 +52,7 @@ public class Step09MineralDetect extends State {
 
     public void init() {
         DriveOnly = Control.AppReader.get("RunMineralDetect").variable("OnlyDrive");
-        distanceIN = Control.AppReader.get("RunMineralDetect").variable("DriveDistance");
+        distanceIN = Control.AppReader.get("RunMineralDetect").variable("distanceIN");
         Power = Control.AppReader.get("RunMineralDetect").variable("Power");
 
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
