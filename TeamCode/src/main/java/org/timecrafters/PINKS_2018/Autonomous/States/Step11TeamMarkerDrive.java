@@ -12,7 +12,7 @@ public class Step11TeamMarkerDrive extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
     private int DriveStep;
-    private boolean FirstRun = true;
+    private boolean FirstRun;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
     private double LeftPower;
@@ -34,18 +34,21 @@ public class Step11TeamMarkerDrive extends State {
     public void init() {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
-        LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         DriveStep = 1;
+        FirstRun = true;
     }
 
     @Override
     public void exec() {
 
         if (Control.RunTeamMarkerDrive) {
+            if (FirstRun) {
+                LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                FirstRun = false;
+            }
 
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
@@ -54,11 +57,10 @@ public class Step11TeamMarkerDrive extends State {
 
                 LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftPowerArc");
                 RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable("RightPowerArc");
-                RightPower = - RightPower;
                 distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInArc");
                 distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInArc");
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceTicksRight);
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }
 
             if (DriveStep == 2) {
@@ -69,7 +71,7 @@ public class Step11TeamMarkerDrive extends State {
                 distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInReverse");
                 distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInReverse");
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceTicksRight);
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }
 
             if (DriveStep == 3) {
@@ -98,15 +100,16 @@ public class Step11TeamMarkerDrive extends State {
         distanceTicksLeft = DistanceConverter(distanceINLeft,4);
         distanceTicksRight = DistanceConverter(distanceINRight,4);
 
-        LeftDrive.setPower(LeftPower);
-        RightDrive.setPower(RightPower);
-
         if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
             RightDrive.setPower(0);
+        } else {
+            RightDrive.setPower(RightPower);
         }
 
         if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
             LeftDrive.setPower(0);
+        } else {
+            LeftDrive.setPower(LeftPower);
         }
 
         if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
@@ -126,10 +129,13 @@ public class Step11TeamMarkerDrive extends State {
     public void telemetry() {
         engine.telemetry.addLine("Running RunTeamMarkerDrive");
         engine.telemetry.addData("Drive Step", DriveStep);
-        engine.telemetry.addData("LeftPower", LeftPower);
-        engine.telemetry.addData("RightPower", RightPower);
+        engine.telemetry.addData("RightPower", RightDrive.getPower());
         engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
-        engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);
+        engine.telemetry.addData("Right Target IN", distanceINRight);
+        engine.telemetry.addData("Left Target IN", distanceINLeft);
+        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
+        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
+
 
     }
 

@@ -58,10 +58,6 @@ public class Step09MineralDetect extends State {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
 
-        LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         DistanceConverter();
 
@@ -87,6 +83,11 @@ public class Step09MineralDetect extends State {
             CurrentTime = System.currentTimeMillis();
             if (FirstRun) {
                 FirstRun = false;
+                LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
                 PreviousTriggerTime = CurrentTime;
                 RightDrive.setPower(Power);
                 LeftDrive.setPower(Power);

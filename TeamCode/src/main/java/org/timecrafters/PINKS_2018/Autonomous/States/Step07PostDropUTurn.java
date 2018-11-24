@@ -9,6 +9,7 @@ import org.timecrafters.engine.State;
 
 public class Step07PostDropUTurn extends State {
     private boolean Complete = false;
+    private boolean FirstRun;
     public ArchitectureControl Control;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
@@ -33,22 +34,27 @@ public class Step07PostDropUTurn extends State {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
         RightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         distanceINLeft = Control.AppReader.get("RunPostDropUTurn").variable("LeftIN");
         distanceINRight = Control.AppReader.get("RunPostDropUTurn").variable("RightIN");
 
         LeftPower = Control.AppReader.get("RunPostDropUTurn").variable("LeftPower");
         RightPower = Control.AppReader.get("RunPostDropUTurn").variable("RightPower");
 
+        FirstRun = true;
+
     }
 
     @Override
     public void exec() {
         if (Control.RunPostDropUTurn) {
+
+            if (FirstRun) {
+                LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                FirstRun = false;
+            }
 
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
