@@ -9,17 +9,19 @@ import org.timecrafters.engine.State;
 
 public class Step07PostDropUTurn extends State {
     private boolean Complete = false;
+    private boolean FirstRun;
     public ArchitectureControl Control;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
-    private boolean FirstRun;
     private int RightCurrentTick;
     private int LeftCurrentTick;
-    private int distanceINRight = 43;
-    private int distanceINLeft = 22;
+    private int distanceINRight;
+    private int distanceINLeft;
     private int distanceTicksRight;
     private int distanceTicksLeft;
-    private double whealCircumference = 4;
+    private double RightPower;
+    private double LeftPower;
+
 
 
     public Step07PostDropUTurn(Engine engine, ArchitectureControl control) {
@@ -29,51 +31,35 @@ public class Step07PostDropUTurn extends State {
     }
 
     public void init() {
-        LeftDrive = engine.hardwareMap.dcMotor.get("leftDrive");
-        RightDrive = engine.hardwareMap.dcMotor.get("rightDrive");
+        LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
+        RightDrive = Control.PinksHardwareConfig.pRightMotor;
         RightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        DistanceConverter();
+        distanceINLeft = Control.AppReader.get("RunPostDropUTurn").variable("LeftIN");
+        distanceINRight = Control.AppReader.get("RunPostDropUTurn").variable("RightIN");
+
+        LeftPower = Control.AppReader.get("RunPostDropUTurn").variable("LeftPower");
+        RightPower = Control.AppReader.get("RunPostDropUTurn").variable("RightPower");
 
         FirstRun = true;
 
     }
 
-    private void DistanceConverter() {
-        distanceTicksRight = (int) ((distanceINRight * 288) / (whealCircumference * Math.PI));
-        distanceTicksLeft = (int) ((distanceINLeft * 288) / (whealCircumference * Math.PI));
-    }
-
     @Override
     public void exec() {
         if (Control.RunPostDropUTurn) {
+
             if (FirstRun) {
-                engine.telemetry.addLine("FIRSTRUN!!!");
-                sleep(1000);
+                LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 FirstRun = false;
             }
-
-            RightDrive.setPower(-0.925);
-            LeftDrive.setPower(-0.358139534883721);
 
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
 
-
-            if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
-                RightDrive.setPower(0);
-            }
-
-            if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
-                LeftDrive.setPower(0);
-            }
-
-            if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
-                Complete = true;
-            }
+            Drive(-LeftPower, -RightPower, distanceINLeft, distanceINRight);
 
             if (Complete) {
                 engine.telemetry.addLine("Completed Step07PostDropUTurn");
@@ -86,6 +72,38 @@ public class Step07PostDropUTurn extends State {
         }
     }
 
+    private int DistanceConverter(int distanceIN, int whealCircumference) {
+        return (int) ((distanceIN * 288) / (whealCircumference * Math.PI));
+    }
+
+    private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
+
+        distanceTicksLeft = DistanceConverter(distanceINLeft, 4);
+        distanceTicksRight = DistanceConverter(distanceINRight, 4);
+
+        LeftDrive.setPower(LeftPower);
+        RightDrive.setPower(RightPower);
+
+        if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
+            RightDrive.setPower(0);
+        }
+
+        if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            LeftDrive.setPower(0);
+        }
+
+        if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            Complete = true;
+
+
+            LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+    }
     @Override
     public void telemetry() {
         engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);

@@ -52,10 +52,12 @@ public class Step09MineralDetect extends State {
 
     public void init() {
         DriveOnly = Control.AppReader.get("RunMineralDetect").variable("OnlyDrive");
-        distanceIN = Control.AppReader.get("RunMineralDetect").variable("DriveDistance");
+        distanceIN = Control.AppReader.get("RunMineralDetect").variable("distanceIN");
+        Power = Control.AppReader.get("RunMineralDetect").variable("Power");
 
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
+
 
         DistanceConverter();
 
@@ -71,6 +73,8 @@ public class Step09MineralDetect extends State {
         HightValues.add(0.0);
         HightValues.add(0.0);
 
+        FirstRun = true;
+
     }
 
     @Override
@@ -79,11 +83,19 @@ public class Step09MineralDetect extends State {
             CurrentTime = System.currentTimeMillis();
             if (FirstRun) {
                 FirstRun = false;
+                LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
                 PreviousTriggerTime = CurrentTime;
+                RightDrive.setPower(Power);
+                LeftDrive.setPower(Power);
             }
 
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
+
 
             if (Math.abs(RightCurrentTick) >= distanceTicks) {
                 RightDrive.setPower(0);
@@ -156,7 +168,6 @@ public class Step09MineralDetect extends State {
 
     @Override
     public void telemetry() {
-        engine.telemetry.addData("Current Time", CurrentTime);
-        engine.telemetry.addData("PreviousTime", PreviousTriggerTime);
+        engine.telemetry.addLine("Running Mineral Detect");
     }
 }

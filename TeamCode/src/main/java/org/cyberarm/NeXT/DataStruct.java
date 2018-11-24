@@ -11,6 +11,7 @@ public class DataStruct {
     Hash of Strings mapped to Strings, those strings are various types mapped to stings:
     Boolean -> "Bxfalse"
     Integer -> "Ix100"
+    Integer -> "Lx123456789"
     Double  -> "Dx0.1"
     Float   -> "Fx10.1"
     String  -> "SxWords can go here."
@@ -68,6 +69,9 @@ public class DataStruct {
       case "I": {
         return (T) Integer.valueOf(split[(split.length-1)]);
       }
+      case "L": {
+        return (T) Long.valueOf(split[(split.length-1)]);
+      }
       case "S": {
         return (T) String.valueOf(split[(split.length-1)]);
       }
@@ -93,6 +97,9 @@ public class DataStruct {
       case "I": {
         return "Integer";
       }
+      case "L": {
+        return "Long";
+      }
       case "S": {
         return "String";
       }
@@ -115,6 +122,9 @@ public class DataStruct {
       }
       case "Integer": {
         return "Ix"+value;
+      }
+      case "Long": {
+        return "Lx"+value;
       }
       case "String": {
         return "Sx"+value;
