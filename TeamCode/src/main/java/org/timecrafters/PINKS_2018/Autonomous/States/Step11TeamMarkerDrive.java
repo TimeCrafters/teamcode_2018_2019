@@ -11,6 +11,7 @@ import org.timecrafters.engine.State;
 public class Step11TeamMarkerDrive extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
+    private boolean PosDepot;
     private int DriveStep;
     private boolean FirstRun;
     private DcMotor RightDrive;
@@ -26,9 +27,10 @@ public class Step11TeamMarkerDrive extends State {
 
 
 
-    public Step11TeamMarkerDrive(Engine engine, ArchitectureControl control) {
+    public Step11TeamMarkerDrive(Engine engine, ArchitectureControl control, boolean posDepot) {
         this.engine = engine;
         this.Control = control;
+        this.PosDepot = posDepot;
     }
 
     public void init() {
@@ -53,7 +55,19 @@ public class Step11TeamMarkerDrive extends State {
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
 
-            if (DriveStep == 1) {
+
+            //the PosDepot Variable enables the different drive patterns for
+            if (DriveStep == 1 && PosDepot) {
+
+                LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftPowerArc");
+                RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable("RightPowerArc");
+                distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInArc");
+                distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInArc");
+
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
+
+            if (DriveStep == 1 && !PosDepot) {
 
                 LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftPowerArc");
                 RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable("RightPowerArc");
