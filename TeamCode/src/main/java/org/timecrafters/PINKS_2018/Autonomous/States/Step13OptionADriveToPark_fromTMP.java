@@ -12,6 +12,7 @@ import org.timecrafters.engine.State;
 public class Step13OptionADriveToPark_fromTMP extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
+    private boolean PosDepot;
     private boolean FirstRun;
     private int DriveStep;
     private DcMotor RightDrive;
@@ -26,9 +27,10 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     private int distanceTicksLeft;
 
 
-    public Step13OptionADriveToPark_fromTMP(Engine engine, ArchitectureControl control) {
+    public Step13OptionADriveToPark_fromTMP(Engine engine, ArchitectureControl control, boolean posDepot) {
         this.engine = engine;
         this.Control = control;
+        this.PosDepot = posDepot;
     }
 
     public void init() {
@@ -40,13 +42,6 @@ public class Step13OptionADriveToPark_fromTMP extends State {
 
     @Override
     public void exec() {
-        engine.telemetry.addLine("Running DriveToPark_fromTMP");
-        engine.telemetry.addData("Drive Step", DriveStep);
-        engine.telemetry.addData("distanceInLeft", distanceINLeft);
-        engine.telemetry.addData("distanceInRight", distanceINRight);
-        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
-        engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);
-        engine.telemetry.update();
         if (Control.RunDriveToPark_fromTMP) {
 
             if (FirstRun) {
@@ -60,49 +55,67 @@ public class Step13OptionADriveToPark_fromTMP extends State {
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
 
-            if (DriveStep == 1) {
-                LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("PowerReverse");
-                RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("PowerReverse");
-                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
-                distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
+            if (PosDepot) {
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                if (DriveStep == 1) {
+                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("PowerReverse");
+                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("PowerReverse");
+                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
+                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
 
-            }
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
 
-            if (DriveStep == 2) {
+                }
 
-                LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftPowerTurn");
-                RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightPowerTurn");
-                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftInTurn");
-                distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightInTurn");
+                if (DriveStep == 2) {
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftPowerTurn");
+                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightPowerTurn");
+                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftInTurn");
+                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightInTurn");
 
-            }
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
 
-            if (DriveStep == 3) {
+                }
 
-                LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDrivePower");
-                RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDrivePower");
-                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDriveIN");
-                distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDriveIN");
+                if (DriveStep == 3) {
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-            }
+                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDrivePower");
+                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDrivePower");
+                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDriveIN");
+                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDriveIN");
 
-            if (DriveStep == 4) {
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                }
 
-                LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LParkArcPower");
-                RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RParkArcPower");
-                distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LParkArcIN");
-                distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RParkArcIN");
+                if (DriveStep == 4) {
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-            }
+                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LParkArcPower");
+                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RParkArcPower");
+                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LParkArcIN");
+                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RParkArcIN");
 
-            if (DriveStep == 5) {
-                Complete = true;
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                }
+
+                if (DriveStep == 5) {
+                    Complete = true;
+                }
+            } else {
+
+                if (DriveStep == 1) {
+                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower");
+                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower");
+                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
+                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
+
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                }
+
+                if (DriveStep == 2) {
+                    Complete = true;
+                }
+
             }
 
             if (Complete) {

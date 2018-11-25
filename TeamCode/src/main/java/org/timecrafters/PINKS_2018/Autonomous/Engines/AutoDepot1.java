@@ -30,7 +30,7 @@ public class AutoDepot1 extends Engine {
         addState(new Step10MineralKick(this, control));
         addState(new Step11TeamMarkerDrive(this, control, true));
         addState(new Step12TeamMarkerPlace(this, control));
-        addState(new Step13OptionADriveToPark_fromTMP(this, control));
+        addState(new Step13OptionADriveToPark_fromTMP(this, control, true));
         addState(new Step13OptionBDriveToPark_fromMK( this, control));
 
     }

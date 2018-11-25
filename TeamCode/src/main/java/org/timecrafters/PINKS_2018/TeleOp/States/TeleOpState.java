@@ -101,16 +101,23 @@ public class TeleOpState extends State {
         if (engine.gamepad2.right_trigger != 0 || engine.gamepad2.left_trigger != 0 ){
             //running the motor from controller
             mineralArmPostitionSet = false;
-            mineralArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            mineralArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
             //clockwise turning for mineral arm
-            mineralArm.setPower(-engine.gamepad2.right_trigger);
+            if (engine.gamepad2.right_trigger != 0 && engine.gamepad2.left_trigger == 0) {
+                mineralArm.setPower(-engine.gamepad2.right_trigger);
+            }
+
             //counter clockwise turning for mineral arm
-            mineralArm.setPower(engine.gamepad2.left_trigger);
+            if (engine.gamepad2.left_trigger != 0 && engine.gamepad2.right_trigger == 0) {
+                mineralArm.setPower(engine.gamepad2.left_trigger);
+            }
         }
+
         if (mineralArmPostitionSet == true) {
             //setting the position when stopped
             mineralArm.setTargetPosition(mineralArmPosition);
-            mineralArm.setPower(0.2);
+            mineralArm.setPower(0.5);
         }
 //**************************************************************************************************
 
@@ -169,6 +176,8 @@ public class TeleOpState extends State {
         engine.telemetry.addData("mineral arm position", mineralArmPosition);
         engine.telemetry.addData("mineral arm position set", mineralArmPostitionSet);
         engine.telemetry.addData("arm motor", mineralArm.getPower());
+        engine.telemetry.addData("Right Trigger Value", engine.gamepad2.right_trigger);
+        engine.telemetry.addData("Left Trigger Value", engine.gamepad2.left_trigger);
         engine.telemetry.addData("arm motor trigger postition", engine.gamepad2.right_trigger);
         engine.telemetry.addData("winch encoder",winchUp.getCurrentPosition());
     }

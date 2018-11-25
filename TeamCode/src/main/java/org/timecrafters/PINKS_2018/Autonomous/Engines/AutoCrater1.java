@@ -30,7 +30,7 @@ public class AutoCrater1 extends Engine {
         addState(new Step10MineralKick(this, control));
         addState(new Step11TeamMarkerDrive(this, control, false));
         addState(new Step12TeamMarkerPlace(this, control));
-        addState(new Step13OptionADriveToPark_fromTMP(this, control));
+        addState(new Step13OptionADriveToPark_fromTMP(this, control, false));
         addState(new Step13OptionBDriveToPark_fromMK( this, control));
 
     }

@@ -37,7 +37,7 @@ public class Step12TeamMarkerPlace extends State {
 
             if (!ReachedTarget) {
                 ClipArm.setTargetPosition(PlacePosition);
-                ClipArm.setPower(0.15);
+                ClipArm.setPower(0.5);
                 if (ClipArm.getCurrentPosition() >= PlacePosition) {
                     ReachedTarget = true;
                     sleep(WaitTime);
