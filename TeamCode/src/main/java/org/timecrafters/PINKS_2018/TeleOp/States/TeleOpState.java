@@ -15,14 +15,17 @@ public class TeleOpState extends State {
     private DcMotor mineralArm;
     private DcMotor clipArm;
     private DcMotor winchUp;
-    private double SpeedMultiplier;
     private InputChecker ButtonUpCheck1;
     private InputChecker ButtonUpCheck2;
     private boolean SlowToggle;
     private boolean collectionToggle;
+    private boolean winchToggle;
+    private long winchTime;
+    private double winchPower;
+    private int winchPosition;
+    private boolean winchManuelMode = true;
     private double collectionPower;
     private long collectionTime;
-    private  double mineralArmPower;
     private  int mineralArmPosition;
     private  boolean mineralArmPostitionSet;
 
@@ -43,9 +46,10 @@ public class TeleOpState extends State {
         winchUp = engine.hardwareMap.dcMotor.get("winchUp");
        // LeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         SlowToggle = false;
-        SpeedMultiplier = 0.7;
         mineralArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mineralArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -55,9 +59,7 @@ public class TeleOpState extends State {
         ButtonUpCheck2.update();
 
 
-        //set motor power
-        RightDrive.setPower(engine.gamepad1.right_stick_y);
-        LeftDrive.setPower(engine.gamepad1.left_stick_y);
+
 //--------------------------------------------------------------------------------------------------
         //code for elbow and mineral collect
 
@@ -89,7 +91,7 @@ public class TeleOpState extends State {
 //**************************************************************************************************
         //code for running the mineral arm
 
-        if (engine.gamepad2.right_trigger == 0 || engine.gamepad2.left_trigger == 0 && !mineralArmPostitionSet){
+        if (engine.gamepad2.right_trigger == 0 && engine.gamepad2.left_trigger == 0 && !mineralArmPostitionSet){
             //finding the current position
             mineralArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             mineralArmPosition = mineralArm.getCurrentPosition();
@@ -101,7 +103,7 @@ public class TeleOpState extends State {
             mineralArmPostitionSet = false;
             mineralArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             //clockwise turning for mineral arm
-            mineralArm.setPower(engine.gamepad2.right_trigger*-1);
+            mineralArm.setPower(-engine.gamepad2.right_trigger);
             //counter clockwise turning for mineral arm
             mineralArm.setPower(engine.gamepad2.left_trigger);
         }
@@ -112,17 +114,62 @@ public class TeleOpState extends State {
         }
 //**************************************************************************************************
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        //clip arm & winch up controls
+
+        if (engine.gamepad2.left_stick_y >= 0) {
+            clipArm.setPower(engine.gamepad2.left_stick_y/4);
+        }else{
+            clipArm.setPower(engine.gamepad2.left_stick_y);
+        }
 
 
+        if (engine.gamepad2.right_stick_y != 0) {
+            winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            winchUp.setPower(engine.gamepad2.right_stick_y);
+            winchManuelMode = true;
+        }else if (engine.gamepad2.right_stick_y == 0){
+            if (winchManuelMode == false) {
+                winchUp.setPower(winchPower);
+                winchUp.setTargetPosition(winchPosition);
+            }else{
+                winchUp.setPower(0);
+            }
+        }
 
+        if (System.currentTimeMillis() >= winchTime) {
+            if (engine.gamepad2.b && winchToggle == false) {
+                winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                winchToggle = true;
+                winchTime = System.currentTimeMillis() + 500;
+                winchPower = 1.0;
+                winchManuelMode = false;
+            } else if (engine.gamepad2.b && winchToggle == true) {
+                winchToggle = false;
+                winchTime = System.currentTimeMillis() + 500;
+                winchPower = 1.0;
+                winchPosition = winchUp.getCurrentPosition();
+                winchUp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                winchUp.setTargetPosition(winchPosition);
+                winchManuelMode = false;
+            }
+        }
+
+        //drive train controls
+        RightDrive.setPower(engine.gamepad1.right_stick_y);
+
+        LeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     }
 
     public void telemetry() {
         engine.telemetry.addData("Toggle", SlowToggle);
-        engine.telemetry.addData("SpeedMultiplier", SpeedMultiplier);
         engine.telemetry.addData("mineral arm position", mineralArmPosition);
         engine.telemetry.addData("mineral arm position set", mineralArmPostitionSet);
         engine.telemetry.addData("arm motor", mineralArm.getPower());
-        engine.telemetry.addData("arm motor joy stick postition", engine.gamepad2.left_stick_y);
+        engine.telemetry.addData("arm motor trigger postition", engine.gamepad2.right_trigger);
+        engine.telemetry.addData("winch encoder",winchUp.getCurrentPosition());
     }
 }
