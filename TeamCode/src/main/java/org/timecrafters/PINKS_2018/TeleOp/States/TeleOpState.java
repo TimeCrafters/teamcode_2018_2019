@@ -20,6 +20,7 @@ public class TeleOpState extends State {
     private boolean SlowToggle;
     private boolean collectionToggle;
     private boolean winchToggle;
+    private double mineraldivide;
     private long winchTime;
     private double winchPower;
     private int winchPosition;
@@ -78,7 +79,7 @@ public class TeleOpState extends State {
             if (engine.gamepad2.a && collectionToggle == false) {
                 collectionToggle = true;
                 collectionTime = System.currentTimeMillis() + 500;
-                collectionPower = 1.0;
+                collectionPower = -1.0;
             } else if (engine.gamepad2.a && collectionToggle == true) {
                 collectionToggle = false;
                 collectionTime = System.currentTimeMillis() + 500;
@@ -89,7 +90,9 @@ public class TeleOpState extends State {
 
 
 //**************************************************************************************************
-        //code for running the mineral arm
+        //CODE FOR RUNNING MINERAL ARM!!!!!
+
+        mineralArmPosition = mineralArm.getCurrentPosition();
 
         if (engine.gamepad2.right_trigger == 0 && engine.gamepad2.left_trigger == 0 && !mineralArmPostitionSet){
             //finding the current position
@@ -105,12 +108,22 @@ public class TeleOpState extends State {
 
             //clockwise turning for mineral arm
             if (engine.gamepad2.right_trigger != 0 && engine.gamepad2.left_trigger == 0) {
-                mineralArm.setPower(-engine.gamepad2.right_trigger);
+                if (mineralArmPosition < -144){
+                    mineraldivide = 4;
+                }else{
+                    mineraldivide = 1;
+                }
+                mineralArm.setPower(-engine.gamepad2.right_trigger/mineraldivide);
             }
 
             //counter clockwise turning for mineral arm
             if (engine.gamepad2.left_trigger != 0 && engine.gamepad2.right_trigger == 0) {
-                mineralArm.setPower(engine.gamepad2.left_trigger);
+                if (mineralArmPosition > -144){
+                    mineraldivide = 4;
+                }else{
+                    mineraldivide = 1;
+                }
+                mineralArm.setPower(engine.gamepad2.left_trigger/mineraldivide);
             }
         }
 
@@ -146,13 +159,13 @@ public class TeleOpState extends State {
         }
 
         if (System.currentTimeMillis() >= winchTime) {
-            if (engine.gamepad2.b && winchToggle == false) {
+            if (engine.gamepad2.y && winchToggle == false) {
                 winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 winchToggle = true;
                 winchTime = System.currentTimeMillis() + 500;
                 winchPower = 1.0;
                 winchManuelMode = false;
-            } else if (engine.gamepad2.b && winchToggle == true) {
+            } else if (engine.gamepad2.y && winchToggle == true) {
                 winchToggle = false;
                 winchTime = System.currentTimeMillis() + 500;
                 winchPower = 1.0;
@@ -180,5 +193,7 @@ public class TeleOpState extends State {
         engine.telemetry.addData("Left Trigger Value", engine.gamepad2.left_trigger);
         engine.telemetry.addData("arm motor trigger postition", engine.gamepad2.right_trigger);
         engine.telemetry.addData("winch encoder",winchUp.getCurrentPosition());
+        engine.telemetry.addData("mineral arm encoder",mineralArm.getCurrentPosition());
+        engine.telemetry.addData("mineral divide", mineraldivide);
     }
 }
