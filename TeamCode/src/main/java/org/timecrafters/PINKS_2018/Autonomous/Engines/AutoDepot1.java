@@ -26,8 +26,9 @@ public class AutoDepot1 extends Engine {
         addState(new Step06DropRobot(this, control));
         addState(new Step07PostDropUTurn(this, control));
         addState(new Step08DriveToDetect(this, control));
-        addState(new Step09MineralDetect(this, control));
-        addState(new Step10MineralKick(this, control));
+        Step09MineralDetect Scan = new Step09MineralDetect(this, control);
+        addState(Scan);
+        addState(new Step10MineralKick(this, control, Scan));
         addState(new Step11TeamMarkerDrive(this, control, true));
         addState(new Step12TeamMarkerPlace(this, control));
         addState(new Step13OptionADriveToPark_fromTMP(this, control, true));

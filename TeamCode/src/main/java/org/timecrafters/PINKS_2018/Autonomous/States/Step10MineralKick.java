@@ -7,11 +7,13 @@ import org.timecrafters.engine.State;
 public class Step10MineralKick extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
+    public Step09MineralDetect Scan;
 
 
-    public Step10MineralKick(Engine engine, ArchitectureControl control) {
+    public Step10MineralKick(Engine engine, ArchitectureControl control, Step09MineralDetect scan) {
         this.engine = engine;
         this.Control = control;
+        this.Scan = scan;
     }
 
     public void init() {
