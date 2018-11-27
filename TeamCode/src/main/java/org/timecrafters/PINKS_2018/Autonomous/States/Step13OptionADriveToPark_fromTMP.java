@@ -73,9 +73,10 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                     RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightPowerTurn");
                     distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftInTurn");
                     distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightInTurn");
-
                     Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
 
+                    Log.i("distanceInRight", "distanceTicksRight: "+distanceTicksRight);
+                    Log.i("distanceInRight", "RightCurrentTick: "+RightCurrentTick);
                 }
 
                 if (DriveStep == 3) {
@@ -101,7 +102,10 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 if (DriveStep == 5) {
                     Complete = true;
                 }
+
             } else {
+
+                Log.i("distanceInRight", "You're NOT supposed to be here!");
 
                 if (DriveStep == 1) {
                     LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower");
@@ -134,19 +138,20 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     }
 
     private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
-        Log.i("driveMethodRunning", "Drive Running");
+
         distanceTicksLeft = DistanceConverter(distanceINLeft,4);
         distanceTicksRight = DistanceConverter(distanceINRight,4);
 
-        LeftDrive.setPower(LeftPower);
-        RightDrive.setPower(RightPower);
-
         if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
             RightDrive.setPower(0);
+        } else {
+            RightDrive.setPower(RightPower);
         }
 
         if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
             LeftDrive.setPower(0);
+        } else {
+            LeftDrive.setPower(LeftPower);
         }
 
         if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
@@ -156,13 +161,17 @@ public class Step13OptionADriveToPark_fromTMP extends State {
             LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             DriveStep++;
-
-
+            sleep(100);
         }
     }
 
     @Override
     public void telemetry() {
-
+        engine.telemetry.addLine("Running Step13OptionADriveToPark_fromTMP");
+        engine.telemetry.addData("Right Current Tick", RightCurrentTick);
+        engine.telemetry.addData("Left Current Tick", LeftCurrentTick);
+        engine.telemetry.addData("Drive Step", DriveStep);
+        engine.telemetry.addData("distanceTicksRight", distanceTicksRight);
+        engine.telemetry.addData("distanceTicksLeft", distanceTicksLeft);
     }
 }

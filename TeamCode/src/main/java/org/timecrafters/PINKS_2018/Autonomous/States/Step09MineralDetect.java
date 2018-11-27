@@ -248,9 +248,9 @@ public class Step09MineralDetect extends State {
                 engine.telemetry.update();
                 sleep(1000);
                 setFinished(true);
-            } else {
-                setFinished(true);
             }
+        } else {
+            setFinished(true);
         }
     }
 
