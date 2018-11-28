@@ -61,7 +61,6 @@ public class Step07PostDropUTurn extends State {
             if (Complete) {
                 engine.telemetry.addLine("Completed Step07PostDropUTurn");
                 engine.telemetry.update();
-                sleep(1000);
                 setFinished(true);
             }
         } else {

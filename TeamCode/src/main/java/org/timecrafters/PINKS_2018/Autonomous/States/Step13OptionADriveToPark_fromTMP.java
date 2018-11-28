@@ -25,6 +25,8 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     private int distanceINLeft;
     private int distanceTicksRight;
     private int distanceTicksLeft;
+    private DcMotor ClipArm;
+
 
 
     public Step13OptionADriveToPark_fromTMP(Engine engine, ArchitectureControl control, boolean posDepot) {
@@ -36,6 +38,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     public void init() {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
+        ClipArm = Control.PinksHardwareConfig.pClipArm;
         FirstRun = true;
         DriveStep = 1;
     }
@@ -49,6 +52,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                Log.i("distanceInRight", "First Run");
                 FirstRun = false;
             }
 
@@ -60,7 +64,14 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                     distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
                     distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
 
+                    ClipArm.setTargetPosition(0);
+                    ClipArm.setPower(-0.15);
+                    if (ClipArm.getCurrentPosition() <= 0) {
+                        ClipArm.setPower(0);
+                    }
+
                     Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+
 
                 }
 
@@ -96,6 +107,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 }
 
                 if (DriveStep == 5) {
+                    Log.i("distanceInRight", "Completed On Time");
                     Complete = true;
                 }
 
@@ -121,7 +133,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
             if (Complete) {
                 engine.telemetry.addLine("Completed RunDriveToPark_fromTMP");
                 engine.telemetry.update();
-                sleep(1000);
+
                 setFinished(true);
             }
         } else {

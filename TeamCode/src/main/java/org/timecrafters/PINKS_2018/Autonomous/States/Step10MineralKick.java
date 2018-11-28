@@ -27,7 +27,7 @@ public class Step10MineralKick extends State {
             if (Complete) {
                 engine.telemetry.addLine("Completed Step10MineralKick");
                 engine.telemetry.update();
-                sleep(1000);
+
                 setFinished(true);
             }
         } else {

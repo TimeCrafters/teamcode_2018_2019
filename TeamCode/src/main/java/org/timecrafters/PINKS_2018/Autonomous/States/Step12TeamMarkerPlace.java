@@ -35,29 +35,20 @@ public class Step12TeamMarkerPlace extends State {
     public void exec() {
         if (Control.RunTeamMarkerPlace) {
 
-            if (!ReachedTarget) {
+            if (!Complete) {
                 ClipArm.setTargetPosition(PlacePosition);
                 ClipArm.setPower(0.5);
                 if (ClipArm.getCurrentPosition() >= PlacePosition) {
-                    ReachedTarget = true;
-                    sleep(WaitTime);
-                }
-            }
-
-            if (ReachedTarget) {
-                ClipArm.setTargetPosition(0);
-                ClipArm.setPower(-0.15);
-                if (ClipArm.getCurrentPosition() <= 0) {
-                    sleep(WaitTime);
-                    ClipArm.setPower(0);
                     Complete = true;
                 }
             }
 
+
+
             if (Complete) {
                 engine.telemetry.addLine("Completed Step12TeamMarkerPlace");
                 engine.telemetry.update();
-                sleep(1000);
+
                 setFinished(true);
             }
         } else {

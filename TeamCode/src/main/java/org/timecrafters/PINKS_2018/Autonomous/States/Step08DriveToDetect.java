@@ -87,7 +87,6 @@ public class Step08DriveToDetect extends State {
             if (Complete) {
                 engine.telemetry.addLine("Completed Step08DriveToDetect");
                 engine.telemetry.update();
-                sleep(1000);
                 setFinished(true);
             }
         } else {
