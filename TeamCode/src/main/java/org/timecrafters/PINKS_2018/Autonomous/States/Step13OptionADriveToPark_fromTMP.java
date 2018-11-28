@@ -73,6 +73,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                     RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightPowerTurn");
                     distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftInTurn");
                     distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightInTurn");
+
                     Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
 
                     Log.i("distanceInRight", "distanceTicksRight: "+distanceTicksRight);
