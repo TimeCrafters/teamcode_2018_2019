@@ -2,9 +2,7 @@ package org.timecrafters.PINKS_2018.Autonomous.Engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.timecrafters.PINKS_2018.Autonomous.States.Step13DriveToPark_Depot;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step13OptionADriveToPark_fromTMP;
-import org.timecrafters.PINKS_2018.Autonomous.States.Step13OptionBDriveToPark_fromMK;
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step08DriveToDetect;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step06DropRobot;
@@ -32,7 +30,7 @@ public class AutoDepot1 extends Engine {
         addState(new Step10MineralKick(this, control, Scan));
         addState(new Step11TeamMarkerDrive(this, control, true));
         addState(new Step12TeamMarkerPlace(this, control));
-        addState(new Step13DriveToPark_Depot(this, control, true));
+        addState(new Step13OptionADriveToPark_fromTMP(this, control, true));
 
 
     }

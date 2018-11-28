@@ -56,9 +56,6 @@ public class Step07PostDropUTurn extends State {
                 FirstRun = false;
             }
 
-            RightCurrentTick = RightDrive.getCurrentPosition();
-            LeftCurrentTick = LeftDrive.getCurrentPosition();
-
             Drive(-LeftPower, -RightPower, distanceINLeft, distanceINRight);
 
             if (Complete) {
@@ -77,6 +74,9 @@ public class Step07PostDropUTurn extends State {
     }
 
     private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
+
+        RightCurrentTick = RightDrive.getCurrentPosition();
+        LeftCurrentTick = LeftDrive.getCurrentPosition();
 
         distanceTicksLeft = DistanceConverter(distanceINLeft, 4);
         distanceTicksRight = DistanceConverter(distanceINRight, 4);

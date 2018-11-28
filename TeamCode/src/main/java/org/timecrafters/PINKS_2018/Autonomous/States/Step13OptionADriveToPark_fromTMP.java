@@ -52,9 +52,6 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 FirstRun = false;
             }
 
-            RightCurrentTick = RightDrive.getCurrentPosition();
-            LeftCurrentTick = LeftDrive.getCurrentPosition();
-
             if (PosDepot) {
 
                 if (DriveStep == 1) {
@@ -76,8 +73,6 @@ public class Step13OptionADriveToPark_fromTMP extends State {
 
                     Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
 
-                    Log.i("distanceInRight", "distanceTicksRight: "+distanceTicksRight);
-                    Log.i("distanceInRight", "RightCurrentTick: "+RightCurrentTick);
                 }
 
                 if (DriveStep == 3) {
@@ -139,6 +134,9 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     }
 
     private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
+
+        RightCurrentTick = RightDrive.getCurrentPosition();
+        LeftCurrentTick = LeftDrive.getCurrentPosition();
 
         distanceTicksLeft = DistanceConverter(distanceINLeft,4);
         distanceTicksRight = DistanceConverter(distanceINRight,4);

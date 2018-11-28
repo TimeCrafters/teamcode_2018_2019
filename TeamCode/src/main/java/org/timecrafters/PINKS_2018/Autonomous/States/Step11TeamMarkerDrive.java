@@ -52,10 +52,6 @@ public class Step11TeamMarkerDrive extends State {
                 FirstRun = false;
             }
 
-            RightCurrentTick = RightDrive.getCurrentPosition();
-            LeftCurrentTick = LeftDrive.getCurrentPosition();
-
-
             //the PosDepot Variable enables the different drive patterns for
             if (DriveStep == 1 && PosDepot) {
 
@@ -110,6 +106,9 @@ public class Step11TeamMarkerDrive extends State {
     }
 
     private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
+
+        RightCurrentTick = RightDrive.getCurrentPosition();
+        LeftCurrentTick = LeftDrive.getCurrentPosition();
 
         distanceTicksLeft = DistanceConverter(distanceINLeft,4);
         distanceTicksRight = DistanceConverter(distanceINRight,4);
