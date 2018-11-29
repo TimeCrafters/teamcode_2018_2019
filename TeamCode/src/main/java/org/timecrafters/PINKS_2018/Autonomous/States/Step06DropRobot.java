@@ -30,7 +30,7 @@ public class Step06DropRobot extends State {
 
             servoLeft.setPosition(.2);
             servoRight.setPosition(1);
-            sleep(1500);
+            sleep(500);
             servoLeft.setPosition(1);
             servoRight.setPosition(0);
             Complete = true;

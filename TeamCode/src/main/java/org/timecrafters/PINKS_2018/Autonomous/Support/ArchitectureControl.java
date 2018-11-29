@@ -17,7 +17,7 @@ public class ArchitectureControl extends State {
     public boolean RunTeamMarkerDrive;
     public boolean RunTeamMarkerPlace;
     public boolean RunDriveToPark_fromTMP;
-    public boolean RunDriveToPark_fromMK;
+    public boolean RunPark;
 
     public ArchitectureControl(Engine engine) {
         this.engine = engine;
@@ -36,7 +36,7 @@ public class ArchitectureControl extends State {
         RunTeamMarkerDrive = AppReader.allow("RunTeamMarkerDrive");
         RunTeamMarkerPlace = AppReader.allow("RunTeamMarkerPlace");
         RunDriveToPark_fromTMP = AppReader.allow("RunDriveToPark_fromTMP");
-        RunDriveToPark_fromMK = AppReader.allow("RunDriveToPark_fromMK");
+        RunPark = AppReader.allow("RunPark");
         setFinished(true);
 
     }

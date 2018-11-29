@@ -172,7 +172,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
             LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             DriveStep++;
-            sleep(100);
+
         }
     }
 

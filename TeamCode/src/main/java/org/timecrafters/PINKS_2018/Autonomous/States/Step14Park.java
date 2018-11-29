@@ -1,14 +1,12 @@
 package org.timecrafters.PINKS_2018.Autonomous.States;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
-public class Step11TeamMarkerDrive extends State {
+public class Step14Park extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
     private boolean PosDepot;
@@ -27,7 +25,7 @@ public class Step11TeamMarkerDrive extends State {
 
 
 
-    public Step11TeamMarkerDrive(Engine engine, ArchitectureControl control, boolean posDepot) {
+    public Step14Park(Engine engine, ArchitectureControl control, boolean posDepot) {
         this.engine = engine;
         this.Control = control;
         this.PosDepot = posDepot;
@@ -43,7 +41,7 @@ public class Step11TeamMarkerDrive extends State {
     @Override
     public void exec() {
 
-        if (Control.RunTeamMarkerDrive) {
+        if (Control.RunPark) {
             if (FirstRun) {
                 LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -53,33 +51,22 @@ public class Step11TeamMarkerDrive extends State {
             }
 
             //the PosDepot Variable enables the different drive patterns for
-            if (DriveStep == 1 && PosDepot) {
+            if (DriveStep == 1) {
 
-                LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftPowerArc");
-                RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable("RightPowerArc");
-                distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInArc");
-                distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInArc");
-
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-            }
-
-            if (DriveStep == 1 && !PosDepot) {
-
-                LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable("CLeftPowerArc");
-                RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable("CRightPowerArc");
-                distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("CLeftInArc");
-                distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("CRightInArc");
+                LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc1");
+                RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc1");
+                distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc1");
+                distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc1");
 
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }
 
-            if (DriveStep == 2) {
+            if (DriveStep == 1) {
 
-                LeftPower = 0.7;
-                RightPower = 0.7;
-
-                distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInReverse");
-                distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInReverse");
+                LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc2");
+                RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc2");
+                distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc2");
+                distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc2");
 
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }

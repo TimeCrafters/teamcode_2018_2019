@@ -10,7 +10,7 @@ import org.timecrafters.PINKS_2018.Autonomous.States.Step10MineralKick;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step11TeamMarkerDrive;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step12TeamMarkerPlace;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step13OptionADriveToPark_fromTMP;
-import org.timecrafters.PINKS_2018.Autonomous.States.Step13OptionBDriveToPark_fromMK;
+import org.timecrafters.PINKS_2018.Autonomous.States.Step14Park;
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 
@@ -32,7 +32,7 @@ public class AutoCrater1 extends Engine {
         addState(new Step11TeamMarkerDrive(this, control, false));
         addState(new Step12TeamMarkerPlace(this, control));
         addState(new Step13OptionADriveToPark_fromTMP(this, control, false));
-        addState(new Step13OptionBDriveToPark_fromMK( this, control));
+        addState(new Step14Park( this, control, true));
 
     }
 

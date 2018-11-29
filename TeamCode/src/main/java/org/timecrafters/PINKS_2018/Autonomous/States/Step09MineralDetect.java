@@ -53,6 +53,7 @@ public class Step09MineralDetect extends State {
     private int distanceTicks;
     private double whealCircumference = 4;
     private boolean Calibrating;
+    private double LazerMidPosition = 0.7;
 
 
 
@@ -119,6 +120,7 @@ public class Step09MineralDetect extends State {
                 StartTime = CurrentTime;
                 RightDrive.setPower(Power);
                 LeftDrive.setPower(Power);
+                LazerArmServo.setPosition(LazerMidPosition);
             }
 
             //Finish if Drive limit reached and gold not found
@@ -222,7 +224,7 @@ public class Step09MineralDetect extends State {
 
                             //Waves Laser Arm
                             if (CurrentTime - PreviousTriggerTime >= ArmWavePeriod) {
-                                lazerWave(0.7);
+                                lazerWave(LazerMidPosition);
                                 PreviousTriggerTime = CurrentTime;
                             }
                         }
