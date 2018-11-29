@@ -73,13 +73,24 @@ public class Step11TeamMarkerDrive extends State {
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }
 
-            if (DriveStep == 2) {
+            if (DriveStep == 2 && PosDepot) {
 
                 LeftPower = 0.7;
                 RightPower = 0.7;
 
                 distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInReverse");
                 distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInReverse");
+
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
+
+            if (DriveStep == 2 && !PosDepot) {
+
+                LeftPower = 0.7;
+                RightPower = 0.7;
+
+                distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("CLeftIN");
+                distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("CRightIN");
 
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }

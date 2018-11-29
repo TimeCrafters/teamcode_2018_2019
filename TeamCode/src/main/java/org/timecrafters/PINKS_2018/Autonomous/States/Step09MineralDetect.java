@@ -127,6 +127,7 @@ public class Step09MineralDetect extends State {
             if (Math.abs(RightCurrentTick) >= distanceTicks) {
                 RightDrive.setPower(0);
                 LeftDrive.setPower(0);
+                LazerArmServo.setPosition(0);
                 Complete = true;
             }
 
