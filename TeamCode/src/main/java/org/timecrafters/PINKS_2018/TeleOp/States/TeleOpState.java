@@ -2,6 +2,7 @@ package org.timecrafters.PINKS_2018.TeleOp.States;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.cyberarm.container.InputChecker;
 import org.timecrafters.engine.Engine;
@@ -24,8 +25,8 @@ public class TeleOpState extends State {
     private double mineralArmPower;
     private double rightTriggerValue;
     private double leftTriggerValue;
-    private long winchTime;
-    private double winchPower;
+    private long captureTime;
+    private double capturePower;
     private int winchPosition;
     private boolean winchManuelMode = true;
     private boolean gameMode = false;
@@ -35,8 +36,15 @@ public class TeleOpState extends State {
     private  int mineralArmCurrentPosition;
     private  boolean mineralArmPostitionSet;
     private long mineralModeTime;
-    private boolean mineralModeToggle;
+    private boolean captureToggle;
+    private double capturePosition;
     private boolean mineralModeLastRead;
+    private int winchTargetPosition;
+    private Servo mineralCapture;
+    private boolean y1LastRead;
+    private boolean a1LastRead;
+    private double mineralArmPowerMaxUp;
+
 
     public TeleOpState(Engine engine) {
         this.engine = engine;
@@ -53,6 +61,7 @@ public class TeleOpState extends State {
         mineralArm = engine.hardwareMap.dcMotor.get("mineralArm");
         clipArm = engine.hardwareMap.dcMotor.get("clipArm");
         winchUp = engine.hardwareMap.dcMotor.get("winchUp");
+        mineralCapture = engine.hardwareMap.servo.get("mineralCapture");
        // LeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         SlowToggle = false;
         winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -61,16 +70,18 @@ public class TeleOpState extends State {
         mineralArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mineralArmCurrentPosition = mineralArm.getCurrentPosition();
         mineralModeLastRead = false;
-
+        winchPosition = winchUp.getCurrentPosition();
+        winchUp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        capturePosition = 0;
+        mineralCapture.setPosition(capturePosition);
+        a1LastRead = false;
+        y1LastRead = false;
+        mineralArmPower = 1.0;
+        mineralArmPowerMaxUp = 1.0;
     }
 
     @Override
     public void exec() throws InterruptedException {
-        ButtonUpCheck1.update();
-        ButtonUpCheck2.update();
-
-
-
 //--------------------------------------------------------------------------------------------------
         //code for elbow and mineral collect
 
@@ -101,11 +112,28 @@ public class TeleOpState extends State {
 
 //**************************************************************************************************
         //CODE FOR RUNNING MINERAL ARM!!!!!
-        if (engine.gamepad1.y != mineralModeLastRead && engine.gamepad1.y == true){
+
+        //power up and down
+        if (engine.gamepad1.y != y1LastRead &&
+                engine.gamepad1.y == true &&
+                mineralArmPowerMaxUp < 1.0){
+            mineralArmPowerMaxUp += 0.15;
+        }
+        y1LastRead = engine.gamepad1.y;
+
+        if (engine.gamepad1.a != a1LastRead &&
+                engine.gamepad1.a == true &&
+                mineralArmPowerMaxUp > 0.10){
+            mineralArmPowerMaxUp -= 0.15;
+        }
+        a1LastRead = engine.gamepad1.a;
+        //Game mode toggle
+        if (engine.gamepad1.x != mineralModeLastRead && engine.gamepad1.x == true){
             gameMode = !gameMode;
         }
-        mineralModeLastRead = engine.gamepad1.y;
+        mineralModeLastRead = engine.gamepad1.x;
 
+        //switch
         if (gameMode == true) {
 
             rightTriggerValue = engine.gamepad2.right_trigger;
@@ -121,24 +149,23 @@ public class TeleOpState extends State {
 
             if (rightTriggerValue > 0.05) {
                 //down
-                mineralArmPower = 0.25 * rightTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition - 10;
+                mineralArmPower = 0.05 * rightTriggerValue;
+                mineralArmTargetPosition = mineralArmCurrentPosition - 50;
             }
 
             if (leftTriggerValue > 0.05) {
                 //up
-                mineralArmPower = 0.75 * leftTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition + 10;
+                mineralArmTargetPosition = mineralArmCurrentPosition + 50;
+                mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
             }
-        }else {
+        }else{
             //start of gamepad 1
-
             rightTriggerValue = engine.gamepad1.right_trigger;
             leftTriggerValue = engine.gamepad1.left_trigger;
 
             if (leftTriggerValue < 0.05 && rightTriggerValue < 0.05) {
                 //no triggers
-                mineralArmPower = 1;
+                //mineralArmPower = 1;
             } else {
                 //at least one trigger
                 mineralArmCurrentPosition = mineralArm.getCurrentPosition();
@@ -146,14 +173,14 @@ public class TeleOpState extends State {
 
             if (rightTriggerValue > 0.05) {
                 //down
-                mineralArmPower = 0.25 * rightTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition + 10;
+                mineralArmPower = 0.05 * rightTriggerValue;
+                mineralArmTargetPosition = mineralArmCurrentPosition + 50;
             }
 
             if (leftTriggerValue > 0.05) {
                 //up
-                mineralArmPower = 0.75 * leftTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition - 10;
+                mineralArmTargetPosition = mineralArmCurrentPosition - 50;
+                mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
             }
         }
 
@@ -163,61 +190,57 @@ public class TeleOpState extends State {
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-        //clip arm & winch up controls
+        //clip arm code
 
         if (engine.gamepad2.left_stick_y >= 0) {
             clipArm.setPower(engine.gamepad2.left_stick_y/4);
         }else{
             clipArm.setPower(engine.gamepad2.left_stick_y);
         }
-
-/*
-        if (engine.gamepad2.right_stick_y != 0) {
-            winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            winchUp.setPower(engine.gamepad2.right_stick_y);
-            winchManuelMode = true;
-        }else if (engine.gamepad2.right_stick_y == 0 ){
-            if (winchManuelMode == false) {
-                winchUp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                winchUp.setPower(winchPower);
-                winchUp.setTargetPosition(winchPosition);
-            }else{
-                winchUp.setPower(0);
-            }
-        }
-
-        if (System.currentTimeMillis() >= winchTime) {
-            if (engine.gamepad2.y && winchToggle == false) {
-                winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                winchToggle = true;
-                winchTime = System.currentTimeMillis() + 500;
-                winchPower = 1.0;
-                winchManuelMode = false;
-            } else if (engine.gamepad2.y && winchToggle == true) {
-                winchToggle = false;
-                winchTime = System.currentTimeMillis() + 500;
-                winchPower = 1.0;
-                winchPosition = winchUp.getCurrentPosition();
-                winchUp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                winchUp.setTargetPosition(winchPosition);
-                winchManuelMode = false;
-            }
-        }
-*/
-        if (engine.gamepad2.right_stick_y != 0){
-            winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            winchUp.setPower(engine.gamepad2.right_stick_y);
-            winchPosition = winchUp.getCurrentPosition();
+ //winch code
+if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5){
+    winchPosition = winchUp.getCurrentPosition();
+}
+        if (engine.gamepad2.right_stick_y > 0.5){
+            winchTargetPosition = winchPosition + 50;
+        }else if (engine.gamepad2.right_stick_y < -0.5){
+            winchTargetPosition = winchPosition - 50;
         }else{
-           winchUp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-           winchUp.setTargetPosition(winchPosition);
-           winchUp.setPower(1);
+            winchTargetPosition = winchPosition;
         }
+
+        winchUp.setTargetPosition(winchTargetPosition);
+        winchUp.setPower(1);
+
+/*if (engine.gamepad2.right_stick_y >= 0.05){
+    winchUp.setPower(1.0*engine.gamepad2.right_stick_y);
+}else if (engine.gamepad2.right_stick_y <= -0.05){
+    winchUp.setPower(1.0*engine.gamepad2.right_stick_y);
+}else{
+    winchUp.setPower(0.1);
+}*/
 
         //drive train controls
         RightDrive.setPower(engine.gamepad1.right_stick_y);
-
         LeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
+
+        if (System.currentTimeMillis() >= captureTime) {
+            if (engine.gamepad2.x && captureToggle == false) {
+                captureToggle = true;
+                captureTime = System.currentTimeMillis() + 500;
+              capturePosition = 0.25;
+            } else if (engine.gamepad2.x && captureToggle == true) {
+                captureToggle = false;
+                captureTime = System.currentTimeMillis() + 500;
+               mineralCapture.setPosition(0);
+                capturePosition = 0;
+            }
+        }
+
+        mineralCapture.setPosition(capturePosition);
+
+
+
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     }
@@ -228,5 +251,7 @@ public class TeleOpState extends State {
         engine.telemetry.addData("Right Trigger Value", rightTriggerValue);
         engine.telemetry.addData("Left Trigger Value", leftTriggerValue);
         engine.telemetry.addData("game-mode?",gameMode);
+        engine.telemetry.addData("tick of winch",winchPosition);
+        engine.telemetry.addData("mineral max power",mineralArmPowerMaxUp);
     }
 }
