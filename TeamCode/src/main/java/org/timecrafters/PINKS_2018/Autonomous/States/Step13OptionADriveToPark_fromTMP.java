@@ -65,7 +65,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                     distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
 
                     ClipArm.setTargetPosition(0);
-                    ClipArm.setPower(-0.15);
+                    ClipArm.setPower(-0.5);
                     if (ClipArm.getCurrentPosition() <= 0) {
                         ClipArm.setPower(0);
                     }
@@ -120,6 +120,12 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                     RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower");
                     distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
                     distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
+
+                    ClipArm.setTargetPosition(0);
+                    ClipArm.setPower(-0.5);
+                    if (ClipArm.getCurrentPosition() <= 10) {
+                        ClipArm.setPower(0);
+                    }
 
                     Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
                 }
