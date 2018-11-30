@@ -51,28 +51,30 @@ public class Step14Park extends State {
             }
 
             //the PosDepot Variable enables the different drive patterns for
-            if (DriveStep == 1) {
+            if (PosDepot) {
+                if (DriveStep == 1) {
 
-                LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc1");
-                RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc1");
-                distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc1");
-                distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc1");
+                    LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc1");
+                    RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc1");
+                    distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc1");
+                    distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc1");
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-            }
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                }
 
-            if (DriveStep == 1) {
+                if (DriveStep == 2) {
 
-                LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc2");
-                RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc2");
-                distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc2");
-                distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc2");
+                    LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc2");
+                    RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc2");
+                    distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc2");
+                    distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc2");
 
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-            }
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                }
 
-            if (DriveStep == 3) {
-                Complete = true;
+                if (DriveStep == 3) {
+                    Complete = true;
+                }
             }
 
             if (Complete) {
@@ -80,6 +82,7 @@ public class Step14Park extends State {
                 engine.telemetry.update();
                 setFinished(true);
             }
+
         } else {
             setFinished(true);
         }
