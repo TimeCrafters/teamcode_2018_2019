@@ -1,6 +1,7 @@
 package org.timecrafters.PINKS_2018.Autonomous.Engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.PINKS_2018.Autonomous.States.Step06DropRobot;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step07PostDropUTurn;
@@ -13,9 +14,9 @@ import org.timecrafters.PINKS_2018.Autonomous.States.Step13OptionADriveToPark_fr
 import org.timecrafters.PINKS_2018.Autonomous.States.Step14Park;
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
-
-@Autonomous (name = "Autonomous: Crater")
-public class AutoCrater1 extends Engine {
+@Disabled
+@Autonomous (name = "Autonomous: Crater, Alternate Path")
+public class AutoCraterAlt1 extends Engine {
 
     @Override
     public void setProcesses() {
@@ -32,7 +33,7 @@ public class AutoCrater1 extends Engine {
         addState(new Step11TeamMarkerDrive(this, control, false));
         addState(new Step12TeamMarkerPlace(this, control));
         addState(new Step13OptionADriveToPark_fromTMP(this, control, false));
-        addState(new Step14Park( this, control, true));
+        addState(new Step14Park( this, control, false, true));
 
     }
 

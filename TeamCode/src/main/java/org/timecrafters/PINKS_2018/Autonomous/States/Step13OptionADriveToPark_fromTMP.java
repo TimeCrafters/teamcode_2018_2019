@@ -52,7 +52,6 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                Log.i("distanceInRight", "First Run");
                 FirstRun = false;
             }
 
@@ -97,16 +96,6 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 }
 
                 if (DriveStep == 4) {
-
-                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LParkArcPower");
-                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RParkArcPower");
-                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LParkArcIN");
-                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RParkArcIN");
-
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-                }
-
-                if (DriveStep == 5) {
                     Log.i("distanceInRight", "Completed On Time");
                     Complete = true;
                 }

@@ -1,13 +1,14 @@
 package org.timecrafters.scott.engine;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.engine.Engine;
 import org.timecrafters.scott.hardwareConfig.scott_state_hardware_config;
 import org.timecrafters.scott.state.scott_state_auto10_drop;
 import org.timecrafters.scott.state.scott_state_auto20_uturn;
 import org.timecrafters.scott.state.scott_state_auto30_align_with_vuforia;
-
+@Disabled
 @Autonomous(name="scott_10_by_marker")
 public class scott_engine_auto10_by_marker extends Engine {
     /**********************************************************************************************

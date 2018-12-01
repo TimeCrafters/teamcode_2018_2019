@@ -35,6 +35,15 @@ public class Step08DriveToDetect extends State {
     private boolean targetVisible;
 
 
+
+    //Originally we planned on useing VuForia to aline the robot's position on the feild. However,
+    //we couldn't get the phone to decern images more that two feet away.
+
+
+
+
+
+
     int CAMERA_FORWARD_DISPLACEMENT;  // eg: Camera is 110 mm in front of robot center
     int CAMERA_VERTICAL_DISPLACEMENT; // eg: Camera is 200 mm above ground
     int CAMERA_LEFT_DISPLACEMENT; // eg: Camera is ON the robot's center line
@@ -57,6 +66,7 @@ public class Step08DriveToDetect extends State {
         CAMERA_VERTICAL_DISPLACEMENT = Control.AppReader.get("RunDriveToDetect").variable("CamraVertical");
         CAMERA_LEFT_DISPLACEMENT     = Control.AppReader.get("RunDriveToDetect").variable("CamraLeft");
     }
+
 
     public void init() {
         setupVuforia();

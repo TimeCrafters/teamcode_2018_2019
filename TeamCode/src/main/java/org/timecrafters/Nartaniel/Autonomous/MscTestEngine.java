@@ -1,9 +1,10 @@
 package org.timecrafters.Nartaniel.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.engine.Engine;
-
+@Disabled
 @Autonomous (name = "Msc Test")
 public class MscTestEngine extends Engine {
 

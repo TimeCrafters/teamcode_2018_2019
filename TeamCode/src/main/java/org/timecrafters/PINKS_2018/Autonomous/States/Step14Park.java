@@ -22,13 +22,16 @@ public class Step14Park extends State {
     private int distanceINLeft;
     private int distanceTicksRight;
     private int distanceTicksLeft;
+    private boolean DriveAround;
 
 
 
-    public Step14Park(Engine engine, ArchitectureControl control, boolean posDepot) {
+
+    public Step14Park(Engine engine, ArchitectureControl control, boolean posDepot, boolean driveAround) {
         this.engine = engine;
         this.Control = control;
         this.PosDepot = posDepot;
+        this.DriveAround = driveAround;
     }
 
     public void init() {
@@ -52,28 +55,91 @@ public class Step14Park extends State {
 
             //the PosDepot Variable enables the different drive patterns for
             if (PosDepot) {
-                if (DriveStep == 1) {
+                if (DriveAround) {
+                    //Position: Depot, Drive around robot
+                    if (DriveStep == 1) {
 
-                    LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc1");
-                    RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc1");
-                    distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc1");
-                    distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc1");
+                        LeftPower = Control.AppReader.get("RunPark").variable("Arc1LPowerD");
+                        RightPower = Control.AppReader.get("RunPark").variable("Arc1RPowerD");
+                        distanceINLeft = Control.AppReader.get("RunPark").variable("Arc1LIND");
+                        distanceINRight = Control.AppReader.get("RunPark").variable("Arc1RIND");
 
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                        Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    }
+
+                    if (DriveStep == 2) {
+
+                        LeftPower = Control.AppReader.get("RunPark").variable("Arc2LPowerD");
+                        RightPower = Control.AppReader.get("RunPark").variable("Arc2RPowerD");
+                        distanceINLeft = Control.AppReader.get("RunPark").variable("Arc2LIND");
+                        distanceINRight = Control.AppReader.get("RunPark").variable("Arc2RIND");
+
+                        Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    }
+
+                    if (DriveStep == 3) {
+                        Complete = true;
+                    }
+
+                } else {
+                    //Position: Depot, Don't drive around
+                    if (DriveStep == 1) {
+
+                        LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectLPowerD");
+                        RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectRPowerD");
+                        distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectLIND");
+                        distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectRIND");
+
+                        Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    }
+
+                    if (DriveStep == 2) {
+                        Complete = true;
+                    }
+
                 }
+            } else {
+                if (DriveAround) {
+                    //Position: Crater, drive around Robot
+                    if (DriveStep == 1) {
 
-                if (DriveStep == 2) {
+                        LeftPower = Control.AppReader.get("RunPark").variable("Arc1LPowerC");
+                        RightPower = Control.AppReader.get("RunPark").variable("Arc1RPowerC");
+                        distanceINLeft = Control.AppReader.get("RunPark").variable("Arc1LINC");
+                        distanceINRight = Control.AppReader.get("RunPark").variable("Arc1RINC");
 
-                    LeftPower = Control.AppReader.get("RunPark").variable("LeftPowerArc2");
-                    RightPower = Control.AppReader.get("RunPark").variable("RightPowerArc2");
-                    distanceINLeft = Control.AppReader.get("RunPark").variable("LeftInArc2");
-                    distanceINRight = Control.AppReader.get("RunPark").variable("RightInArc2");
+                        Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    }
 
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-                }
+                    if (DriveStep == 2) {
 
-                if (DriveStep == 3) {
-                    Complete = true;
+                        LeftPower = Control.AppReader.get("RunPark").variable("Arc2LPowerC");
+                        RightPower = Control.AppReader.get("RunPark").variable("Arc2RPowerC");
+                        distanceINLeft = Control.AppReader.get("RunPark").variable("Arc2LINC");
+                        distanceINRight = Control.AppReader.get("RunPark").variable("Arc2RINC");
+
+                        Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    }
+
+                    if (DriveStep == 3) {
+                        Complete = true;
+                    }
+                } else {
+                    //Position: Crater, don't drive around
+                    if (DriveStep == 1) {
+
+                        LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectLPowerC");
+                        RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectRPowerC");
+                        distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectLINC");
+                        distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("DirectRINC");
+
+
+                        Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    }
+
+                    if (DriveStep == 2) {
+                        Complete = true;
+                    }
                 }
             }
 
