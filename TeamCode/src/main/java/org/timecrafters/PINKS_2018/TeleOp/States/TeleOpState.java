@@ -2,6 +2,7 @@ package org.timecrafters.PINKS_2018.TeleOp.States;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.cyberarm.container.InputChecker;
@@ -25,6 +26,7 @@ public class TeleOpState extends State {
     private double mineralArmPower;
     private double rightTriggerValue;
     private double leftTriggerValue;
+    private double leftStickValue;
     private long captureTime;
     private double capturePower;
     private int winchPosition;
@@ -44,6 +46,10 @@ public class TeleOpState extends State {
     private boolean y1LastRead;
     private boolean a1LastRead;
     private double mineralArmPowerMaxUp;
+    private boolean y2LastRead;
+    private int clipArmTargetPostition;
+    private double clipArmPower;
+    private boolean clipIsUp;
 
 
     public TeleOpState(Engine engine) {
@@ -76,8 +82,10 @@ public class TeleOpState extends State {
         mineralCapture.setPosition(capturePosition);
         a1LastRead = false;
         y1LastRead = false;
-        mineralArmPower = 1.0;
-        mineralArmPowerMaxUp = 1.0;
+        y2LastRead = false;
+        mineralArmPower = 0.1;
+        mineralArmPowerMaxUp = 0.4;
+        clipIsUp = false;
     }
 
     @Override
@@ -117,14 +125,14 @@ public class TeleOpState extends State {
         if (engine.gamepad1.y != y1LastRead &&
                 engine.gamepad1.y == true &&
                 mineralArmPowerMaxUp < 1.0){
-            mineralArmPowerMaxUp += 0.15;
+            mineralArmPowerMaxUp += 0.1;
         }
         y1LastRead = engine.gamepad1.y;
 
         if (engine.gamepad1.a != a1LastRead &&
                 engine.gamepad1.a == true &&
-                mineralArmPowerMaxUp > 0.10){
-            mineralArmPowerMaxUp -= 0.15;
+                mineralArmPowerMaxUp > 0.0){
+            mineralArmPowerMaxUp -= 0.1;
         }
         a1LastRead = engine.gamepad1.a;
         //Game mode toggle
@@ -141,7 +149,7 @@ public class TeleOpState extends State {
 
             if (leftTriggerValue < 0.05 && rightTriggerValue < 0.05) {
                 //no triggers
-                mineralArmPower = 1;
+                mineralArmPower = 0.1;
             } else {
                 //at least one trigger
                 mineralArmCurrentPosition = mineralArm.getCurrentPosition();
@@ -149,13 +157,13 @@ public class TeleOpState extends State {
 
             if (rightTriggerValue > 0.05) {
                 //down
-                mineralArmPower = 0.05 * rightTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition - 50;
+                mineralArmPower = 0.1 * rightTriggerValue;
+                mineralArmTargetPosition = mineralArmCurrentPosition - 75;
             }
 
             if (leftTriggerValue > 0.05) {
                 //up
-                mineralArmTargetPosition = mineralArmCurrentPosition + 50;
+                mineralArmTargetPosition = mineralArmCurrentPosition + 75;
                 mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
             }
         }else{
@@ -174,12 +182,12 @@ public class TeleOpState extends State {
             if (rightTriggerValue > 0.05) {
                 //down
                 mineralArmPower = 0.05 * rightTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition + 50;
+                mineralArmTargetPosition = mineralArmCurrentPosition + 75;
             }
 
             if (leftTriggerValue > 0.05) {
                 //up
-                mineralArmTargetPosition = mineralArmCurrentPosition - 50;
+                mineralArmTargetPosition = mineralArmCurrentPosition - 75;
                 mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
             }
         }
@@ -191,12 +199,38 @@ public class TeleOpState extends State {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         //clip arm code
-
-        if (engine.gamepad2.left_stick_y >= 0) {
-            clipArm.setPower(engine.gamepad2.left_stick_y/4);
-        }else{
-            clipArm.setPower(engine.gamepad2.left_stick_y);
+      /*  if (engine.gamepad2.y != y2LastRead &&
+                engine.gamepad2.y == true &&
+                clipIsUp == false){
+            clipArmTargetPostition = 72;
+            clipArmPower = 0.75;
+            clipIsUp = true;
+            y2LastRead = true;
         }
+        if (engine.gamepad2.y != y2LastRead &&
+                engine.gamepad2.y == true &&
+                clipIsUp == true){
+            clipArmTargetPostition = 0;
+            clipArmPower = 0.25;
+            clipIsUp = false;
+            y2LastRead = true;
+        }*/
+
+
+        leftStickValue = engine.gamepad2.left_stick_y;
+
+        clipArm.setPower(leftStickValue);
+    /*    if (leftStickValue >= 0.1){
+            clipArmTargetPostition = clipArm.getCurrentPosition() + 20;
+            clipArmPower = 1*leftStickValue;
+        }
+        if (leftStickValue <= -0.1){
+            clipArmTargetPostition = clipArm.getCurrentPosition() - 20;
+            clipArmPower = 0.5*leftStickValue;
+        }
+        clipArm.setTargetPosition(clipArmTargetPostition);
+        clipArm.setPower(clipArmPower);*/
+
  //winch code
 if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5){
     winchPosition = winchUp.getCurrentPosition();
