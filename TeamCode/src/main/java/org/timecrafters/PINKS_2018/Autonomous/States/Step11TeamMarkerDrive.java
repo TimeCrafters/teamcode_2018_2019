@@ -61,17 +61,16 @@ public class Step11TeamMarkerDrive extends State {
                 FirstRun = false;
             }
 
+            //Turns the robot to face the depot
             //the PosDepot Variable enables the different drive patterns for different starting positions
             if (DriveStep == 1 && PosDepot) {
-
-                //Turns the robot to face the depot
                 //The strings below correspond to values we can edit on the phone
                 setDriveValues("LeftPowerArc", "RightPowerArc", "LeftInArc", "RightInArc");
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }
 
+            //This dose the same thing as the step above, just adjusted for a different starting location
             if (DriveStep == 1 && !PosDepot) {
-                //This dose the same thing as the step above, just adjusted for a different starting location
                 setDriveValues("CLeftPowerArc", "CRightPowerArc", "CLeftInArc", "CRightInArc");
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }
