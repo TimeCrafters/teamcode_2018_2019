@@ -6,6 +6,13 @@ import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
+/**********************************************************************************************
+ * Name: DropRobot
+ * Inputs: engine, ArchitectureControl
+ * Outputs: none
+ * Use: Opens drop latch to drop robot
+ **********************************************************************************************/
+
 public class Step06DropRobot extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
@@ -27,7 +34,8 @@ public class Step06DropRobot extends State {
     @Override
     public void exec() {
         if (Control.RunDropRobot) {
-
+            //This is the actual code for the Drop step. It opens the drop latch servos before
+            //closing them shortly after the robot lands.
             servoLeft.setPosition(.2);
             servoRight.setPosition(1);
             sleep(500);

@@ -9,6 +9,14 @@ import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
+/**********************************************************************************************
+ * Name: PostDropUTurn
+ * Inputs: engine, ArchitectureControl
+ * Outputs: none
+ * Use: drives the robot to the crater and park
+ **********************************************************************************************/
+
+
 public class Step13OptionADriveToPark_fromTMP extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
@@ -54,14 +62,14 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 FirstRun = false;
             }
-
+            
+            //the PosDepot Variable enables the different drive patterns for different starting positions
             if (PosDepot) {
 
+                //the robot drives strait backwards onto the opponent's crater while simultaneously
+                // returning the marker placement arm to it's original position.
                 if (DriveStep == 1) {
-                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("PowerReverse");
-                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("PowerReverse");
-                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
-                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("InReverse");
+                    setDriveValues("PowerReverse", "PowerReverse", "InReverse", "InReverse");
 
                     ClipArm.setTargetPosition(0);
                     ClipArm.setPower(-0.5);
@@ -74,41 +82,30 @@ public class Step13OptionADriveToPark_fromTMP extends State {
 
                 }
 
+                //these other steps currently have their variables on the phone set to zero
+                //originally they were used in a drive path that retraced our steps around the minerals
+                //and back toward the crater.
                 if (DriveStep == 2) {
-
-                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftPowerTurn");
-                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightPowerTurn");
-                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("LeftInTurn");
-                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("RightInTurn");
-
+                    setDriveValues("LeftPowerTurn", "RightPowerTurn", "LeftInTurn", "RightInTurn");
                     Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
 
                 }
 
                 if (DriveStep == 3) {
-
-                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDrivePower");
-                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDrivePower");
-                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDriveIN");
-                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("ParkDriveIN");
-
+                    setDriveValues("ParkDrivePower", "ParkDrivePower", "ParkDriveIN", "ParkDriveIN");
                     Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
                 }
 
                 if (DriveStep == 4) {
-                    Log.i("distanceInRight", "Completed On Time");
                     Complete = true;
                 }
 
             } else {
 
-                Log.i("distanceInRight", "You're NOT supposed to be here!");
-
+                //the robot drives strait backwards onto the alliance's crater while simultaneously
+                // returning the marker placement arm to it's original position.
                 if (DriveStep == 1) {
-                    LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower");
-                    RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower");
-                    distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
-                    distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
+                    setDriveValues("AltPathPower", "AltPathPower", "AltPathIN", "AltPathIN");
 
                     ClipArm.setTargetPosition(0);
                     ClipArm.setPower(-0.5);
@@ -136,8 +133,18 @@ public class Step13OptionADriveToPark_fromTMP extends State {
         }
     }
 
+    //A handy conversion from distance on the field to motor ticks using the circumference of the wheal
     private int DistanceConverter(int distanceIN, int whealCircumference) {
         return (int) ((distanceIN * 288) / (whealCircumference * Math.PI));
+    }
+
+    //these step specific definitions used to be individually done before every drive
+    //we packaged it all into this method in response to a recommendation from a previous torment.
+    private void setDriveValues(String leftPower, String rightPower, String INLeft, String INRight) {
+        LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable(leftPower);
+        RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable(rightPower);
+        distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable(INLeft);
+        distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable(INRight);
     }
 
     private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
@@ -148,6 +155,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
         distanceTicksLeft = DistanceConverter(distanceINLeft,4);
         distanceTicksRight = DistanceConverter(distanceINRight,4);
 
+        //run the motor until it reaches it's target
         if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
             RightDrive.setPower(0);
         } else {
@@ -160,13 +168,16 @@ public class Step13OptionADriveToPark_fromTMP extends State {
             LeftDrive.setPower(LeftPower);
         }
 
+        //when both motors reach their target, it moves to the next step before resetting the encoders
         if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            DriveStep++;
+
+
             LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            DriveStep++;
 
         }
     }

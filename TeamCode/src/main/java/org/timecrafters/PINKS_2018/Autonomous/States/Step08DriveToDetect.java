@@ -22,6 +22,13 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
+/**********************************************************************************************
+ * Name: DriveToDetect
+ * Inputs: engine, ArchitectureControl
+ * Outputs: none
+ * Use: none
+ **********************************************************************************************/
+
 public class Step08DriveToDetect extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
