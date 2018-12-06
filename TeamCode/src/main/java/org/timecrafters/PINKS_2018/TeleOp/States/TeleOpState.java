@@ -157,7 +157,7 @@ public class TeleOpState extends State {
 
             if (rightTriggerValue > 0.05) {
                 //down
-                mineralArmPower = 0.1 * rightTriggerValue;
+                mineralArmPower = 0.25 * rightTriggerValue;
                 mineralArmTargetPosition = mineralArmCurrentPosition - 75;
             }
 
@@ -181,7 +181,7 @@ public class TeleOpState extends State {
 
             if (rightTriggerValue > 0.05) {
                 //down
-                mineralArmPower = 0.05 * rightTriggerValue;
+                mineralArmPower = 0.25 * rightTriggerValue;
                 mineralArmTargetPosition = mineralArmCurrentPosition + 75;
             }
 
