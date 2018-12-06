@@ -6,9 +6,12 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
+
+import java.util.ArrayList;
 
 /**********************************************************************************************
  * Name: TeamMarkerDrive
@@ -21,6 +24,8 @@ import org.timecrafters.engine.State;
 public class Step11TeamMarkerDriveV2 extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
+    private long StartTime;
+    private long PreviousTriggerTime;
     private boolean PosDepot;
     private int DriveStep;
     private boolean FirstRun;
@@ -36,6 +41,9 @@ public class Step11TeamMarkerDriveV2 extends State {
     private int distanceTicksLeft;
     private ModernRoboticsI2cRangeSensor LeftUSSensor;
     private ModernRoboticsI2cRangeSensor RightUSSensor;
+    private ArrayList<Double> USDistances;
+    private int DataSetSize;
+    private long ReadTime;
 
 
 
@@ -68,6 +76,8 @@ public class Step11TeamMarkerDriveV2 extends State {
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                StartTime = System.currentTimeMillis();
+                PreviousTriggerTime = StartTime;
                 FirstRun = false;
             }
 
@@ -86,10 +96,20 @@ public class Step11TeamMarkerDriveV2 extends State {
             }
 
             // These drive strait into the depot for a distance that depends on the starting position
-            if (DriveStep == 2 ) {
+            if (DriveStep == 2 && PosDepot) {
+
+                //This provides a list of data
+                if (PreviousTriggerTime - StartTime > ReadTime) {
+                    USDistances.add(LeftUSSensor.getDistance(DistanceUnit.MM));
+                    if (USDistances.size() > DataSetSize) {
+                        USDistances.remove(0);
+                    }
+                }
 
                 distanceINLeft = 36;
                 distanceINRight = 36;
+
+
 
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }

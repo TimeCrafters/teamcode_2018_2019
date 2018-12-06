@@ -113,6 +113,7 @@ public class Step09MineralDetect extends State {
 
             if (FirstRun) {
                 FirstRun = false;
+                Log.i("LazerScan", "First Run");
                 LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -294,6 +295,10 @@ public class Step09MineralDetect extends State {
     @Override
     public void telemetry() {
         engine.telemetry.addLine("Running Mineral Detect");
+
+        engine.telemetry.addData("Variable Power", Power);
+        engine.telemetry.addData("Actual Right Power", RightDrive.getPower());
+        engine.telemetry.addData("Actual Left Power", RightDrive.getPower());
 
         engine.telemetry.addData("Calibrating", Calibrating);
 
