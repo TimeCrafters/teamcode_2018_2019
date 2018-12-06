@@ -1,28 +1,29 @@
 package org.timecrafters.PINKS_2018.Autonomous.States;
 
-
 import android.util.Log;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 /**********************************************************************************************
- * Name: PostDropUTurn
+ * Name: TeamMarkerDrive
  * Inputs: engine, ArchitectureControl
  * Outputs: none
- * Use: drives the robot to the crater and park
+ * Use: drive over to the depot
+ * Version 1.0
  **********************************************************************************************/
 
-
-public class Step13OptionADriveToPark_fromTMP extends State {
+public class Step11TeamMarkerDriveV2 extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
     private boolean PosDepot;
-    private boolean FirstRun;
     private int DriveStep;
+    private boolean FirstRun;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
     private double LeftPower;
@@ -33,11 +34,13 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     private int distanceINLeft;
     private int distanceTicksRight;
     private int distanceTicksLeft;
-    private DcMotor ClipArm;
+    private ModernRoboticsI2cRangeSensor LeftUSSensor;
+    private ModernRoboticsI2cRangeSensor RightUSSensor;
 
 
 
-    public Step13OptionADriveToPark_fromTMP(Engine engine, ArchitectureControl control, boolean posDepot) {
+
+    public Step11TeamMarkerDriveV2(Engine engine, ArchitectureControl control, boolean posDepot) {
         this.engine = engine;
         this.Control = control;
         this.PosDepot = posDepot;
@@ -46,91 +49,64 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     public void init() {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
-        ClipArm = Control.PinksHardwareConfig.pClipArm;
-        FirstRun = true;
+        LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
+        RightUSSensor = Control.PinksHardwareConfig.pRightUSSensor;
+
+
+
         DriveStep = 1;
+        FirstRun = true;
     }
 
     @Override
     public void exec() {
-        if (Control.RunDriveToPark_fromTMP) {
 
+        if (Control.RunTeamMarkerDrive) {
             if (FirstRun) {
+                //These used to be in init which left things very broken
                 LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 FirstRun = false;
             }
-            
+
+            //Turns the robot to face the depot
             //the PosDepot Variable enables the different drive patterns for different starting positions
-            if (PosDepot) {
+            if (DriveStep == 1 && PosDepot) {
+                //The strings below correspond to values we can edit on the phone
+                setDriveValues("LeftPowerArc", "RightPowerArc", "LeftInArc", "RightInArc");
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
 
-                //the robot drives strait backwards onto the opponent's crater while simultaneously
-                // returning the marker placement arm to it's original position.
-                if (DriveStep == 1) {
-                    setDriveValues("PowerReverse", "PowerReverse", "InReverse", "InReverse");
+            //This dose the same thing as the step above, just adjusted for a different starting location
+            if (DriveStep == 1 && !PosDepot) {
+                setDriveValues("CLeftPowerArc", "CRightPowerArc", "CLeftInArc", "CRightInArc");
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
 
-                    ClipArm.setTargetPosition(0);
-                    ClipArm.setPower(-0.5);
-                    if (ClipArm.getCurrentPosition() <= 0) {
-                        ClipArm.setPower(0);
-                    }
+            // These drive strait into the depot for a distance that depends on the starting position
+            if (DriveStep == 2 ) {
 
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                distanceINLeft = 36;
+                distanceINRight = 36;
 
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
 
-                }
-
-                //these other steps currently have their variables on the phone set to zero
-                //originally they were used in a drive path that retraced our steps around the minerals
-                //and back toward the crater.
-                if (DriveStep == 2) {
-                    setDriveValues("LeftPowerTurn", "RightPowerTurn", "LeftInTurn", "RightInTurn");
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-
-                }
-
-                if (DriveStep == 3) {
-                    setDriveValues("ParkDrivePower", "ParkDrivePower", "ParkDriveIN", "ParkDriveIN");
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-                }
-
-                if (DriveStep == 4) {
-                    Complete = true;
-                }
-
-            } else {
-
-                //the robot drives strait backwards onto the alliance's crater while simultaneously
-                // returning the marker placement arm to it's original position.
-                if (DriveStep == 1) {
-                    setDriveValues("AltPathPower", "AltPathPower", "AltPathIN", "AltPathIN");
-
-                    ClipArm.setTargetPosition(0);
-                    ClipArm.setPower(-0.5);
-                    if (ClipArm.getCurrentPosition() <= 10) {
-                        ClipArm.setPower(0);
-                    }
-
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
-                }
-
-                if (DriveStep == 2) {
-                    Complete = true;
-                }
-
+            if (DriveStep == 3) {
+                Complete = true;
             }
 
             if (Complete) {
-                engine.telemetry.addLine("Completed RunDriveToPark_fromTMP");
+                engine.telemetry.addLine("Completed Step14Park");
                 engine.telemetry.update();
-
                 setFinished(true);
             }
         } else {
             setFinished(true);
         }
+
     }
 
     //A handy conversion from distance on the field to motor ticks using the circumference of the wheal
@@ -141,10 +117,10 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     //these step specific definitions used to be individually done before every drive
     //we packaged it all into this method in response to a recommendation from a previous torment.
     private void setDriveValues(String leftPower, String rightPower, String INLeft, String INRight) {
-        LeftPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable(leftPower);
-        RightPower = Control.AppReader.get("RunDriveToPark_fromTMP").variable(rightPower);
-        distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable(INLeft);
-        distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable(INRight);
+        LeftPower = Control.AppReader.get("RunTeamMarkerDrive").variable(leftPower);
+        RightPower = Control.AppReader.get("RunTeamMarkerDrive").variable(rightPower);
+        distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable(INLeft);
+        distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable(INRight);
     }
 
     private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
@@ -182,13 +158,19 @@ public class Step13OptionADriveToPark_fromTMP extends State {
         }
     }
 
+    //the telemetry method is called with the main op-mode loop to avoid weirdness in perpetually displaying telemetry
     @Override
     public void telemetry() {
-        engine.telemetry.addLine("Running Step13OptionADriveToPark_fromTMP");
-        engine.telemetry.addData("Right Current Tick", RightCurrentTick);
-        engine.telemetry.addData("Left Current Tick", LeftCurrentTick);
+        engine.telemetry.addLine("Running RunPark");
         engine.telemetry.addData("Drive Step", DriveStep);
-        engine.telemetry.addData("distanceTicksRight", distanceTicksRight);
-        engine.telemetry.addData("distanceTicksLeft", distanceTicksLeft);
+        engine.telemetry.addData("RightPower", RightDrive.getPower());
+        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
+        engine.telemetry.addData("Right Target IN", distanceINRight);
+        engine.telemetry.addData("Left Target IN", distanceINLeft);
+        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
+        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
+
+
     }
+
 }

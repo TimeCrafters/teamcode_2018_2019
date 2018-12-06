@@ -7,6 +7,13 @@ import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
+/**********************************************************************************************
+ * Name: PostDropUTurn
+ * Inputs: engine, ArchitectureControl
+ * Outputs: none
+ * Use: drives the robot in an arc that leaves it parallel with the minerals
+ **********************************************************************************************/
+
 public class Step07PostDropUTurn extends State {
   private boolean Complete = false;
   private boolean FirstRun;
@@ -34,9 +41,10 @@ public class Step07PostDropUTurn extends State {
     LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
     RightDrive = Control.PinksHardwareConfig.pRightMotor;
     RightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    //these are were we use the variables we edit on the phone
     distanceINLeft = Control.AppReader.get("RunPostDropUTurn").variable("LeftIN");
     distanceINRight = Control.AppReader.get("RunPostDropUTurn").variable("RightIN");
-
     LeftPower = Control.AppReader.get("RunPostDropUTurn").variable("LeftPower");
     RightPower = Control.AppReader.get("RunPostDropUTurn").variable("RightPower");
 
@@ -56,6 +64,7 @@ public class Step07PostDropUTurn extends State {
         FirstRun = false;
       }
 
+
       Drive(-LeftPower, -RightPower, distanceINLeft, distanceINRight);
 
       if (Complete) {
@@ -68,9 +77,11 @@ public class Step07PostDropUTurn extends State {
     }
   }
 
-  private int DistanceConverter(int distanceIN, int whealCircumference) {
-    return (int) ((distanceIN * 288) / (whealCircumference * Math.PI));
+  //A handy conversion from distance on the field to motor ticks using the circumference of the wheal
+  private int DistanceConverter(int distanceIN, int WhealDiamiter) {
+    return (int) ((distanceIN * 288) / (WhealDiamiter * Math.PI));
   }
+
 
   private void Drive(double LeftPower, double RightPower, int distanceINLeft, int distanceINRight) {
 
@@ -82,7 +93,7 @@ public class Step07PostDropUTurn extends State {
 
     LeftDrive.setPower(LeftPower);
     RightDrive.setPower(RightPower);
-
+    //run the motor until it reaches it's target
     if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
       RightDrive.setPower(0);
     }
@@ -90,7 +101,7 @@ public class Step07PostDropUTurn extends State {
     if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
       LeftDrive.setPower(0);
     }
-
+    //when both motors reach their target, it moves to the next step before resetting the encoders
     if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
       Complete = true;
 
@@ -103,6 +114,8 @@ public class Step07PostDropUTurn extends State {
 
     }
   }
+
+  //the telemetry method is called with the main op-mode loop to avoid weirdness in perpetually displaying telemetry
   @Override
   public void telemetry() {
     engine.telemetry.addData("LeftCurrentTick", LeftCurrentTick);
