@@ -120,5 +120,9 @@ public class Step10MineralKick extends State {
         }
     }
 
-
+    @Override
+    public void telemetry() {
+        engine.telemetry.addData("Is Gold?", Scan.isGold);
+        engine.telemetry.addData("Scan #", Scan.ScanNumber);
+    }
 }

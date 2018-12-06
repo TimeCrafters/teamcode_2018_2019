@@ -1,10 +1,12 @@
 package org.timecrafters.PINKS_2018.Autonomous.Support;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import org.timecrafters.engine.Engine;
 
@@ -26,6 +28,8 @@ public class PinksHardwareConfig {
     private String szDropRight = "dropRight";      // REV exp hub 3 servo port 0 180 servo
     private String szClipArm = "clipArm";       // Rev exp hub 3 motor port 1
     private String szWinchUp = "winchUp";       // Rev exp hub 3 motor port 2
+    private String szLeftUSSensor = "LeftUS";   // I2C
+    private String szRightUSSensor = "RightUS"; // I2C
 
     /*create pointers for hardware*/
     public DcMotor pLeftMotor;
@@ -42,6 +46,8 @@ public class PinksHardwareConfig {
     public Servo pDropRight;
     public DcMotor pClipArm;
     public DcMotor pWinchUp;
+    public ModernRoboticsI2cRangeSensor pLeftUSSensor;
+    public ModernRoboticsI2cRangeSensor pRightUSSensor;
 
 
     /* create some useful variables */
@@ -67,6 +73,8 @@ public class PinksHardwareConfig {
         pDropRight = engine.hardwareMap.servo.get(szDropRight);
         pClipArm = engine.hardwareMap.dcMotor.get(szClipArm);
         pWinchUp = engine.hardwareMap.dcMotor.get(szWinchUp);
+        pLeftUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szLeftUSSensor);
+        pRightUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szRightUSSensor);
 
         /* initialize hardware modes*/
         pLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
