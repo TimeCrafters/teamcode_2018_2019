@@ -2,7 +2,6 @@ package org.timecrafters.PINKS_2018.TeleOp.States;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.cyberarm.container.InputChecker;
@@ -50,6 +49,19 @@ public class TeleOpState extends State {
     private int clipArmTargetPostition;
     private double clipArmPower;
     private boolean clipIsUp;
+    private Servo servoRotation;
+    private double servoRotationPosition;
+    private boolean servoRotationLastRead;
+    private boolean servoRotationLastRead2;
+    private boolean servoClampLastRead;
+    private boolean servoClampLastRead2;
+    private Servo servoClamp;
+    private double servoClampPosition;
+    private int clipArmLastPosition;
+    private boolean clipArmLastRead;
+    private boolean clipArmLastRead2;
+    private boolean clipArmToggle;
+
 
 
     public TeleOpState(Engine engine) {
@@ -68,7 +80,8 @@ public class TeleOpState extends State {
         clipArm = engine.hardwareMap.dcMotor.get("clipArm");
         winchUp = engine.hardwareMap.dcMotor.get("winchUp");
         mineralCapture = engine.hardwareMap.servo.get("mineralCapture");
-       // LeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        servoRotation = engine.hardwareMap.servo.get("servoRotation");
+        servoClamp = engine.hardwareMap.servo.get("servoClamp");
         SlowToggle = false;
         winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -86,6 +99,15 @@ public class TeleOpState extends State {
         mineralArmPower = 0.1;
         mineralArmPowerMaxUp = 0.4;
         clipIsUp = false;
+        servoRotation.setPosition(0);
+        servoRotationPosition = 0.0;
+        servoClamp.setPosition(1);
+        servoClampPosition = 1;
+       // clipArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //clipArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        clipArmLastPosition = clipArm.getCurrentPosition();
+
+
     }
 
     @Override
@@ -93,6 +115,7 @@ public class TeleOpState extends State {
 //--------------------------------------------------------------------------------------------------
         //code for elbow and mineral collect
 
+        //elbow code
         if (engine.gamepad1.dpad_left) {
             ElbowServo.setPower(-1);
         }else if (engine.gamepad1.dpad_right) {
@@ -198,40 +221,26 @@ public class TeleOpState extends State {
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-        //clip arm code
-      /*  if (engine.gamepad2.y != y2LastRead &&
-                engine.gamepad2.y == true &&
-                clipIsUp == false){
-            clipArmTargetPostition = 72;
-            clipArmPower = 0.75;
-            clipIsUp = true;
-            y2LastRead = true;
+
+
+        if (engine.gamepad2.x != clipArmLastRead && engine.gamepad2.x == true){
+          //  clipArmLastPosition = clipArm.getCurrentPosition() - 10;
+          //  clipArm.setTargetPosition(clipArmLastPosition);
+            clipArm.setPower(-0.75);
         }
-        if (engine.gamepad2.y != y2LastRead &&
-                engine.gamepad2.y == true &&
-                clipIsUp == true){
-            clipArmTargetPostition = 0;
-            clipArmPower = 0.25;
-            clipIsUp = false;
-            y2LastRead = true;
-        }*/
+        clipArmLastRead = engine.gamepad2.x;
 
-
-        leftStickValue = engine.gamepad2.left_stick_y;
-
-        clipArm.setPower(leftStickValue);
-    /*    if (leftStickValue >= 0.1){
-            clipArmTargetPostition = clipArm.getCurrentPosition() + 20;
-            clipArmPower = 1*leftStickValue;
+        if (engine.gamepad2.b != clipArmLastRead2 && engine.gamepad2.b == true){
+           // clipArmLastPosition = clipArm.getCurrentPosition() + 10;
+           // clipArm.setTargetPosition(clipArmLastPosition);
+            clipArm.setPower(0.75);
+    }
+        if (engine.gamepad2.b == false &&
+                engine.gamepad2.x == false ){
+            clipArm.setPower(0);
         }
-        if (leftStickValue <= -0.1){
-            clipArmTargetPostition = clipArm.getCurrentPosition() - 20;
-            clipArmPower = 0.5*leftStickValue;
-        }
-        clipArm.setTargetPosition(clipArmTargetPostition);
-        clipArm.setPower(clipArmPower);*/
 
- //winch code
+
 if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5){
     winchPosition = winchUp.getCurrentPosition();
 }
@@ -246,24 +255,17 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
         winchUp.setTargetPosition(winchTargetPosition);
         winchUp.setPower(1);
 
-/*if (engine.gamepad2.right_stick_y >= 0.05){
-    winchUp.setPower(1.0*engine.gamepad2.right_stick_y);
-}else if (engine.gamepad2.right_stick_y <= -0.05){
-    winchUp.setPower(1.0*engine.gamepad2.right_stick_y);
-}else{
-    winchUp.setPower(0.1);
-}*/
 
         //drive train controls
         RightDrive.setPower(engine.gamepad1.right_stick_y);
         LeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
 
         if (System.currentTimeMillis() >= captureTime) {
-            if (engine.gamepad2.x && captureToggle == false) {
+            if (engine.gamepad2.y && captureToggle == false) {
                 captureToggle = true;
                 captureTime = System.currentTimeMillis() + 500;
               capturePosition = 0.25;
-            } else if (engine.gamepad2.x && captureToggle == true) {
+            } else if (engine.gamepad2.y && captureToggle == true) {
                 captureToggle = false;
                 captureTime = System.currentTimeMillis() + 500;
                mineralCapture.setPosition(0);
@@ -273,7 +275,39 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
 
         mineralCapture.setPosition(capturePosition);
 
+        //toggle for positive servo position
+        if (engine.gamepad2.dpad_up != servoRotationLastRead && engine.gamepad2.dpad_up == true){
+            servoRotationPosition = servoRotationPosition -0.05;
 
+        }
+        servoRotationLastRead = engine.gamepad2.dpad_up;
+
+        //toggle for negative servo position
+        if (engine.gamepad2.dpad_down != servoRotationLastRead2 && engine.gamepad2.dpad_down == true){
+            servoRotationPosition = servoRotationPosition +0.05;
+
+        }
+        servoRotationLastRead2 = engine.gamepad2.dpad_down;
+
+        //setting servo position
+        servoRotation.setPosition(servoRotationPosition);
+//--------------------------------------------------------------------------------------------------
+        //toggle for positive servo position
+        if (engine.gamepad2.dpad_left != servoClampLastRead && engine.gamepad2.dpad_left == true){
+            servoClampPosition = servoClampPosition -0.05;
+
+        }
+        servoClampLastRead = engine.gamepad2.dpad_left;
+
+        //toggle for negative servo position
+        if (engine.gamepad2.dpad_right != servoClampLastRead2 && engine.gamepad2.dpad_right == true){
+            servoClampPosition = servoClampPosition +0.05;
+
+        }
+        servoClampLastRead2 = engine.gamepad2.dpad_right;
+
+        //setting servo position
+        servoClamp.setPosition(servoClampPosition);
 
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -287,5 +321,9 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
         engine.telemetry.addData("game-mode?",gameMode);
         engine.telemetry.addData("tick of winch",winchPosition);
         engine.telemetry.addData("mineral max power",mineralArmPowerMaxUp);
+        engine.telemetry.addData("clamp position", servoRotation.getPosition());
+        engine.telemetry.addData("clip target position", clipArmLastPosition);
+        engine.telemetry.addData("current clip position",clipArm.getCurrentPosition());
+        engine.telemetry.addData("clip power!!!",clipArm.getPower());
     }
 }
