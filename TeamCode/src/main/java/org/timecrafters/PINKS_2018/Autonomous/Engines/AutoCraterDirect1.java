@@ -8,8 +8,10 @@ import org.timecrafters.PINKS_2018.Autonomous.States.Step08DriveToDetect;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step09MineralDetect;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step10MineralKick;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step11TeamMarkerDrive;
+import org.timecrafters.PINKS_2018.Autonomous.States.Step11TeamMarkerDriveV2;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step12TeamMarkerPlace;
 import org.timecrafters.PINKS_2018.Autonomous.States.Step13OptionADriveToPark_fromTMP;
+import org.timecrafters.PINKS_2018.Autonomous.States.Step13OptionADriveToPark_fromTMPV2;
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 
@@ -28,9 +30,9 @@ public class AutoCraterDirect1 extends Engine {
     Step09MineralDetect Scan = new Step09MineralDetect(this, control);
     addState(Scan);
     addState(new Step10MineralKick(this, control, Scan));
-    addState(new Step11TeamMarkerDrive(this, control, false));
+    addState(new Step11TeamMarkerDriveV2(this, control, false));
     addState(new Step12TeamMarkerPlace(this, control));
-    addState(new Step13OptionADriveToPark_fromTMP(this, control, false));
+    addState(new Step13OptionADriveToPark_fromTMPV2(this, control, false));
 
 
   }

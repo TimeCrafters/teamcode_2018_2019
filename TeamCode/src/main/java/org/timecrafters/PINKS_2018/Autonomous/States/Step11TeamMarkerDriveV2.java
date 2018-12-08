@@ -24,7 +24,6 @@ import java.util.ArrayList;
 public class Step11TeamMarkerDriveV2 extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
-    private long StartTime;
     private long PreviousTriggerTime;
     private boolean PosDepot;
     private int DriveStep;
@@ -40,10 +39,11 @@ public class Step11TeamMarkerDriveV2 extends State {
     private int distanceTicksRight;
     private int distanceTicksLeft;
     private ModernRoboticsI2cRangeSensor LeftUSSensor;
-    private ModernRoboticsI2cRangeSensor RightUSSensor;
-    private ArrayList<Double> USDistances;
-    private int DataSetSize;
+    private double USDistance;
+    private double TargetWallDistance;
     private long ReadTime;
+    private double CorrectionAmount;
+
 
 
 
@@ -58,10 +58,9 @@ public class Step11TeamMarkerDriveV2 extends State {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
         LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
-        RightUSSensor = Control.PinksHardwareConfig.pRightUSSensor;
-
-
-
+        ReadTime = Control.AppReader.get("RunTeamMarkerDrive").variable("CorrectionTime");
+        TargetWallDistance = Control.AppReader.get("RunTeamMarkerDrive").variable("TargetWallDistance");
+        CorrectionAmount = Control.AppReader.get("RunTeamMarkerDrive").variable("CAmount");
         DriveStep = 1;
         FirstRun = true;
     }
@@ -76,8 +75,7 @@ public class Step11TeamMarkerDriveV2 extends State {
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                StartTime = System.currentTimeMillis();
-                PreviousTriggerTime = StartTime;
+                PreviousTriggerTime = System.currentTimeMillis();
                 FirstRun = false;
             }
 
@@ -98,19 +96,34 @@ public class Step11TeamMarkerDriveV2 extends State {
             // These drive strait into the depot for a distance that depends on the starting position
             if (DriveStep == 2 && PosDepot) {
 
-                //This provides a list of data
-                if (PreviousTriggerTime - StartTime > ReadTime) {
-                    USDistances.add(LeftUSSensor.getDistance(DistanceUnit.MM));
-                    if (USDistances.size() > DataSetSize) {
-                        USDistances.remove(0);
+                //Ultrasonic sensor guidance
+                USDistance = LeftUSSensor.cmUltrasonic();
+
+                if (System.currentTimeMillis() - PreviousTriggerTime > ReadTime && USDistance < 100) {
+
+                    PreviousTriggerTime = System.currentTimeMillis();
+
+                    if (USDistance > TargetWallDistance + 1) {
+                        LeftPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) - CorrectionAmount;
+                        RightPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) + CorrectionAmount;
+                    } else if (USDistance < TargetWallDistance - 1) {
+                            LeftPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) + CorrectionAmount;
+                            RightPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) - CorrectionAmount;
+                    } else {
+                        LeftPower = (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower"));
+                        RightPower = (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower"));
                     }
+
+                    distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInReverse");
+                    distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInReverse");
+
+
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
                 }
+            }
 
-                distanceINLeft = 36;
-                distanceINRight = 36;
-
-
-
+            if (DriveStep == 2 && !PosDepot) {
+                setDriveValues("StraitPower", "StraitPower", "CLeftIN", "CRightIN");
                 Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
             }
 
@@ -183,14 +196,16 @@ public class Step11TeamMarkerDriveV2 extends State {
     public void telemetry() {
         engine.telemetry.addLine("Running RunPark");
         engine.telemetry.addData("Drive Step", DriveStep);
-        engine.telemetry.addData("RightPower", RightDrive.getPower());
-        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
-        engine.telemetry.addData("Right Target IN", distanceINRight);
-        engine.telemetry.addData("Left Target IN", distanceINLeft);
-        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
-        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
+        engine.telemetry.addData("Left Power", LeftPower);
+//        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
+//        engine.telemetry.addData("Right Target IN", distanceINRight);
+//        engine.telemetry.addData("Left Target IN", distanceINLeft);
+//        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
+//        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
 
 
+        engine.telemetry.addData("Left Ultrasonic", LeftUSSensor.cmUltrasonic());
+        //engine.telemetry.addData("Right Ultrasonic", RightUSSensor.cmUltrasonic());
     }
 
 }
