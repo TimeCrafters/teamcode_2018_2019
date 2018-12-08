@@ -121,11 +121,15 @@ public class Step09MineralDetect extends State {
                 StartTime = CurrentTime;
                 RightDrive.setPower(Power);
                 LeftDrive.setPower(Power);
+                Log.i("LazerScan", "Right Power "+RightDrive.getPower());
+                Log.i("LazerScan", "Left Power "+LeftDrive.getPower());
                 LazerArmServo.setPosition(LazerMidPosition);
+                sleep(500 );
             }
 
             //Finish if Drive limit reached and gold not found
             if (Math.abs(RightCurrentTick) >= distanceTicks) {
+                Log.i("LazerScan", "Stopped Drive");
                 RightDrive.setPower(0);
                 LeftDrive.setPower(0);
                 LazerArmServo.setPosition(0);
@@ -139,7 +143,7 @@ public class Step09MineralDetect extends State {
 //the distance from ground, and thus the height of the object;
 
                 if (Calibrating) {
-                    pause(true);
+                    //pause(true);
                     if (CurrentTime - StartTime < CalibrationTime) {
                         Cal0.add(DistanceSensors.get(0).getDistance(DistanceUnit.MM));
                         Cal1.add(DistanceSensors.get(1).getDistance(DistanceUnit.MM));
@@ -187,6 +191,7 @@ public class Step09MineralDetect extends State {
 
                     //Checks the 4 height values to see if an object is present and act accordingly
                     if (!ScanCommence) {
+                        Log.i("LazerScan", "Scan Not Commenced");
                         for (int index = 0; index < (HightValues.size() - 1); index++) {
                             if (HightValues.get(index) >= ObjectDetectThreshold) {
                                 ScanCommence = true;
@@ -199,7 +204,7 @@ public class Step09MineralDetect extends State {
 
 
                     if (ScanCommence) {
-
+                        Log.i("LazerScan", "Object Detected");
                         //Remember the Highest value while scanning
                         for (int index = 0; index < (HightValues.size() - 1); index++) {
                             if (HightValues.get(index) > HightValues.get(HightValues.size() - 1)) {
@@ -283,6 +288,7 @@ public class Step09MineralDetect extends State {
     }
 
     public void pause(boolean pause) {
+        Log.i("LazerScan", "Pause "+pause);
         if (pause) {
             RightDrive.setPower(0);
             LeftDrive.setPower(0);

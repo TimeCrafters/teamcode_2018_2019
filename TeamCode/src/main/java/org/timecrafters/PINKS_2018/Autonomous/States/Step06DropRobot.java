@@ -29,6 +29,9 @@ public class Step06DropRobot extends State {
     public void init() {
         servoLeft = Control.PinksHardwareConfig.pDropLeft;
         servoRight = Control.PinksHardwareConfig.pDropRight;
+
+        servoLeft.setPosition(1);
+        servoRight.setPosition(0);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class Step06DropRobot extends State {
         if (Control.RunDropRobot) {
             //This is the actual code for the Drop step. It opens the drop latch servos before
             //closing them shortly after the robot lands.
-            servoLeft.setPosition(.2);
+            servoLeft.setPosition(.6);
             servoRight.setPosition(1);
             sleep(500);
             servoLeft.setPosition(1);

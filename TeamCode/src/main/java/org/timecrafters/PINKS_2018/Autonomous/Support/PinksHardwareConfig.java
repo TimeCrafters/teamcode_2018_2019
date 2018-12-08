@@ -47,7 +47,7 @@ public class PinksHardwareConfig {
     public DcMotor pClipArm;
     public DcMotor pWinchUp;
     public ModernRoboticsI2cRangeSensor pLeftUSSensor;
-    public ModernRoboticsI2cRangeSensor pRightUSSensor;
+    //public ModernRoboticsI2cRangeSensor pRightUSSensor;
 
 
     /* create some useful variables */
@@ -74,7 +74,7 @@ public class PinksHardwareConfig {
         pClipArm = engine.hardwareMap.dcMotor.get(szClipArm);
         pWinchUp = engine.hardwareMap.dcMotor.get(szWinchUp);
         pLeftUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szLeftUSSensor);
-        pRightUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szRightUSSensor);
+        //pRightUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szRightUSSensor);
 
         /* initialize hardware modes*/
         pLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
