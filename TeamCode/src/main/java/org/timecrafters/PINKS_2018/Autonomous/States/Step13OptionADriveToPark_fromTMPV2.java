@@ -35,7 +35,6 @@ public class Step13OptionADriveToPark_fromTMPV2 extends State {
     private int distanceTicksLeft;
     private DcMotor ClipArm;
     private ModernRoboticsI2cRangeSensor LeftUSSensor;
-    //private ModernRoboticsI2cRangeSensor RightUSSensor;
     private double USDistance;
     private double TargetWallDistance;
     private long ReadTime;
@@ -54,6 +53,7 @@ public class Step13OptionADriveToPark_fromTMPV2 extends State {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
         ClipArm = Control.PinksHardwareConfig.pClipArm;
+        LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
         ReadTime = Control.AppReader.get("RunTeamMarkerDrive").variable("CorrectionTime");
         TargetWallDistance = Control.AppReader.get("RunTeamMarkerDrive").variable("TargetWallDistance");
         CorrectionAmount = Control.AppReader.get("RunTeamMarkerDrive").variable("CAmount");
@@ -141,9 +141,9 @@ public class Step13OptionADriveToPark_fromTMPV2 extends State {
                         Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
                     }
 
-
+                    //The part that returns the marker arm to storage.
                     ClipArm.setTargetPosition(0);
-                    ClipArm.setPower(-0.5);
+                    ClipArm.setPower(-1);
                     if (ClipArm.getCurrentPosition() <= 10) {
                         ClipArm.setPower(0);
                     }
