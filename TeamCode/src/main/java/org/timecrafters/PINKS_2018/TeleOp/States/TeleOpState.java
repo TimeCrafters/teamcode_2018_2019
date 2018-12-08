@@ -61,6 +61,8 @@ public class TeleOpState extends State {
     private boolean clipArmLastRead;
     private boolean clipArmLastRead2;
     private boolean clipArmToggle;
+    private Servo laserArm;
+    private double laserArmPosition;
 
 
 
@@ -82,6 +84,7 @@ public class TeleOpState extends State {
         mineralCapture = engine.hardwareMap.servo.get("mineralCapture");
         servoRotation = engine.hardwareMap.servo.get("servoRotation");
         servoClamp = engine.hardwareMap.servo.get("servoClamp");
+        laserArm = engine.hardwareMap.servo.get("laserArm");
         SlowToggle = false;
         winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -246,7 +249,8 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
 }
         if (engine.gamepad2.right_stick_y > 0.5){
             winchTargetPosition = winchPosition + 50;
-        }else if (engine.gamepad2.right_stick_y < -0.5){
+        }
+        if (engine.gamepad2.right_stick_y < -0.5){
             winchTargetPosition = winchPosition - 50;
         }else{
             winchTargetPosition = winchPosition;
@@ -254,6 +258,14 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
 
         winchUp.setTargetPosition(winchTargetPosition);
         winchUp.setPower(1);
+
+        if (engine.gamepad2.right_bumper == true){
+            laserArmPosition = 0.5;
+        }
+        if (engine.gamepad2.left_bumper == true){
+            laserArmPosition = 0;
+        }
+        laserArm.setPosition(laserArmPosition);
 
 
         //drive train controls
@@ -276,31 +288,31 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
         mineralCapture.setPosition(capturePosition);
 
         //toggle for positive servo position
-        if (engine.gamepad2.dpad_up != servoRotationLastRead && engine.gamepad2.dpad_up == true){
+        if (engine.gamepad2.dpad_down != servoRotationLastRead && engine.gamepad2.dpad_down == true && servoRotationPosition > 0){
             servoRotationPosition = servoRotationPosition -0.05;
 
         }
-        servoRotationLastRead = engine.gamepad2.dpad_up;
+        servoRotationLastRead = engine.gamepad2.dpad_down;
 
         //toggle for negative servo position
-        if (engine.gamepad2.dpad_down != servoRotationLastRead2 && engine.gamepad2.dpad_down == true){
+        if (engine.gamepad2.dpad_up != servoRotationLastRead2 && engine.gamepad2.dpad_up == true && servoRotationPosition < 1){
             servoRotationPosition = servoRotationPosition +0.05;
 
         }
-        servoRotationLastRead2 = engine.gamepad2.dpad_down;
+        servoRotationLastRead2 = engine.gamepad2.dpad_up;
 
         //setting servo position
         servoRotation.setPosition(servoRotationPosition);
 //--------------------------------------------------------------------------------------------------
         //toggle for positive servo position
-        if (engine.gamepad2.dpad_left != servoClampLastRead && engine.gamepad2.dpad_left == true){
+        if (engine.gamepad2.dpad_left != servoClampLastRead && engine.gamepad2.dpad_left == true && servoClampPosition >0){
             servoClampPosition = servoClampPosition -0.05;
 
         }
         servoClampLastRead = engine.gamepad2.dpad_left;
 
         //toggle for negative servo position
-        if (engine.gamepad2.dpad_right != servoClampLastRead2 && engine.gamepad2.dpad_right == true){
+        if (engine.gamepad2.dpad_right != servoClampLastRead2 && engine.gamepad2.dpad_right == true&& servoClampPosition < 1){
             servoClampPosition = servoClampPosition +0.05;
 
         }
