@@ -60,7 +60,7 @@ public class Step10MineralKick extends State {
 
                 if (Scan.ScanNumber == 1) {
 
-
+                    
                 }
 
                 if (Scan.ScanNumber == 2) {
