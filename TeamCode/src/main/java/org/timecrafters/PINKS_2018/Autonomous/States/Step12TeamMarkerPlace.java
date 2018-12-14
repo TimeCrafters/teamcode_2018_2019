@@ -54,7 +54,6 @@ public class Step12TeamMarkerPlace extends State {
             }
 
 
-
             if (Complete) {
                 engine.telemetry.addLine("Completed Step12TeamMarkerPlace");
                 engine.telemetry.update();

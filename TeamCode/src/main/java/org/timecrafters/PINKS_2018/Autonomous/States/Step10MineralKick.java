@@ -33,10 +33,10 @@ public class Step10MineralKick extends State {
 
 
 
-    public Step10MineralKick(Engine engine, ArchitectureControl control, Step09MineralDetect scan) {
+    public Step10MineralKick(Engine engine, ArchitectureControl control) {
         this.engine = engine;
         this.Control = control;
-        this.Scan = scan;
+        //this.Scan = scan;
     }
 
     public void init() {
@@ -56,21 +56,6 @@ public class Step10MineralKick extends State {
                 FirstRun = false;
             }
 
-            if (Scan.isGold) {
-
-                if (Scan.ScanNumber == 1) {
-
-                    
-                }
-
-                if (Scan.ScanNumber == 2) {
-
-                }
-
-                if (Scan.ScanNumber == 3) {
-
-                }
-            }
 
             if (Complete) {
                 engine.telemetry.addLine("Completed Step10MineralKick");
@@ -122,7 +107,6 @@ public class Step10MineralKick extends State {
 
     @Override
     public void telemetry() {
-        engine.telemetry.addData("Is Gold?", Scan.isGold);
-        engine.telemetry.addData("Scan #", Scan.ScanNumber);
+
     }
 }

@@ -29,7 +29,7 @@ public class AutoDepotDirect1 extends Engine {
     addState(new Step08DriveToDetect(this, control));
     Step09MineralDetect Scan = new Step09MineralDetect(this, control);
     addState(Scan);
-    addState(new Step10MineralKick(this, control, Scan));
+    addState(new Step10MineralKick(this, control));
     addState(new Step11TeamMarkerDriveV2(this, control, true));
     addState(new Step12TeamMarkerPlace(this, control));
     addState(new Step13OptionADriveToPark_fromTMPV2(this, control, true));
