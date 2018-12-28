@@ -22,6 +22,7 @@ public class Step12TeamMarkerPlace extends State {
     private int PlacePosition;
     private long WaitTime;
     private boolean ReachedTarget;
+    private double Power;
 
 
     public Step12TeamMarkerPlace(Engine engine, ArchitectureControl control) {
@@ -33,6 +34,7 @@ public class Step12TeamMarkerPlace extends State {
         ClipArm = Control.PinksHardwareConfig.pClipArm;
         PlacePosition = Control.AppReader.get("RunTeamMarkerPlace").variable("Pos"); // probably 130
         WaitTime = Control.AppReader.get("RunTeamMarkerPlace").variable("Pause");
+        Power = Control.AppReader.get("RunTeamMarkerPlace").variable("Power");
         ClipArm.setDirection(DcMotorSimple.Direction.REVERSE);
         ClipArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ClipArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -45,12 +47,11 @@ public class Step12TeamMarkerPlace extends State {
 
             if (!Complete) {
                 ClipArm.setTargetPosition(PlacePosition);
-                ClipArm.setPower(0.5);
+                ClipArm.setPower(Power);
                 if (ClipArm.getCurrentPosition() >= PlacePosition) {
                     Complete = true;
                 }
             }
-
 
 
             if (Complete) {
