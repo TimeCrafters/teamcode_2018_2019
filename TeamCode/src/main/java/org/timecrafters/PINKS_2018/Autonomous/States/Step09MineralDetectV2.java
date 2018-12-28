@@ -2,16 +2,21 @@ package org.timecrafters.PINKS_2018.Autonomous.States;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
+
+import java.util.List;
 
 public class Step09MineralDetectV2 extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
     private VuforiaLocalizer VuForia;
     private TFObjectDetector ObjectDetector;
+    private List<Recognition> Objects;
+    private Recognition Object;
     private boolean FirstRun;
 
     public Step09MineralDetectV2(Engine engine, ArchitectureControl control) {
@@ -42,8 +47,14 @@ public class Step09MineralDetectV2 extends State {
             if (FirstRun) {
                 FirstRun = false;
                 ObjectDetector.activate();
-
             }
+
+            Objects = ObjectDetector.getUpdatedRecognitions();
+
+            if (Objects != null) {
+                engine.telemetry.addLine("HAZAH!");
+            }
+
 
 
             if (Complete) {
@@ -61,7 +72,8 @@ public class Step09MineralDetectV2 extends State {
     @Override
     public void telemetry() {
         engine.telemetry.addLine("Running Scan");
-
-        engine.telemetry.addData("Returning:", ObjectDetector.getUpdatedRecognitions());
+        if (Object != null) {
+            engine.telemetry.addData("Object", Object.getLeft());
+        }
     }
 }
