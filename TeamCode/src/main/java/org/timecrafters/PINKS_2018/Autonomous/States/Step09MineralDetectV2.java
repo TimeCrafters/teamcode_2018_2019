@@ -18,6 +18,10 @@ public class Step09MineralDetectV2 extends State {
     private List<Recognition> Objects;
     private Recognition Object;
     private boolean FirstRun;
+    private float GoldLeft;
+    private float SilverLeft;
+    private float SecondSilverLeft;
+    public int GoldPosition;
 
     public Step09MineralDetectV2(Engine engine, ArchitectureControl control) {
         this.engine = engine;
@@ -39,6 +43,10 @@ public class Step09MineralDetectV2 extends State {
         ObjectDetector.loadModelFromAsset("RoverRuckus.tflite", "Gold Mineral", "Silver Mineral");
 
         FirstRun = true;
+        GoldLeft = -1;
+        SilverLeft = -1;
+        SecondSilverLeft = -1;
+        GoldPosition = 0;
     }
 
     @Override
@@ -49,12 +57,37 @@ public class Step09MineralDetectV2 extends State {
                 ObjectDetector.activate();
             }
 
+
             Objects = ObjectDetector.getUpdatedRecognitions();
 
             if (Objects != null) {
-                engine.telemetry.addLine("HAZAH!");
-            }
+                //all three minerals are viable...
+                if (Objects.size() == 3) {
 
+                    for (Recognition object : Objects) {
+                        if (object.getLabel().equals("Gold Mineral")) {
+                            //.getBottom returns a value for where the object is on the screen. We switched
+                            //to getBottom from getLeft when we switched to mounting the phone in landscape.
+                            GoldLeft = object.getBottom();
+                        } else if (SilverLeft == -1) {
+                            SilverLeft = object.getBottom();
+                        } else {
+                            SecondSilverLeft = object.getBottom();
+                        }
+
+                        //With the values for the object's positions in view, we determine the position
+                        //of the gold mineral.
+                        if (GoldLeft < SilverLeft && GoldLeft < SecondSilverLeft) {
+                            GoldPosition = 1;
+                        } else if (GoldLeft > SilverLeft && GoldLeft > SecondSilverLeft) {
+                            GoldPosition = 3;
+                        } else {
+                            GoldPosition = 2;
+                        }
+
+                    }
+                }
+            }
 
 
             if (Complete) {
@@ -72,8 +105,7 @@ public class Step09MineralDetectV2 extends State {
     @Override
     public void telemetry() {
         engine.telemetry.addLine("Running Scan");
-        if (Object != null) {
-            engine.telemetry.addData("Object", Object.getLeft());
-        }
+
+        engine.telemetry.addData("Gold Position", GoldPosition);
     }
 }
