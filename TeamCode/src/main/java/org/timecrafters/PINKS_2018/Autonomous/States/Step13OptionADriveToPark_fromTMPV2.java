@@ -124,18 +124,18 @@ public class Step13OptionADriveToPark_fromTMPV2 extends State {
 
                         PreviousTriggerTime = System.currentTimeMillis();
 
-                        distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathIN");
-                        distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathIN");
+                        distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
+                        distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
 
                         if (USDistance > TargetWallDistance + 1) {
-                            LeftPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathPower")) + CorrectionAmount;
-                            RightPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathPower")) - CorrectionAmount;
+                            LeftPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) + CorrectionAmount;
+                            RightPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) - CorrectionAmount;
                         } else if (USDistance < TargetWallDistance - 1) {
-                            LeftPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathPower")) - CorrectionAmount;
-                            RightPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathPower")) + CorrectionAmount;
+                            LeftPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) - CorrectionAmount;
+                            RightPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) + CorrectionAmount;
                         } else {
-                            LeftPower = (Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathPower"));
-                            RightPower = (Control.AppReader.get("RunTeamMarkerDrive").variable("AltPathPower"));
+                            LeftPower = (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower"));
+                            RightPower = (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower"));
                         }
 
                         Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
