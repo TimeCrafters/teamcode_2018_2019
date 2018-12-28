@@ -2,6 +2,7 @@ package org.timecrafters.PINKS_2018.TeleOp.States;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.cyberarm.container.InputChecker;
@@ -85,29 +86,31 @@ public class TeleOpState extends State {
         servoRotation = engine.hardwareMap.servo.get("servoRotation");
         servoClamp = engine.hardwareMap.servo.get("servoClamp");
         laserArm = engine.hardwareMap.servo.get("laserArm");
-        SlowToggle = false;
+
         winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mineralArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mineralArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mineralArmCurrentPosition = mineralArm.getCurrentPosition();
-        mineralModeLastRead = false;
         winchPosition = winchUp.getCurrentPosition();
         winchUp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        capturePosition = 0;
         mineralCapture.setPosition(capturePosition);
+
+        mineralModeLastRead = false;
+        SlowToggle = false;
         a1LastRead = false;
         y1LastRead = false;
         y2LastRead = false;
+        clipIsUp = false;
+
+        capturePosition = 0;
         mineralArmPower = 0.1;
         mineralArmPowerMaxUp = 0.4;
-        clipIsUp = false;
         servoRotation.setPosition(0);
         servoRotationPosition = 0.0;
         servoClamp.setPosition(1);
         servoClampPosition = 1;
-       // clipArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //clipArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         clipArmLastPosition = clipArm.getCurrentPosition();
 
 
@@ -116,9 +119,9 @@ public class TeleOpState extends State {
     @Override
     public void exec() throws InterruptedException {
 //--------------------------------------------------------------------------------------------------
-        //code for elbow and mineral collect
+        //code for elbow and mineral collection
 
-        //elbow code
+        //elbow code - moving servo left and right when the dpad left or right is true
         if (engine.gamepad1.dpad_left) {
             ElbowServo.setPower(-1);
         }else if (engine.gamepad1.dpad_right) {
@@ -127,7 +130,8 @@ public class TeleOpState extends State {
             ElbowServo.setPower(0);
         }
 
-        //mineral collect toggle
+        //mineral collect toggle - using a toggle to go between 100% power and 0% power on the servo
+        //that collects minerals
 
         collectionServo.setPower(collectionPower);
         if (System.currentTimeMillis() >= collectionTime) {
@@ -145,9 +149,11 @@ public class TeleOpState extends State {
 
 
 //**************************************************************************************************
-        //CODE FOR RUNNING MINERAL ARM!!!!!
+        //CODE FOR RUNNING MINERAL COLLECTION ARM!!!!!
 
-        //power up and down
+        //power up and down toggles
+
+        //a toggle to increase the mineral collection arm power
         if (engine.gamepad1.y != y1LastRead &&
                 engine.gamepad1.y == true &&
                 mineralArmPowerMaxUp < 1.0){
@@ -155,19 +161,22 @@ public class TeleOpState extends State {
         }
         y1LastRead = engine.gamepad1.y;
 
+        //a toggle to decrease the mineral collection arm power
         if (engine.gamepad1.a != a1LastRead &&
                 engine.gamepad1.a == true &&
                 mineralArmPowerMaxUp > 0.0){
             mineralArmPowerMaxUp -= 0.1;
         }
         a1LastRead = engine.gamepad1.a;
-        //Game mode toggle
+
+
+        //Game mode toggle - a switch for who is driving the mineral collection arm
         if (engine.gamepad1.x != mineralModeLastRead && engine.gamepad1.x == true){
             gameMode = !gameMode;
         }
         mineralModeLastRead = engine.gamepad1.x;
 
-        //switch
+        //if controller 2 has control of the mineral collection arm
         if (gameMode == true) {
 
             rightTriggerValue = engine.gamepad2.right_trigger;
@@ -182,89 +191,101 @@ public class TeleOpState extends State {
             }
 
             if (rightTriggerValue > 0.05) {
-                //down
+                //down - setting the arm power times the right trigger and setting the position
+                //to the current position minus 75
                 mineralArmPower = 0.25 * rightTriggerValue;
                 mineralArmTargetPosition = mineralArmCurrentPosition - 75;
             }
 
             if (leftTriggerValue > 0.05) {
-                //up
+                //up - setting the arm power times the left trigger and setting the position
+                //to the current position plus 75
                 mineralArmTargetPosition = mineralArmCurrentPosition + 75;
                 mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
             }
         }else{
-            //start of gamepad 1
+            //if controller 1 has control of the mineral collection arm
             rightTriggerValue = engine.gamepad1.right_trigger;
             leftTriggerValue = engine.gamepad1.left_trigger;
 
             if (leftTriggerValue < 0.05 && rightTriggerValue < 0.05) {
                 //no triggers
-                //mineralArmPower = 1;
             } else {
                 //at least one trigger
                 mineralArmCurrentPosition = mineralArm.getCurrentPosition();
             }
 
             if (rightTriggerValue > 0.05) {
-                //down
+                //down - setting the arm power times the left trigger and setting the position
+                //to the current position plus 75
                 mineralArmPower = 0.25 * rightTriggerValue;
                 mineralArmTargetPosition = mineralArmCurrentPosition + 75;
             }
 
             if (leftTriggerValue > 0.05) {
-                //up
+                //up - setting the arm power times the right trigger and setting the position
+                //to the current position minus 75
                 mineralArmTargetPosition = mineralArmCurrentPosition - 75;
                 mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
             }
         }
-
+        //setting the mineral collection arm power and target position
         mineralArm.setTargetPosition(mineralArmTargetPosition);
         mineralArm.setPower(mineralArmPower);
 //**************************************************************************************************
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-
+        //code for clip arm
 
         if (engine.gamepad2.x != clipArmLastRead && engine.gamepad2.x == true){
-          //  clipArmLastPosition = clipArm.getCurrentPosition() - 10;
-          //  clipArm.setTargetPosition(clipArmLastPosition);
+            //drives arm down
             clipArm.setPower(-0.75);
         }
         clipArmLastRead = engine.gamepad2.x;
 
         if (engine.gamepad2.b != clipArmLastRead2 && engine.gamepad2.b == true){
-           // clipArmLastPosition = clipArm.getCurrentPosition() + 10;
-           // clipArm.setTargetPosition(clipArmLastPosition);
+            //drives arm up
             clipArm.setPower(0.75);
     }
+
         if (engine.gamepad2.b == false &&
                 engine.gamepad2.x == false ){
+            //arm power set to zero
             clipArm.setPower(0);
         }
 
+        // winch code
 
-if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5){
-    winchPosition = winchUp.getCurrentPosition();
-}
-        if (engine.gamepad2.right_stick_y > 0.5){
-            winchTargetPosition = winchPosition + 50;
+        //getting current position when sticks aren't centered
+        if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5){
+            winchPosition = winchUp.getCurrentPosition();
         }
-        if (engine.gamepad2.right_stick_y < -0.5){
+
+        if (engine.gamepad2.right_stick_y > 0.5){
+            //going up
             winchTargetPosition = winchPosition - 50;
+        }else if (engine.gamepad2.right_stick_y < -0.5){
+            //going down
+            winchTargetPosition = winchPosition + 50;
         }else{
+            //setting fixed position
             winchTargetPosition = winchPosition;
         }
-
+        //setting power and position of winch
         winchUp.setTargetPosition(winchTargetPosition);
         winchUp.setPower(1);
 
+        //laser arm
         if (engine.gamepad2.right_bumper == true){
-            laserArmPosition = 0.5;
+            //laser arm out
+            laserArmPosition = 1.0;
         }
         if (engine.gamepad2.left_bumper == true){
+            //laser arm in
             laserArmPosition = 0;
         }
+        //setting laser arm position
         laserArm.setPosition(laserArmPosition);
 
 
@@ -272,6 +293,8 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
         RightDrive.setPower(engine.gamepad1.right_stick_y);
         LeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
 
+
+        //toggle for mineral capture
         if (System.currentTimeMillis() >= captureTime) {
             if (engine.gamepad2.y && captureToggle == false) {
                 captureToggle = true;
@@ -284,8 +307,10 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
                 capturePosition = 0;
             }
         }
-
+        //setting mineral capture position
         mineralCapture.setPosition(capturePosition);
+
+        //controls for latching on the lander
 
         //toggle for positive servo position
         if (engine.gamepad2.dpad_down != servoRotationLastRead && engine.gamepad2.dpad_down == true && servoRotationPosition > 0){
@@ -304,6 +329,8 @@ if (engine.gamepad2.right_stick_y > 0.5 || engine.gamepad2.right_stick_y < -0.5)
         //setting servo position
         servoRotation.setPosition(servoRotationPosition);
 //--------------------------------------------------------------------------------------------------
+        // controls for letting go of hook on clip arm
+
         //toggle for positive servo position
         if (engine.gamepad2.dpad_left != servoClampLastRead && engine.gamepad2.dpad_left == true && servoClampPosition >0){
             servoClampPosition = servoClampPosition -0.05;
