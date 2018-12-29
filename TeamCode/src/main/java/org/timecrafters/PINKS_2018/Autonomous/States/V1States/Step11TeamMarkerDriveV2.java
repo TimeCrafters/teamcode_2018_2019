@@ -1,12 +1,17 @@
-package org.timecrafters.PINKS_2018.Autonomous.States;
+package org.timecrafters.PINKS_2018.Autonomous.States.V1States;
 
 import android.util.Log;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
+
+import java.util.ArrayList;
 
 /**********************************************************************************************
  * Name: TeamMarkerDrive
@@ -16,9 +21,10 @@ import org.timecrafters.engine.State;
  * Version 1.0
  **********************************************************************************************/
 
-public class Step11TeamMarkerDrive extends State {
+public class Step11TeamMarkerDriveV2 extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
+    private long PreviousTriggerTime;
     private boolean PosDepot;
     private int DriveStep;
     private boolean FirstRun;
@@ -32,11 +38,17 @@ public class Step11TeamMarkerDrive extends State {
     private int distanceINLeft;
     private int distanceTicksRight;
     private int distanceTicksLeft;
+    private ModernRoboticsI2cRangeSensor LeftUSSensor;
+    private double USDistance;
+    private double TargetWallDistance;
+    private long ReadTime;
+    private double CorrectionAmount;
 
 
 
 
-    public Step11TeamMarkerDrive(Engine engine, ArchitectureControl control, boolean posDepot) {
+
+    public Step11TeamMarkerDriveV2(Engine engine, ArchitectureControl control, boolean posDepot) {
         this.engine = engine;
         this.Control = control;
         this.PosDepot = posDepot;
@@ -45,6 +57,10 @@ public class Step11TeamMarkerDrive extends State {
     public void init() {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
+        LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
+        ReadTime = Control.AppReader.get("RunTeamMarkerDrive").variable("CorrectionTime");
+        TargetWallDistance = Control.AppReader.get("RunTeamMarkerDrive").variable("TargetWallDistance");
+        CorrectionAmount = Control.AppReader.get("RunTeamMarkerDrive").variable("CAmount");
         DriveStep = 1;
         FirstRun = true;
     }
@@ -59,6 +75,7 @@ public class Step11TeamMarkerDrive extends State {
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                PreviousTriggerTime = System.currentTimeMillis();
                 FirstRun = false;
             }
 
@@ -78,8 +95,31 @@ public class Step11TeamMarkerDrive extends State {
 
             // These drive strait into the depot for a distance that depends on the starting position
             if (DriveStep == 2 && PosDepot) {
-                setDriveValues("StraitPower", "StraitPower", "LeftInReverse", "RightInReverse");
-                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+
+                //Ultrasonic sensor guidance
+                USDistance = LeftUSSensor.cmUltrasonic();
+
+                if (System.currentTimeMillis() - PreviousTriggerTime > ReadTime && USDistance < 100) {
+
+                    PreviousTriggerTime = System.currentTimeMillis();
+
+                    if (USDistance > TargetWallDistance + 1) {
+                        LeftPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) - CorrectionAmount;
+                        RightPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) + CorrectionAmount;
+                    } else if (USDistance < TargetWallDistance - 1) {
+                            LeftPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) + CorrectionAmount;
+                            RightPower = (double) (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower")) - CorrectionAmount;
+                    } else {
+                        LeftPower = (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower"));
+                        RightPower = (Control.AppReader.get("RunTeamMarkerDrive").variable("StraitPower"));
+                    }
+
+                    distanceINLeft = Control.AppReader.get("RunTeamMarkerDrive").variable("LeftInReverse");
+                    distanceINRight = Control.AppReader.get("RunTeamMarkerDrive").variable("RightInReverse");
+
+
+                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                }
             }
 
             if (DriveStep == 2 && !PosDepot) {
@@ -156,14 +196,16 @@ public class Step11TeamMarkerDrive extends State {
     public void telemetry() {
         engine.telemetry.addLine("Running RunPark");
         engine.telemetry.addData("Drive Step", DriveStep);
-        engine.telemetry.addData("RightPower", RightDrive.getPower());
-        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
-        engine.telemetry.addData("Right Target IN", distanceINRight);
-        engine.telemetry.addData("Left Target IN", distanceINLeft);
-        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
-        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
+        engine.telemetry.addData("Left Power", LeftPower);
+//        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
+//        engine.telemetry.addData("Right Target IN", distanceINRight);
+//        engine.telemetry.addData("Left Target IN", distanceINLeft);
+//        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
+//        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
 
 
+        engine.telemetry.addData("Left Ultrasonic", LeftUSSensor.cmUltrasonic());
+        //engine.telemetry.addData("Right Ultrasonic", RightUSSensor.cmUltrasonic());
     }
 
 }

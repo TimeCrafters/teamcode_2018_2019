@@ -1,11 +1,11 @@
-package org.timecrafters.PINKS_2018.Autonomous.States;
+package org.timecrafters.PINKS_2018.Autonomous.States.V1States;
 
 
-import android.util.Log;
-
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
+import org.timecrafters.engine.Cont;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
@@ -17,7 +17,7 @@ import org.timecrafters.engine.State;
  **********************************************************************************************/
 
 
-public class Step13OptionADriveToPark_fromTMP extends State {
+public class Step13OptionADriveToPark_fromTMPV2 extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
     private boolean PosDepot;
@@ -34,10 +34,16 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     private int distanceTicksRight;
     private int distanceTicksLeft;
     private DcMotor ClipArm;
+    private ModernRoboticsI2cRangeSensor LeftUSSensor;
+    private double USDistance;
+    private double TargetWallDistance;
+    private long ReadTime;
+    private long PreviousTriggerTime;
+    private double CorrectionAmount;
 
 
 
-    public Step13OptionADriveToPark_fromTMP(Engine engine, ArchitectureControl control, boolean posDepot) {
+    public Step13OptionADriveToPark_fromTMPV2(Engine engine, ArchitectureControl control, boolean posDepot) {
         this.engine = engine;
         this.Control = control;
         this.PosDepot = posDepot;
@@ -47,6 +53,10 @@ public class Step13OptionADriveToPark_fromTMP extends State {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
         ClipArm = Control.PinksHardwareConfig.pClipArm;
+        LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
+        ReadTime = Control.AppReader.get("RunTeamMarkerDrive").variable("CorrectionTime");
+        TargetWallDistance = Control.AppReader.get("RunTeamMarkerDrive").variable("TargetWallDistance");
+        CorrectionAmount = Control.AppReader.get("RunTeamMarkerDrive").variable("CAmount");
         FirstRun = true;
         DriveStep = 1;
     }
@@ -60,6 +70,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                PreviousTriggerTime = System.currentTimeMillis();
                 FirstRun = false;
             }
             
@@ -105,15 +116,38 @@ public class Step13OptionADriveToPark_fromTMP extends State {
                 //the robot drives strait backwards onto the alliance's crater while simultaneously
                 // returning the marker placement arm to it's original position.
                 if (DriveStep == 1) {
-                    setDriveValues("AltPathPower", "AltPathPower", "AltPathIN", "AltPathIN");
 
+                    //Ultrasonic sensor guidance
+                    USDistance = LeftUSSensor.cmUltrasonic();
+
+                    if (System.currentTimeMillis() - PreviousTriggerTime > ReadTime && USDistance < 100) {
+
+                        PreviousTriggerTime = System.currentTimeMillis();
+
+                        distanceINLeft = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
+                        distanceINRight = Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathIN");
+
+                        if (USDistance > TargetWallDistance + 1) {
+                            LeftPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) + CorrectionAmount;
+                            RightPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) - CorrectionAmount;
+                        } else if (USDistance < TargetWallDistance - 1) {
+                            LeftPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) - CorrectionAmount;
+                            RightPower = (double) (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower")) + CorrectionAmount;
+                        } else {
+                            LeftPower = (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower"));
+                            RightPower = (Control.AppReader.get("RunDriveToPark_fromTMP").variable("AltPathPower"));
+                        }
+
+                        Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+                    }
+
+                    //The part that returns the marker arm to storage.
                     ClipArm.setTargetPosition(0);
-                    ClipArm.setPower(-0.5);
+                    ClipArm.setPower(-1);
                     if (ClipArm.getCurrentPosition() <= 10) {
                         ClipArm.setPower(0);
                     }
 
-                    Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
                 }
 
                 if (DriveStep == 2) {
@@ -182,7 +216,7 @@ public class Step13OptionADriveToPark_fromTMP extends State {
         }
     }
 
-    @Override
+
     public void telemetry() {
         engine.telemetry.addLine("Running Step13OptionADriveToPark_fromTMP");
         engine.telemetry.addData("Right Current Tick", RightCurrentTick);

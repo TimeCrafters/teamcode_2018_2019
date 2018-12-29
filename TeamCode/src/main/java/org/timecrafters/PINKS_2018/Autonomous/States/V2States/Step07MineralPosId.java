@@ -1,18 +1,27 @@
-package org.timecrafters.PINKS_2018.Autonomous.States;
+package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
 
+import org.cyberarm.NeXT.StateConfiguration;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.timecrafters.PINKS_2018.Autonomous.Support.ArchitectureControl;
+import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 import java.util.List;
 
-public class Step09MineralDetectV2 extends State {
-    private boolean Complete = false;
-    public ArchitectureControl Control;
+/**********************************************************************************************
+ * Name: DropRobot
+ * Inputs: engine, ArchitectureControl
+ * Outputs: none
+ * Use: Opens drop latch to drop robot
+ **********************************************************************************************/
+
+public class Step07MineralPosId extends State {
+    private String StepID = "MineralPosId";
+    public StateConfiguration AppReader;
+    public PinksHardwareConfig PinksHardwareConfig;
     private VuforiaLocalizer VuForia;
     private TFObjectDetector ObjectDetector;
     private List<Recognition> Objects;
@@ -23,9 +32,11 @@ public class Step09MineralDetectV2 extends State {
     private float SecondSilverLeft;
     public int GoldPosition;
 
-    public Step09MineralDetectV2(Engine engine, ArchitectureControl control) {
+
+    public Step07MineralPosId(Engine engine) {
         this.engine = engine;
-        this.Control = control;
+        this.AppReader = new StateConfiguration();
+        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
     }
 
     public void init() {
@@ -51,7 +62,8 @@ public class Step09MineralDetectV2 extends State {
 
     @Override
     public void exec() {
-        if (Control.RunMineralDetect) {
+        if (AppReader.allow(StepID)) {
+
             if (FirstRun) {
                 FirstRun = false;
                 ObjectDetector.activate();
@@ -89,23 +101,11 @@ public class Step09MineralDetectV2 extends State {
                 }
             }
 
-
-            if (Complete) {
-                engine.telemetry.addLine("Completed Step09MineralDetect");
-                engine.telemetry.update();
-                Complete = false;
-                ObjectDetector.shutdown();
-                setFinished(true);
-            }
         } else {
+            engine.telemetry.addLine("Skipping Step"+StepID);
+            sleep(1000);
             setFinished(true);
         }
     }
 
-    @Override
-    public void telemetry() {
-        engine.telemetry.addLine("Running Scan");
-
-        engine.telemetry.addData("Gold Position", GoldPosition);
-    }
 }

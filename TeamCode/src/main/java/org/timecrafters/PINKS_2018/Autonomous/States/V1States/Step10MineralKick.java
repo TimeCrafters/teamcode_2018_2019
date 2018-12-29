@@ -1,4 +1,4 @@
-package org.timecrafters.PINKS_2018.Autonomous.States;
+package org.timecrafters.PINKS_2018.Autonomous.States.V1States;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -17,7 +17,7 @@ import org.timecrafters.engine.State;
 public class Step10MineralKick extends State {
     private boolean Complete = false;
     public ArchitectureControl Control;
-    public Step09MineralDetect Scan;
+    public Step07MineralDetectV2 Scan;
     private boolean FirstRun;
     private int DriveStep;
     private DcMotor RightDrive;
@@ -33,16 +33,19 @@ public class Step10MineralKick extends State {
 
 
 
-    public Step10MineralKick(Engine engine, ArchitectureControl control) {
+    public Step10MineralKick(Engine engine, ArchitectureControl control, Step07MineralDetectV2 scan) {
         this.engine = engine;
         this.Control = control;
-        //this.Scan = scan;
+        this.Scan = scan;
     }
 
     public void init() {
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
         FirstRun = true;
+
+        LeftPower = Control.AppReader.get("MineralKick").variable("Power");
+        RightPower = Control.AppReader.get("MineralKick").variable("Power");
     }
 
     @Override
@@ -56,6 +59,23 @@ public class Step10MineralKick extends State {
                 FirstRun = false;
             }
 
+            if (Scan.GoldPosition == 1) {
+                distanceINLeft = Control.AppReader.get("MineralKick").variable("Pos1Distance");
+                distanceINRight = Control.AppReader.get("MineralKick").variable("Pos1Distance");
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
+
+            if (Scan.GoldPosition == 2) {
+                distanceINLeft = Control.AppReader.get("MineralKick").variable("Pos2Distance");
+                distanceINRight = Control.AppReader.get("MineralKick").variable("Pos2Distance");
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
+
+            if (Scan.GoldPosition == 3) {
+                distanceINLeft = Control.AppReader.get("MineralKick").variable("Pos3Distance");
+                distanceINRight = Control.AppReader.get("MineralKick").variable("Pos3Distance");
+                Drive(LeftPower, RightPower, distanceINLeft, distanceINRight);
+            }
 
             if (Complete) {
                 engine.telemetry.addLine("Completed Step10MineralKick");
