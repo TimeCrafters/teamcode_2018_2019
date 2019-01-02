@@ -7,19 +7,19 @@ import org.timecrafters.engine.State;
 
 /**********************************************************************************************
  * Name: DropRobot
- * Inputs: engine
+ * Inputs: engine, ArchitectureControl
  * Outputs: none
- * Use:
+ * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step06DropRobot extends State {
-    private String StepID = "DropRobot";
+public class Step14DPointToCrater extends State {
+    private String StepID = "PointToCrater";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
 
 
 
-    public Step06DropRobot(Engine engine) {
+    public Step14DPointToCrater(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);

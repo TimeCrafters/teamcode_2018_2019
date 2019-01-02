@@ -18,7 +18,7 @@ import java.util.List;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step07MineralPosId extends State {
+public class Step07DMineralPosId extends State {
     private String StepID = "MineralPosId";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
@@ -33,7 +33,7 @@ public class Step07MineralPosId extends State {
     public int GoldPosition;
 
 
-    public Step07MineralPosId(Engine engine) {
+    public Step07DMineralPosId(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);
@@ -62,6 +62,9 @@ public class Step07MineralPosId extends State {
 
     @Override
     public void exec() {
+        //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
+        //variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
+        //toggled on or off.
         if (AppReader.allow(StepID)) {
 
             if (FirstRun) {
@@ -102,6 +105,9 @@ public class Step07MineralPosId extends State {
             }
 
         } else {
+            //since the rest of the program depends on the decision of this step, if the step is
+            //toggled off, we just run the center path
+            GoldPosition = 2;
             engine.telemetry.addLine("Skipping Step"+StepID);
             sleep(1000);
             setFinished(true);

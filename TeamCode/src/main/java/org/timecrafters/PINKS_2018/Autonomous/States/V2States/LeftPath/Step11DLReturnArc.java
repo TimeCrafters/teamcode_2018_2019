@@ -1,4 +1,4 @@
-package org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath;
+package org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath;
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
@@ -12,14 +12,14 @@ import org.timecrafters.engine.State;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step14PointToCrater extends State {
-    private String StepID = "PointTowardGold";
+public class Step11DLReturnArc extends State {
+    private String StepID = "LReturnArc";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
 
 
 
-    public Step14PointToCrater(Engine engine) {
+    public Step11DLReturnArc(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);
@@ -32,10 +32,12 @@ public class Step14PointToCrater extends State {
     @Override
     public void exec() {
         //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        // variables from the phone.
+        // variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
+        // toggled on or off.
         if (AppReader.allow(StepID)) {
 
-
+            engine.telemetry.addLine("Running Step"+StepID);
+            sleep(1000);
             setFinished(true);
 
         } else {
@@ -43,6 +45,7 @@ public class Step14PointToCrater extends State {
             sleep(1000);
             setFinished(true);
         }
+        engine.telemetry.update();
     }
 
 }

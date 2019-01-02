@@ -7,22 +7,24 @@ import org.timecrafters.engine.State;
 
 /**********************************************************************************************
  * Name: DropRobot
- * Inputs: engine, ArchitectureControl
+ * Inputs: engine,
  * Outputs: none
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step011PlaceMarker extends State {
-    private String StepID = "PlaceMarker";
+public class Step08DPointTowardGold extends State {
+    private String StepID = "PointTowardGold";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
+    public Step07DMineralPosId GoldPosIdentifier;
 
 
 
-    public Step011PlaceMarker(Engine engine) {
+    public Step08DPointTowardGold(Engine engine, Step07DMineralPosId mineralPosId ) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.GoldPosIdentifier = mineralPosId;
     }
 
     public void init() {
@@ -32,10 +34,12 @@ public class Step011PlaceMarker extends State {
     @Override
     public void exec() {
         //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        // variables from the phone.
+        // variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
+        // toggled on or off.
         if (AppReader.allow(StepID)) {
 
-
+            engine.telemetry.addLine("Running Step"+StepID);
+            sleep(1000);
             setFinished(true);
 
         } else {
@@ -43,6 +47,7 @@ public class Step011PlaceMarker extends State {
             sleep(1000);
             setFinished(true);
         }
+        engine.telemetry.update();
     }
 
 }
