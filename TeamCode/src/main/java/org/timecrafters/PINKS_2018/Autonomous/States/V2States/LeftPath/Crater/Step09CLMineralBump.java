@@ -1,4 +1,4 @@
-package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
+package org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater;
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
@@ -12,14 +12,14 @@ import org.timecrafters.engine.State;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step14DPointToCrater extends State {
-    private String StepID = "DPointToCrater";
+public class Step09CLMineralBump extends State {
+    private String StepID = "CLMineralBump";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
 
 
 
-    public Step14DPointToCrater(Engine engine) {
+    public Step09CLMineralBump(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);

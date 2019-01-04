@@ -18,7 +18,7 @@ import java.util.List;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step07DMineralPosId extends State {
+public class Step07MineralPosId extends State {
     private String StepID = "MineralPosId";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
@@ -33,7 +33,7 @@ public class Step07DMineralPosId extends State {
     public int GoldPosition;
 
 
-    public Step07DMineralPosId(Engine engine) {
+    public Step07MineralPosId(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);

@@ -1,4 +1,4 @@
-package org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath;
+package org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Depot;
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
@@ -12,14 +12,14 @@ import org.timecrafters.engine.State;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step11DLReturnArc extends State {
-    private String StepID = "LReturnArc";
+public class Step10DRDriveToDepot extends State {
+    private String StepID = "DRDriveToDepot";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
 
 
 
-    public Step11DLReturnArc(Engine engine) {
+    public Step10DRDriveToDepot(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);

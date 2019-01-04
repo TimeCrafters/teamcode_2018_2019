@@ -5,15 +5,22 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step06DropRobot;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step07MineralPosId;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step08PointTowardGold;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step12CTurnToDepot;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step13CDriveToDepot;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step14CDriveToCrater;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step14DPointToCrater;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step15DDriveToCrater;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathCenter;
+import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathLeft;
+import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathRight;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathCenter;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathLeft;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathRight;
 import org.timecrafters.engine.Engine;
 
 @Autonomous (name = "Autonomous: Depot")
-public class AutoDepotDirect2 extends Engine {
+public class AutoCraterDirect2 extends Engine {
 
   @Override
   public void setProcesses() {
@@ -25,14 +32,14 @@ public class AutoDepotDirect2 extends Engine {
 
     addState(new Step08PointTowardGold(this, MPosId));
 
-    addSubEngine(new DMineralPathCenter(this, MPosId));
-    addSubEngine(new DMineralPathLeft(this, MPosId));
-    addSubEngine(new DMineralPathRight(this, MPosId));
+    addSubEngine(new CMineralPathCenter(this, MPosId));
+    addSubEngine(new CMineralPathLeft(this, MPosId));
+    addSubEngine(new CMineralPathRight(this, MPosId));
 
-    addState(new Step14DPointToCrater(this));
-    addState(new Step15DDriveToCrater(this));
-
-
+    addState(new Step12CTurnToDepot(this));
+    addState(new Step13CDriveToDepot(this));
+    addState(new StepPlaceMarker(this));
+    addState(new Step14CDriveToCrater(this));
 
 
   }

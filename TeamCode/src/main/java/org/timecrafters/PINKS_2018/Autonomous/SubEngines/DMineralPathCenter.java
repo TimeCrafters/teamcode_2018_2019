@@ -1,19 +1,19 @@
 package org.timecrafters.PINKS_2018.Autonomous.SubEngines;
 
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Step09DCMineralBump;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Step10DCDriveToDepot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Step11DCReverse;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Step12DCTurn;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Step13DCMineralStrait;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step07DMineralPosId;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.Step09DCMineralBump;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.Step10DCDriveToDepot;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.Step11DCReverse;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.Step12DCTurn;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.Step13DCMineralStrait;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step07MineralPosId;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
 public class DMineralPathCenter extends SubEngine {
     Engine engine;
-    private Step07DMineralPosId GoldPosIdentifier;
+    private Step07MineralPosId GoldPosIdentifier;
 
-    public DMineralPathCenter(Engine engine, Step07DMineralPosId mineralPosId) {
+    public DMineralPathCenter(Engine engine, Step07MineralPosId mineralPosId) {
         this.engine = engine;
         this.GoldPosIdentifier = mineralPosId;
     }

@@ -1,4 +1,4 @@
-package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
+package org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot;
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
@@ -7,24 +7,22 @@ import org.timecrafters.engine.State;
 
 /**********************************************************************************************
  * Name: DropRobot
- * Inputs: engine,
+ * Inputs: engine, ArchitectureControl
  * Outputs: none
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step08DPointTowardGold extends State {
-    private String StepID = "PointTowardGold";
+public class Step12DCTurn extends State {
+    private String StepID = "DCTurn";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    public Step07DMineralPosId GoldPosIdentifier;
 
 
 
-    public Step08DPointTowardGold(Engine engine, Step07DMineralPosId mineralPosId ) {
+    public Step12DCTurn(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);
-        this.GoldPosIdentifier = mineralPosId;
     }
 
     public void init() {

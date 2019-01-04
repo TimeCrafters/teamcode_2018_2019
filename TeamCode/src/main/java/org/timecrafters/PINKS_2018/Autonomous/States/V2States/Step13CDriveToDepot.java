@@ -12,14 +12,14 @@ import org.timecrafters.engine.State;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class Step14DPointToCrater extends State {
-    private String StepID = "DPointToCrater";
+public class Step13CDriveToDepot extends State {
+    private String StepID = "CDriveToDepot";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
 
 
 
-    public Step14DPointToCrater(Engine engine) {
+    public Step13CDriveToDepot(Engine engine) {
         this.engine = engine;
         this.AppReader = new StateConfiguration();
         this.PinksHardwareConfig = new PinksHardwareConfig(engine);
