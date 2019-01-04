@@ -1,0 +1,41 @@
+[
+{"enabled":false,"name":"DropRobot","variables":{}},
+{"enabled":false,"name":"MineralPosId","variables":{}},
+{"enabled":false,"name":"PointTowardGold","variables":{}},
+{"enabled":false,"name":"PlaceMarker","variables":{}},
+
+    {"enabled":false,"name":"CCMineralBump","variables":{}},
+    {"enabled":false,"name":"CCReturnArc","variables":{}},
+    {"enabled":false,"name":"CCMineralStrait","variables":{}},
+
+    {"enabled":false,"name":"CLMineralBump","variables":{}},
+    {"enabled":false,"name":"CLReturnArc","variables":{}},
+    {"enabled":false,"name":"CLMineralStrait","variables":{}},
+
+    {"enabled":false,"name":"CRMineralBump","variables":{}},
+    {"enabled":false,"name":"CRReturnArc","variables":{}},
+    {"enabled":false,"name":"CRMineralStrait","variables":{}},
+
+{"enabled":false,"name":"CTurnToDepot","variables":{}},
+{"enabled":false,"name":"CDriveToDepot","variables":{}},
+{"enabled":false,"name":"CDriveToCrater","variables":{}},
+
+    {"enabled":false,"name":"DCMineralBump","variables":{}},
+    {"enabled":false,"name":"DCDriveToDepot","variables":{}},
+    {"enabled":false,"name":"DCReverse","variables":{}},
+    {"enabled":false,"name":"DCTurn","variables":{}},
+    {"enabled":false,"name":"DCMineralStrait","variables":{}},
+
+    {"enabled":false,"name":"DLMineralBump","variables":{}},
+    {"enabled":false,"name":"DLDriveToDepot","variables":{}},
+    {"enabled":false,"name":"DLReturnArc","variables":{}},
+    {"enabled":false,"name":"DLMineralStrait","variables":{}},
+
+    {"enabled":false,"name":"DRMineralBump","variables":{}},
+    {"enabled":false,"name":"DRDriveToDepot","variables":{}},
+    {"enabled":false,"name":"DRReturnArc","variables":{}},
+    {"enabled":false,"name":"DRMineralStrait","variables":{}},
+
+{"enabled":false,"name":"DPointToCrater","variables":{}},
+{"enabled":false,"name":"DDriveToCrater","variables":{}}
+]

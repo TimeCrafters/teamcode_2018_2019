@@ -13,7 +13,7 @@ import org.timecrafters.engine.State;
  **********************************************************************************************/
 
 public class Step11CCMineralStrait extends State {
-    private String StepID = "CCMineralBump";
+    private String StepID = "CCMineralStrait";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
 

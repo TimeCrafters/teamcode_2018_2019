@@ -6,6 +6,7 @@ import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.S
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.Step12DCTurn;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.Step13DCMineralStrait;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step07MineralPosId;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
@@ -22,6 +23,7 @@ public class DMineralPathCenter extends SubEngine {
     public void setProcesses() {
         addState(new Step09DCMineralBump(engine));
         addState(new Step10DCDriveToDepot(engine));
+        addState(new StepPlaceMarker(engine));
         addState(new Step11DCReverse(engine));
         addState(new Step12DCTurn(engine));
         addState(new Step13DCMineralStrait(engine));
