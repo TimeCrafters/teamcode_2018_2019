@@ -5,7 +5,7 @@ import org.timecrafters.engine.SubEngine;
 
 public class GoldDetectPathA extends SubEngine {
     public LazerScanv2_1 goldDetect;
-//    public Drive ScanDrive;
+//    public PinksDrive ScanDrive;
     public Engine engine;
 
     public GoldDetectPathA(Engine engine, LazerScanv2_1 goldDetect, Drive scanDrive) {

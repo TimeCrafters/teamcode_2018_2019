@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.timecrafters.engine.Engine;
 @Disabled
-@Autonomous (name = "Gold Drive test")
+@Autonomous (name = "Gold PinksDrive test")
 
 public class GoldDriveTestEngine extends Engine {
     @Override

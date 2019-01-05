@@ -16,7 +16,7 @@ public class DriveToDetect_ extends SubEngine {
     @Override
     public void setProcesses() {
 
-        addState(new CompleteStepIndicator_(engine, "Drive to Detect", 1));
+        addState(new CompleteStepIndicator_(engine, "PinksDrive to Detect", 1));
     }
 
     @Override

@@ -127,9 +127,9 @@ public class Step09MineralDetect extends State {
                 sleep(500 );
             }
 
-            //Finish if Drive limit reached and gold not found
+            //Finish if PinksDrive limit reached and gold not found
             if (Math.abs(RightCurrentTick) >= distanceTicks) {
-                Log.i("LazerScan", "Stopped Drive");
+                Log.i("LazerScan", "Stopped PinksDrive");
                 RightDrive.setPower(0);
                 LeftDrive.setPower(0);
                 LazerArmServo.setPosition(0);
@@ -226,7 +226,7 @@ public class Step09MineralDetect extends State {
                         //if it reaches the end of the object before sufficient Dati is acquired, it
                         //pauses the drive and waves the scan arm over the object for More Dati
                         if (HightValues.get(0) < ObjectDetectThreshold && HightValues.get(1) < ObjectDetectThreshold && HightValues.get(2) < ObjectDetectThreshold && HightValues.get(3) < ObjectDetectThreshold) {
-                            //Temporarily Stops Drive
+                            //Temporarily Stops PinksDrive
                             pause(true);
 
                             //Waves Laser Arm

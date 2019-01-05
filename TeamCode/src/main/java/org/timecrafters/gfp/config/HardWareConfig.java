@@ -58,7 +58,7 @@ public class HardWareConfig  extends State{
 
 //        sleep(time);
 
-        //Drive Train
+        //PinksDrive Train
         dcFrontLeft  = engine.hardwareMap.dcMotor.get("dcFrontLeft");
         dcFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         dcFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);

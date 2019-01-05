@@ -66,6 +66,7 @@ public class Step07MineralPosId extends State {
         //variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
         //toggled on or off.
         if (AppReader.allow(StepID)) {
+            engine.telemetry.addLine("Running Step"+StepID);
 
             if (FirstRun) {
                 FirstRun = false;
@@ -100,18 +101,22 @@ public class Step07MineralPosId extends State {
                             GoldPosition = 2;
                         }
 
+                        if (GoldPosition != 0) {
+                            setFinished(true);
+                        }
                     }
                 }
             }
 
         } else {
             //since the rest of the program depends on the decision of this step, if the step is
-            //toggled off, we just run the center path
-            GoldPosition = 2;
+            //toggled off, we run whatever path we set on the phone.
+            GoldPosition = AppReader.get(StepID).variable("DefaultPath");
             engine.telemetry.addLine("Skipping Step"+StepID);
             sleep(1000);
             setFinished(true);
         }
+        engine.telemetry.update();
     }
 
 }

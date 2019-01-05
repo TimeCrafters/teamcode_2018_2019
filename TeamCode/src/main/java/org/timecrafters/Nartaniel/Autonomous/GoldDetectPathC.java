@@ -5,7 +5,7 @@ import org.timecrafters.engine.SubEngine;
 
 public class GoldDetectPathC extends SubEngine {
     public LazerScanv2_1 goldDetect;
-//    public Drive ScanDrive;
+//    public PinksDrive ScanDrive;
     public Engine engine;
 
     public GoldDetectPathC(Engine engine, LazerScanv2_1 goldDetect, Drive scanDrive) {
@@ -18,7 +18,7 @@ public class GoldDetectPathC extends SubEngine {
     @Override
     public void setProcesses() {
 
-        //addState(new Drive(engine, -0.7, 27, 4));
+        //addState(new PinksDrive(engine, -0.7, 27, 4));
     }
 
     @Override

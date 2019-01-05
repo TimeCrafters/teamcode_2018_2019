@@ -59,7 +59,7 @@ public class DarcShadowzTestEngineRed extends Engine {
         addThreadedState(new Flipper(this, -1, 750, false, 2500));
         addThreadedState(new DriveStraightForward(this, 0.15, 2300, 250));
 
-        // Turn Left, Drive Forward
+        // Turn Left, PinksDrive Forward
         addState(new TurnLeft(this, 0.3, 1000));
         addState(new DriveStraightForward(this, 0.50, 2900));
 

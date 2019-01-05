@@ -56,7 +56,7 @@ public class Step14Park extends State {
             //the PosDepot Variable enables the different drive patterns for
             if (PosDepot) {
                 if (DriveAround) {
-                    //Position: Depot, Drive around robot
+                    //Position: Depot, PinksDrive around robot
                     if (DriveStep == 1) {
 
                         LeftPower = Control.AppReader.get("RunPark").variable("Arc1LPowerD");
@@ -196,7 +196,7 @@ public class Step14Park extends State {
     @Override
     public void telemetry() {
         engine.telemetry.addLine("Running RunPark");
-        engine.telemetry.addData("Drive Step", DriveStep);
+        engine.telemetry.addData("PinksDrive Step", DriveStep);
         engine.telemetry.addData("RightPower", RightDrive.getPower());
         engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
         engine.telemetry.addData("Right Target IN", distanceINRight);

@@ -30,6 +30,7 @@ public class PinksHardwareConfig {
     private String szWinchUp = "winchUp";       // Rev exp hub 3 motor port 2
     private String szLeftUSSensor = "LeftUS";   // I2C
     private String szRightUSSensor = "RightUS"; // I2C
+    private String szPaddle;
 
     /*create pointers for hardware*/
     public DcMotor pLeftMotor;
@@ -48,6 +49,7 @@ public class PinksHardwareConfig {
     public DcMotor pWinchUp;
     public ModernRoboticsI2cRangeSensor pLeftUSSensor;
     //public ModernRoboticsI2cRangeSensor pRightUSSensor;
+    public Servo pPaddle;
 
 
     /* create some useful variables */
@@ -75,6 +77,7 @@ public class PinksHardwareConfig {
         pWinchUp = engine.hardwareMap.dcMotor.get(szWinchUp);
         pLeftUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szLeftUSSensor);
         //pRightUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szRightUSSensor);
+        pPaddle = engine.hardwareMap.servo.get(szPaddle);
 
         /* initialize hardware modes*/
         pLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -93,5 +96,6 @@ public class PinksHardwareConfig {
         pMineralCollectServo.setPower(0.0);
         pDropLeft.setPosition(1.0);
         pDropRight.setPosition(0.0);
+
     }
 }

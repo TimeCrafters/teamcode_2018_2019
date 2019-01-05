@@ -29,7 +29,7 @@ public class DMineralPathRight extends SubEngine {
 
     @Override
     public void evaluate() {
-        if (GoldPosIdentifier.GoldPosition == 1) {
+        if (GoldPosIdentifier.GoldPosition == 3) {
             setRunable(true);
         }
     }

@@ -19,7 +19,7 @@ import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathLeft;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathRight;
 import org.timecrafters.engine.Engine;
 
-@Autonomous (name = "Autonomous: Depot")
+@Autonomous (name = "Autonomous: Crater")
 public class AutoCraterDirect2 extends Engine {
 
   @Override

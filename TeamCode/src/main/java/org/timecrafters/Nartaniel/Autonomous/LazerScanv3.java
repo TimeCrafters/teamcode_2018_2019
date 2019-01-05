@@ -109,7 +109,7 @@ public class LazerScanv3 extends State {
 //        if (!ScanCommence && HightValues.get(0) >= ObjectDetectThreshhold || HightValues.get(1) >= ObjectDetectThreshhold || HightValues.get(2) >= ObjectDetectThreshhold || HightValues.get(3) >= ObjectDetectThreshhold) {
 //            ScanCommence = true;
 //            NumberOfDati = 0;
-//            Drive.pause(true);
+//            PinksDrive.pause(true);
 //            ServoDirection = true;
 //            PreviousTriggerTime = CurrentTime;
 //        }
