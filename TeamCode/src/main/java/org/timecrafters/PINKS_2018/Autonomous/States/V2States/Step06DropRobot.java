@@ -26,10 +26,10 @@ public class Step06DropRobot extends State {
 
 
 
-    public Step06DropRobot(Engine engine) {
+    public Step06DropRobot(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {

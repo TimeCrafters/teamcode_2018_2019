@@ -19,10 +19,10 @@ public class Step10CCReturnArc extends State {
 
 
 
-    public Step10CCReturnArc(Engine engine) {
+    public Step10CCReturnArc(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {

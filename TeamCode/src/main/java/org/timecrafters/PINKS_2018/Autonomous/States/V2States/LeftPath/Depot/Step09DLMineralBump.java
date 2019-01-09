@@ -19,10 +19,10 @@ public class Step09DLMineralBump extends State {
 
 
 
-    public Step09DLMineralBump(Engine engine) {
+    public Step09DLMineralBump(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {

@@ -2,6 +2,7 @@ package org.timecrafters.PINKS_2018.Autonomous.Engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step06DropRobot;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step07MineralPosId;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step08PointTowardGold;
@@ -17,29 +18,36 @@ import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathRight;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathCenter;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathLeft;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathRight;
+import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 
 @Autonomous (name = "Autonomous: Crater")
 public class AutoCraterDirect2 extends Engine {
 
+  public org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig PinksHardwareConfig;
+  public StateConfiguration AppReader;
+
   @Override
   public void setProcesses() {
 
-    addState(new Step06DropRobot(this));
+    PinksHardwareConfig = new PinksHardwareConfig(this);
+    AppReader = new StateConfiguration();
 
-    Step07MineralPosId MPosId = (new Step07MineralPosId(this));
+    addState(new Step06DropRobot(this, AppReader, PinksHardwareConfig));
+
+    Step07MineralPosId MPosId = (new Step07MineralPosId(this, AppReader, PinksHardwareConfig));
     addState(MPosId);
 
-    addState(new Step08PointTowardGold(this, MPosId));
+    addState(new Step08PointTowardGold(this, MPosId, AppReader, PinksHardwareConfig));
 
-    addSubEngine(new CMineralPathCenter(this, MPosId));
-    addSubEngine(new CMineralPathLeft(this, MPosId));
-    addSubEngine(new CMineralPathRight(this, MPosId));
+    addSubEngine(new CMineralPathCenter(this, MPosId, AppReader, PinksHardwareConfig));
+    addSubEngine(new CMineralPathLeft(this, MPosId, AppReader, PinksHardwareConfig));
+    addSubEngine(new CMineralPathRight(this, MPosId, AppReader, PinksHardwareConfig));
 
-    addState(new Step12CTurnToDepot(this));
-    addState(new Step13CDriveToDepot(this));
-    addState(new StepPlaceMarker(this));
-    addState(new Step14CDriveToCrater(this));
+    addState(new Step12CTurnToDepot(this, AppReader, PinksHardwareConfig));
+    addState(new Step13CDriveToDepot(this, AppReader, PinksHardwareConfig));
+    addState(new StepPlaceMarker(this, AppReader, PinksHardwareConfig));
+    addState(new Step14CDriveToCrater(this, AppReader, PinksHardwareConfig));
 
 
   }

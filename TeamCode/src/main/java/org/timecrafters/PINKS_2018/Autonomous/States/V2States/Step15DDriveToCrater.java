@@ -19,10 +19,10 @@ public class Step15DDriveToCrater extends State {
 
 
 
-    public Step15DDriveToCrater(Engine engine) {
+    public Step15DDriveToCrater(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {

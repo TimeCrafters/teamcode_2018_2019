@@ -31,10 +31,10 @@ public class Step08PointTowardGold extends State {
 
 
 
-    public Step08PointTowardGold(Engine engine, Step07MineralPosId mineralPosId ) {
+    public Step08PointTowardGold(Engine engine, Step07MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
         this.GoldPosIdentifier = mineralPosId;
     }
 

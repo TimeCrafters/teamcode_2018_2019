@@ -19,10 +19,10 @@ public class Step11DCReverse extends State {
 
 
 
-    public Step11DCReverse(Engine engine) {
+    public Step11DCReverse(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {

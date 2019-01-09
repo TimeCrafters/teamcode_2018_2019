@@ -32,10 +32,10 @@ public class Step07MineralPosId extends State {
     public int GoldPosition;
 
 
-    public Step07MineralPosId(Engine engine) {
+    public Step07MineralPosId(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {

@@ -24,10 +24,10 @@ public class Step09DCMineralBump extends State {
     private int RightInches;
 
 
-    public Step09DCMineralBump(Engine engine) {
+    public Step09DCMineralBump(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {

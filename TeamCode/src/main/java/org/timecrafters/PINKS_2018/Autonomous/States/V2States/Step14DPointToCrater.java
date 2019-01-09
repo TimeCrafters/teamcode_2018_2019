@@ -19,10 +19,10 @@ public class Step14DPointToCrater extends State {
 
 
 
-    public Step14DPointToCrater(Engine engine) {
+    public Step14DPointToCrater(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = new StateConfiguration();
-        this.PinksHardwareConfig = new PinksHardwareConfig(engine);
+        this.AppReader = appReader;
+        this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {
