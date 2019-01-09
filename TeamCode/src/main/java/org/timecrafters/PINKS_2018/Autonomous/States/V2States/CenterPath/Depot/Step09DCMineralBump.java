@@ -17,7 +17,11 @@ public class Step09DCMineralBump extends State {
     private String StepID = "DCMineralBump";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    public PinksDrive Drive;
+    private PinksDrive Drive;
+    private double LeftPower;
+    private double RightPower;
+    private int LeftInches;
+    private int RightInches;
 
 
     public Step09DCMineralBump(Engine engine) {
@@ -27,11 +31,11 @@ public class Step09DCMineralBump extends State {
     }
 
     public void init() {
-        Drive.initialize(PinksHardwareConfig);
-        Drive.LeftInches = AppReader.get(StepID).variable("LeftIN");
-        Drive.RightInches = AppReader.get(StepID).variable("RightIN");
-        Drive.LeftPower = AppReader.get(StepID).variable("LeftPower");
-        Drive.RightPower = AppReader.get(StepID).variable("RightPower");
+        Drive = new PinksDrive(PinksHardwareConfig);
+        LeftInches = AppReader.get(StepID).variable("LeftIN");
+        RightInches = AppReader.get(StepID).variable("RightIN");
+        LeftPower = AppReader.get(StepID).variable("LeftPower");
+        RightPower = AppReader.get(StepID).variable("RightPower");
     }
 
     @Override
@@ -42,7 +46,7 @@ public class Step09DCMineralBump extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
-            Drive.go();
+            Drive.go(LeftPower, RightPower, LeftInches, RightInches);
 
             setFinished(Drive.HasReachedTarget());
 

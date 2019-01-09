@@ -25,7 +25,6 @@ public class Step07MineralPosId extends State {
     private VuforiaLocalizer VuForia;
     private TFObjectDetector ObjectDetector;
     private List<Recognition> Objects;
-    private Recognition Object;
     private boolean FirstRun;
     private float GoldLeft;
     private float SilverLeft;

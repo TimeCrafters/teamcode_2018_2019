@@ -1,6 +1,7 @@
 package org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot;
 
 import org.cyberarm.NeXT.StateConfiguration;
+import org.timecrafters.PINKS_2018.Autonomous.Support.PinksDrive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
@@ -16,7 +17,11 @@ public class Step10DCDriveToDepot extends State {
     private String StepID = "DCDriveToDepot";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-
+    private PinksDrive Drive;
+    private double LeftPower;
+    private double RightPower;
+    private int LeftInches;
+    private int RightInches;
 
 
     public Step10DCDriveToDepot(Engine engine) {

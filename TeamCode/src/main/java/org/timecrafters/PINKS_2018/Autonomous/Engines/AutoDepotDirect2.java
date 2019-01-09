@@ -10,13 +10,18 @@ import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step15DDriveToCrat
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathCenter;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathLeft;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.DMineralPathRight;
+import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 
 @Autonomous (name = "Autonomous: Depot")
 public class AutoDepotDirect2 extends Engine {
 
+  public PinksHardwareConfig PinksHardwareConfig;
+
   @Override
   public void setProcesses() {
+
+    PinksHardwareConfig = new PinksHardwareConfig(this);
 
     addState(new Step06DropRobot(this));
 

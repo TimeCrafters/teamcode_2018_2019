@@ -85,7 +85,7 @@ public class Step09MineralDetect extends State {
 
         LeftDrive = Control.PinksHardwareConfig.pLeftMotor;
         RightDrive = Control.PinksHardwareConfig.pRightMotor;
-        LazerArmServo = Control.PinksHardwareConfig.pLaserArmServo;
+        //LazerArmServo = Control.PinksHardwareConfig.pLaserArmServo;
 
         DistanceSensors.add(Control.PinksHardwareConfig.pMineralDetect0);
         DistanceSensors.add(Control.PinksHardwareConfig.pMineralDetect1);

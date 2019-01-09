@@ -4,10 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class PinksDrive {
-    public int LeftInches;
-    public int RightInches;
-    public double LeftPower;
-    public double RightPower;
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
     private int RightCurrentTick;
@@ -16,7 +12,7 @@ public class PinksDrive {
     private int distanceTicksLeft;
 
 
-    public void initialize(PinksHardwareConfig pinksHardwareConfig) {
+    public PinksDrive(PinksHardwareConfig pinksHardwareConfig) {
         LeftDrive = pinksHardwareConfig.pLeftMotor;
         RightDrive = pinksHardwareConfig.pRightMotor;
         RightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -30,16 +26,16 @@ public class PinksDrive {
     }
 
     //The main PinksDrive method
-    public void go() {
+    public void go(double leftPower, double rightPower, int leftInches, int rightInches) {
 
         RightCurrentTick = RightDrive.getCurrentPosition();
         LeftCurrentTick = LeftDrive.getCurrentPosition();
 
-        distanceTicksLeft = DistanceConverter(LeftInches, 4);
-        distanceTicksRight = DistanceConverter(RightInches, 4);
+        distanceTicksLeft = DistanceConverter(leftInches, 4);
+        distanceTicksRight = DistanceConverter(rightInches, 4);
 
-        LeftDrive.setPower(LeftPower);
-        RightDrive.setPower(RightPower);
+        LeftDrive.setPower(leftPower);
+        RightDrive.setPower(rightPower);
 
         //run the motor until it reaches it's target
         if (Math.abs(RightCurrentTick) >= distanceTicksRight) {

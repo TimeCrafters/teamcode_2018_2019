@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.timecrafters.engine.Engine;
 
 public class PinksHardwareConfig {
@@ -16,7 +19,7 @@ public class PinksHardwareConfig {
     public Engine engine;
     private String szLeftMotor = "leftDrive";      // REV exp hub 2 motor port 0
     private String szRightMotor = "rightDrive";     // REV exp hub 3 motor port 0
-    private String szLaserArmServo = "laserArm";       // REV exp hub 3 servo port 5 180 servo
+    //private String szLaserArmServo = "laserArm";       // REV exp hub 3 servo port 5 180 servo
     private String szMineralDetect0 = "distance0";      // REV exp hub 3 i2c bus 0 port 1
     private String szMineralDetect1 = "distance1";      // REV exp hub 3 i2c bus 1 port 0
     private String szMineralDetect2 = "distance2";      // REV exp hub 3 i2c bus 2 port 0
@@ -30,12 +33,13 @@ public class PinksHardwareConfig {
     private String szWinchUp = "winchUp";       // Rev exp hub 3 motor port 2
     private String szLeftUSSensor = "LeftUS";   // I2C
     private String szRightUSSensor = "RightUS"; // I2C
-    private String szPaddle;
+    private String szPaddle = "Paddle";        // Hub 3 port 5
+
 
     /*create pointers for hardware*/
     public DcMotor pLeftMotor;
     public DcMotor pRightMotor;
-    public Servo pLaserArmServo;
+    //public Servo pLaserArmServo;
     public DistanceSensor pMineralDetect0;
     public DistanceSensor pMineralDetect1;
     public DistanceSensor pMineralDetect2;
@@ -50,6 +54,8 @@ public class PinksHardwareConfig {
     public ModernRoboticsI2cRangeSensor pLeftUSSensor;
     //public ModernRoboticsI2cRangeSensor pRightUSSensor;
     public Servo pPaddle;
+    public VuforiaLocalizer pVuForia;
+    public TFObjectDetector pObjectDetector;
 
 
     /* create some useful variables */
@@ -63,7 +69,7 @@ public class PinksHardwareConfig {
         /* get pointers */
         pLeftMotor = engine.hardwareMap.dcMotor.get(szLeftMotor);
         pRightMotor = engine.hardwareMap.dcMotor.get(szRightMotor);
-        pLaserArmServo = engine.hardwareMap.servo.get(szLaserArmServo);
+        //pLaserArmServo = engine.hardwareMap.servo.get(szLaserArmServo);
         pMineralDetect0 = engine.hardwareMap.get(DistanceSensor.class, szMineralDetect0);
         pMineralDetect1 = engine.hardwareMap.get(DistanceSensor.class, szMineralDetect1);
         pMineralDetect2 = engine.hardwareMap.get(DistanceSensor.class, szMineralDetect2);
@@ -90,12 +96,24 @@ public class PinksHardwareConfig {
         /* initialize hardware positions*/
         pLeftMotor.setPower(0.0);
         pRightMotor.setPower(0.0);
-        pLaserArmServo.setPosition(0.0);
+        //pLaserArmServo.setPosition(0.0);
         pMineralArmMotor.setPower(0.0);
         pElbowServo.setPower(0.0);
         pMineralCollectServo.setPower(0.0);
         pDropLeft.setPosition(1.0);
         pDropRight.setPosition(0.0);
+
+//        //Vuforia initializing
+//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+//        parameters.vuforiaLicenseKey = "AcU+kbn/////AAAAGWDmHA7mS0gCoiMy9pA5e1AVyLZeqKejLOtP9c3COfi9g9m4Cs1XuVQVdqRFhyrFkNUynXwrhQyV65hPnPkGgRky9MjHlLLCWuqdpHzDLJonuOSBh5zVO11PleXH+2utK1lCnbBxvOM+/OrB9EAHUBrcB0ItRxjzFQOe8TXrjGGe1IyjC/Ljke3lZf/LVVinej3zjGNqwsNQoZ0+ahxYNPCJOdzRFkXjyMDXJVDQYMtVQcWKpbEM6dJ9jQ9f0UFIVXANJ7CC8ZDyrl2DQ8o4sOX981OktCKWW0d4PH0IwAw/c2nGgt1t2V/7PwTwysBYM1N+SjVpMNRg52u9gNl9os4ulF6AZw+U2LcVj4kqGZDi";
+//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//        pVuForia = ClassFactory.getInstance().createVuforia(parameters);
+//
+//        //Tensor Flow Object Detection initializing
+//        int tfodMonitorViewId = engine.hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", engine.hardwareMap.appContext.getPackageName());
+//        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+//        pObjectDetector = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, pVuForia);
+//        pObjectDetector.loadModelFromAsset("RoverRuckus.tflite", "Gold Mineral", "Silver Mineral");
 
     }
 }
