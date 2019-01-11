@@ -12,10 +12,11 @@ import org.timecrafters.engine.State;
 import java.util.List;
 
 /**********************************************************************************************
- * Name: DropRobot
- * Inputs: engine, ArchitectureControl
- * Outputs: none
- * Use: Opens drop latch to drop robot
+ * Name: MineralPosId
+ * Inputs: engine, PinksHardwareConfig, AppReader
+ * Outputs: GoldPosition
+ * Use: Observe the set of minerals and determine the position of gold as 1, 2 ,or 3 (Left, Center,
+ * Right)
  **********************************************************************************************/
 
 public class Step07MineralPosId extends State {
@@ -40,17 +41,9 @@ public class Step07MineralPosId extends State {
 
     public void init() {
 
-        //Vuforia initializing
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = "AcU+kbn/////AAAAGWDmHA7mS0gCoiMy9pA5e1AVyLZeqKejLOtP9c3COfi9g9m4Cs1XuVQVdqRFhyrFkNUynXwrhQyV65hPnPkGgRky9MjHlLLCWuqdpHzDLJonuOSBh5zVO11PleXH+2utK1lCnbBxvOM+/OrB9EAHUBrcB0ItRxjzFQOe8TXrjGGe1IyjC/Ljke3lZf/LVVinej3zjGNqwsNQoZ0+ahxYNPCJOdzRFkXjyMDXJVDQYMtVQcWKpbEM6dJ9jQ9f0UFIVXANJ7CC8ZDyrl2DQ8o4sOX981OktCKWW0d4PH0IwAw/c2nGgt1t2V/7PwTwysBYM1N+SjVpMNRg52u9gNl9os4ulF6AZw+U2LcVj4kqGZDi";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        VuForia = ClassFactory.getInstance().createVuforia(parameters);
+        VuForia = PinksHardwareConfig.pVuForia;
 
-        //Tensor Flow Object Detection initializing
-        int tfodMonitorViewId = engine.hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", engine.hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        ObjectDetector = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, VuForia);
-        ObjectDetector.loadModelFromAsset("RoverRuckus.tflite", "Gold Mineral", "Silver Mineral");
+        ObjectDetector = PinksHardwareConfig.pObjectDetector;
 
         FirstRun = true;
         GoldLeft = -1;

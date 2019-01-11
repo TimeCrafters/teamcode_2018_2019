@@ -12,8 +12,8 @@ import org.timecrafters.engine.State;
 import java.util.List;
 
 /**********************************************************************************************
- * Name: DropRobot
- * Inputs: engine,
+ * Name: PointTowardGold
+ * Inputs: engine, mineralPosId, AppReader, PinksHardwareConfig
  * Outputs: none
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
@@ -27,6 +27,9 @@ public class Step08PointTowardGold extends State {
     private TFObjectDetector ObjectDetector;
     private List<Recognition> Objects;
     private boolean FirstRun;
+    private float GoldPosOnScreen;
+    private float TargetPos;
+    private float TargetAlowance;
 
 
 
@@ -40,17 +43,12 @@ public class Step08PointTowardGold extends State {
 
     public void init() {
 
-//        //Vuforia initializing
-//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-//        parameters.vuforiaLicenseKey = "AcU+kbn/////AAAAGWDmHA7mS0gCoiMy9pA5e1AVyLZeqKejLOtP9c3COfi9g9m4Cs1XuVQVdqRFhyrFkNUynXwrhQyV65hPnPkGgRky9MjHlLLCWuqdpHzDLJonuOSBh5zVO11PleXH+2utK1lCnbBxvOM+/OrB9EAHUBrcB0ItRxjzFQOe8TXrjGGe1IyjC/Ljke3lZf/LVVinej3zjGNqwsNQoZ0+ahxYNPCJOdzRFkXjyMDXJVDQYMtVQcWKpbEM6dJ9jQ9f0UFIVXANJ7CC8ZDyrl2DQ8o4sOX981OktCKWW0d4PH0IwAw/c2nGgt1t2V/7PwTwysBYM1N+SjVpMNRg52u9gNl9os4ulF6AZw+U2LcVj4kqGZDi";
-//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-//        VuForia = ClassFactory.getInstance().createVuforia(parameters);
-//
-//        //Tensor Flow Object Detection initializing
-//        int tfodMonitorViewId = engine.hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", engine.hardwareMap.appContext.getPackageName());
-//        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-//        ObjectDetector = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, VuForia);
-//        ObjectDetector.loadModelFromAsset("RoverRuckus.tflite", "Gold Mineral", "Silver Mineral");
+        VuForia = PinksHardwareConfig.pVuForia;
+
+        ObjectDetector = PinksHardwareConfig.pObjectDetector;
+
+        TargetPos = AppReader.get(StepID).variable("Mid");
+        TargetAlowance = AppReader.get(StepID).variable("Allowance");
 
         FirstRun = true;
     }
@@ -63,20 +61,30 @@ public class Step08PointTowardGold extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
-//            if (FirstRun) {
-//                ObjectDetector.activate();
-//            }
-//
-//            Objects = ObjectDetector.getUpdatedRecognitions();
-//
-//            if (Objects != null) {
-//                for (Recognition object : Objects) {
-//                    if (object.getLabel().equals("Gold Mineral")) {
-//                        engine.telemetry.addData("getTop", object.getTop());
-//                        engine.telemetry.addData("getBottom", object.getBottom());
-//                    }
-//                }
-//            }
+            if (FirstRun) {
+                ObjectDetector.activate();
+            }
+
+            Objects = ObjectDetector.getUpdatedRecognitions();
+
+            //Looks at the Recognitions, finds the gold object, and determines it's position on screen
+            if (Objects != null) {
+                for (Recognition object : Objects) {
+                    if (object.getLabel().equals("Gold Mineral")) {
+                        GoldPosOnScreen = (object.getBottom() + object.getTop()) / 2;
+                    }
+                }
+            }
+
+            if (GoldPosOnScreen < TargetPos - TargetAlowance) {
+                engine.telemetry.addLine("LeftSide");
+            } else if (GoldPosOnScreen > TargetPos + TargetAlowance) {
+                engine.telemetry.addLine("RightSide");
+            } else {
+                engine.telemetry.addLine("Target");
+            }
+
+            engine.telemetry.addData("getBottom", GoldPosOnScreen );
 
 
 
