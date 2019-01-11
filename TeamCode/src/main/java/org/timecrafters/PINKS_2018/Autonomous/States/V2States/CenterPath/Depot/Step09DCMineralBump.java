@@ -32,6 +32,7 @@ public class Step09DCMineralBump extends State {
 
     public void init() {
         Drive = new PinksDrive(PinksHardwareConfig);
+
         LeftInches = AppReader.get(StepID).variable("LeftIN");
         RightInches = AppReader.get(StepID).variable("RightIN");
         LeftPower = AppReader.get(StepID).variable("LeftPower");

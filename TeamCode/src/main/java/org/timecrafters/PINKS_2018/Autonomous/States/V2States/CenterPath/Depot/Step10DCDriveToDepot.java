@@ -31,7 +31,12 @@ public class Step10DCDriveToDepot extends State {
     }
 
     public void init() {
+        Drive = new PinksDrive(PinksHardwareConfig);
 
+        LeftInches = AppReader.get(StepID).variable("LeftIN");
+        RightInches = AppReader.get(StepID).variable("RightIN");
+        LeftPower = AppReader.get(StepID).variable("LeftPower");
+        RightPower = AppReader.get(StepID).variable("RightPower");
     }
 
     @Override
@@ -40,10 +45,11 @@ public class Step10DCDriveToDepot extends State {
         // variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
         // toggled on or off.
         if (AppReader.allow(StepID)) {
-
             engine.telemetry.addLine("Running Step"+StepID);
-            sleep(1000);
-            setFinished(true);
+
+            Drive.go(LeftPower, RightPower, LeftInches, RightInches);
+
+            setFinished(Drive.HasReachedTarget());
 
         } else {
             engine.telemetry.addLine("Skipping Step"+StepID);
