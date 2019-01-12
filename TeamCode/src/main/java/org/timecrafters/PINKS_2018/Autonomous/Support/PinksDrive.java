@@ -49,7 +49,12 @@ public class PinksDrive {
 
     public boolean HasReachedTarget() {
         //when both motors reach their target, return true
-        return (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft);
+        if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            reset();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void reset() {
