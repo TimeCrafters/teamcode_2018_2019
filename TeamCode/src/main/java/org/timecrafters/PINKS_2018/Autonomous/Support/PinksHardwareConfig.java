@@ -53,7 +53,7 @@ public class PinksHardwareConfig {
     public DcMotor pWinchUp;
     public ModernRoboticsI2cRangeSensor pLeftUSSensor;
     public ModernRoboticsI2cRangeSensor pRightUSSensor;
-    public Servo pPaddle;
+    public CRServo pPaddle;
     public VuforiaLocalizer pVuForia;
     public TFObjectDetector pObjectDetector;
 
@@ -83,7 +83,7 @@ public class PinksHardwareConfig {
         pWinchUp = engine.hardwareMap.dcMotor.get(szWinchUp);
         pLeftUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szLeftUSSensor);
         //pRightUSSensor = engine.hardwareMap.get(ModernRoboticsI2cRangeSensor.class, szRightUSSensor);
-        pPaddle = engine.hardwareMap.servo.get(szPaddle);
+        pPaddle = engine.hardwareMap.crservo.get(szPaddle);
 
         /* initialize hardware modes*/
         pLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

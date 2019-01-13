@@ -79,8 +79,8 @@ public class RevRovingRobotControl extends CyberarmState {
     cyberarmEngine.telemetry.addLine();
 
     cyberarmEngine.telemetry.addLine("Rev Roving Robot");
-    cyberarmEngine.telemetry.addData("Left PinksDrive Position", leftDrive.getCurrentPosition());
-    cyberarmEngine.telemetry.addData("Right PinksDrive Position", rightDrive.getCurrentPosition());
+    cyberarmEngine.telemetry.addData("LeftDrive PinksDrive Position", leftDrive.getCurrentPosition());
+    cyberarmEngine.telemetry.addData("RightDrive PinksDrive Position", rightDrive.getCurrentPosition());
     cyberarmEngine.telemetry.addData("Steering Position", steering.getPosition());
 
     cyberarmEngine.telemetry.addLine();

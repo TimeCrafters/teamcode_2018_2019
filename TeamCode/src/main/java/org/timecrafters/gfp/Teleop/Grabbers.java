@@ -26,7 +26,7 @@ public class Grabbers extends Config {
     @Override
     public void exec(){
 
-        //Right Grabber
+        //RightDrive Grabber
         /*if(cyberarmEngine.gamepad2.right_bumper) {
             dcRightGrabber.setPower(upPower);
 

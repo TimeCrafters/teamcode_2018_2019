@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class PinksDrive {
-    private DcMotor RightDrive;
-    private DcMotor LeftDrive;
+    public DcMotor RightDrive;
+    public DcMotor LeftDrive;
     private int RightCurrentTick;
     private int LeftCurrentTick;
     private int distanceTicksRight;

@@ -147,11 +147,11 @@ public abstract class Drive extends Config {
 
 
 
-        Log.i(TAG+".DRIVEMOTORS", "Front Right :" +  Integer.toString(dcFrontRightEncoder));
-        Log.i(TAG+".DRIVEMOTORS", "Front Left :" + Integer.toString(dcFrontLeftEncoder));
+        Log.i(TAG+".DRIVEMOTORS", "Front RightDrive :" +  Integer.toString(dcFrontRightEncoder));
+        Log.i(TAG+".DRIVEMOTORS", "Front LeftDrive :" + Integer.toString(dcFrontLeftEncoder));
 
-        Log.i(TAG+".DRIVEMOTORS", "Back Right :" + Integer.toString(dcBackRightEncoder));
-        Log.i(TAG+".DRIVEMOTORS", "Back Left :" + Integer.toString(dcBackLeftEncoder));
+        Log.i(TAG+".DRIVEMOTORS", "Back RightDrive :" + Integer.toString(dcBackRightEncoder));
+        Log.i(TAG+".DRIVEMOTORS", "Back LeftDrive :" + Integer.toString(dcBackLeftEncoder));
 
         Log.i(TAG+".DRIVEMOTORS","---------");
 

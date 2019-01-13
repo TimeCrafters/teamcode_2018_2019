@@ -196,16 +196,16 @@ public class Step11TeamMarkerDriveV2 extends State {
     public void telemetry() {
         engine.telemetry.addLine("Running RunPark");
         engine.telemetry.addData("PinksDrive Step", DriveStep);
-        engine.telemetry.addData("Left Power", LeftPower);
+        engine.telemetry.addData("LeftDrive Power", LeftPower);
 //        engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
-//        engine.telemetry.addData("Right Target IN", distanceINRight);
-//        engine.telemetry.addData("Left Target IN", distanceINLeft);
-//        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
-//        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
+//        engine.telemetry.addData("RightDrive Target IN", distanceINRight);
+//        engine.telemetry.addData("LeftDrive Target IN", distanceINLeft);
+//        engine.telemetry.addData("RightDrive Target Tick", distanceTicksRight);
+//        engine.telemetry.addData("LeftDrive Target Tick", distanceTicksLeft);
 
 
-        engine.telemetry.addData("Left Ultrasonic", LeftUSSensor.cmUltrasonic());
-        //engine.telemetry.addData("Right Ultrasonic", RightUSSensor.cmUltrasonic());
+        engine.telemetry.addData("LeftDrive Ultrasonic", LeftUSSensor.cmUltrasonic());
+        //engine.telemetry.addData("RightDrive Ultrasonic", RightUSSensor.cmUltrasonic());
     }
 
 }

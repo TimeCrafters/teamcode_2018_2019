@@ -28,7 +28,7 @@ public class RedBackRight  extends SubEngine{
 
     @Override
     public void setProcesses() {
-        //Right glyph goal
+        //RightDrive glyph goal
         addState(new TurnRight(engine, 0.3, 900));
         addState(new RaiseArm(engine, 1, 500));
         addThreadedState(new DriveStraightBackward(engine, 0.5, 800));

@@ -355,8 +355,8 @@ public class TeleOpState extends State {
     public void telemetry() {
         engine.telemetry.addData("mineral arm position", mineralArmCurrentPosition);
         engine.telemetry.addData("arm motor power", mineralArmPower);
-        engine.telemetry.addData("Right Trigger Value", rightTriggerValue);
-        engine.telemetry.addData("Left Trigger Value", leftTriggerValue);
+        engine.telemetry.addData("RightDrive Trigger Value", rightTriggerValue);
+        engine.telemetry.addData("LeftDrive Trigger Value", leftTriggerValue);
         engine.telemetry.addData("game-mode?",gameMode);
         engine.telemetry.addData("tick of winch",winchPosition);
         engine.telemetry.addData("mineral max power",mineralArmPowerMaxUp);

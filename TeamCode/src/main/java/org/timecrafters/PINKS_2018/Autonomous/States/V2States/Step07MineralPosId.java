@@ -16,7 +16,7 @@ import java.util.List;
  * Inputs: engine, PinksHardwareConfig, AppReader
  * Outputs: GoldPosition
  * Use: Observe the set of minerals and determine the position of gold as 1, 2 ,or 3 (Left, Center,
- * Right)
+ * RightDrive)
  **********************************************************************************************/
 
 public class Step07MineralPosId extends State {

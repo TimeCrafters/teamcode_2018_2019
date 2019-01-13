@@ -199,10 +199,10 @@ public class Step14Park extends State {
         engine.telemetry.addData("PinksDrive Step", DriveStep);
         engine.telemetry.addData("RightPower", RightDrive.getPower());
         engine.telemetry.addData("RightCurrentTick", RightCurrentTick);
-        engine.telemetry.addData("Right Target IN", distanceINRight);
-        engine.telemetry.addData("Left Target IN", distanceINLeft);
-        engine.telemetry.addData("Right Target Tick", distanceTicksRight);
-        engine.telemetry.addData("Left Target Tick", distanceTicksLeft);
+        engine.telemetry.addData("RightDrive Target IN", distanceINRight);
+        engine.telemetry.addData("LeftDrive Target IN", distanceINLeft);
+        engine.telemetry.addData("RightDrive Target Tick", distanceTicksRight);
+        engine.telemetry.addData("LeftDrive Target Tick", distanceTicksLeft);
 
 
     }

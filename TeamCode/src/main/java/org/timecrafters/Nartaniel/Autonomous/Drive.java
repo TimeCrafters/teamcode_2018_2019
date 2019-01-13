@@ -81,8 +81,8 @@ public class Drive extends State {
     }
 
     public void telemetry() {
-        engine.telemetry.addData("Curret Right Tick", RightDrive.getCurrentPosition());
-        engine.telemetry.addData("Curret Left Tick", LeftDrive.getCurrentPosition());
+        engine.telemetry.addData("Curret RightDrive Tick", RightDrive.getCurrentPosition());
+        engine.telemetry.addData("Curret LeftDrive Tick", LeftDrive.getCurrentPosition());
         engine.telemetry.addData("Power", Power);
         engine.telemetry.addData("Target Ticks", distanceTicks);
     }

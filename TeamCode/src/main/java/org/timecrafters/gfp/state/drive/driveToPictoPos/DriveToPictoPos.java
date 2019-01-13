@@ -21,7 +21,7 @@ public class DriveToPictoPos extends Config {
 
         switch (vuMark){
 
-            //Glyph Right
+            //Glyph RightDrive
             case 0:
                 break;
 

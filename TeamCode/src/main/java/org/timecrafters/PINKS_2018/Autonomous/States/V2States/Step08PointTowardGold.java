@@ -1,10 +1,10 @@
 package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.timecrafters.PINKS_2018.Autonomous.Support.PinksDrive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
@@ -30,6 +30,8 @@ public class Step08PointTowardGold extends State {
     private float GoldPosOnScreen;
     private float TargetPos;
     private float TargetAlowance;
+    private PinksDrive Drive;
+    private double Power;
 
 
 
@@ -47,8 +49,11 @@ public class Step08PointTowardGold extends State {
 
         ObjectDetector = PinksHardwareConfig.pObjectDetector;
 
+        Drive = new PinksDrive(PinksHardwareConfig);
+
         TargetPos = AppReader.get(StepID).variable("Mid");
         TargetAlowance = AppReader.get(StepID).variable("Allowance");
+        Power = AppReader.get(StepID).variable("Power");
 
         FirstRun = true;
     }
@@ -78,13 +83,26 @@ public class Step08PointTowardGold extends State {
 
             if (GoldPosOnScreen < TargetPos - TargetAlowance) {
                 engine.telemetry.addLine("LeftSide");
+
+                Drive.RightDrive.setPower(Power);
+                Drive.LeftDrive.setPower(0);
+
             } else if (GoldPosOnScreen > TargetPos + TargetAlowance) {
                 engine.telemetry.addLine("RightSide");
+
+                Drive.LeftDrive.setPower(Power);
+                Drive.RightDrive.setPower(0);
+
             } else {
                 engine.telemetry.addLine("Target");
+
+                Drive.LeftDrive.setPower(0);
+                Drive.LeftDrive.setPower(0);
+                Drive.reset();
+                //setFinished(true);
             }
 
-            engine.telemetry.addData("getBottom", GoldPosOnScreen );
+            engine.telemetry.addData("GoldPosOnScreen", GoldPosOnScreen );
 
 
 

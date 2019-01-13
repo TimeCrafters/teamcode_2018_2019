@@ -24,7 +24,7 @@ public class TurnRight extends Drive {
 
     public void init(){
         super.init();
-        //Front Left, Back Left, Front Right, Back Right
+        //Front LeftDrive, Back LeftDrive, Front RightDrive, Back RightDrive
         setMotors(-1,-1,1,1);
         DcMotor[] motors = {dcFrontLeft, dcBackLeft};
         setReadMotors(motors);

@@ -185,8 +185,8 @@ public class Step13OptionADriveToPark_fromTMP extends State {
     @Override
     public void telemetry() {
         engine.telemetry.addLine("Running Step13OptionADriveToPark_fromTMP");
-        engine.telemetry.addData("Right Current Tick", RightCurrentTick);
-        engine.telemetry.addData("Left Current Tick", LeftCurrentTick);
+        engine.telemetry.addData("RightDrive Current Tick", RightCurrentTick);
+        engine.telemetry.addData("LeftDrive Current Tick", LeftCurrentTick);
         engine.telemetry.addData("PinksDrive Step", DriveStep);
         engine.telemetry.addData("distanceTicksRight", distanceTicksRight);
         engine.telemetry.addData("distanceTicksLeft", distanceTicksLeft);

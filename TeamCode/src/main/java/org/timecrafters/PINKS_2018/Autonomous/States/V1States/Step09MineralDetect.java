@@ -121,8 +121,8 @@ public class Step09MineralDetect extends State {
                 StartTime = CurrentTime;
                 RightDrive.setPower(Power);
                 LeftDrive.setPower(Power);
-                Log.i("LazerScan", "Right Power "+RightDrive.getPower());
-                Log.i("LazerScan", "Left Power "+LeftDrive.getPower());
+                Log.i("LazerScan", "RightDrive Power "+RightDrive.getPower());
+                Log.i("LazerScan", "LeftDrive Power "+LeftDrive.getPower());
                 LazerArmServo.setPosition(LazerMidPosition);
                 sleep(500 );
             }
@@ -303,8 +303,8 @@ public class Step09MineralDetect extends State {
         engine.telemetry.addLine("Running Mineral Detect");
 
         engine.telemetry.addData("Variable Power", Power);
-        engine.telemetry.addData("Actual Right Power", RightDrive.getPower());
-        engine.telemetry.addData("Actual Left Power", RightDrive.getPower());
+        engine.telemetry.addData("Actual RightDrive Power", RightDrive.getPower());
+        engine.telemetry.addData("Actual LeftDrive Power", RightDrive.getPower());
 
         engine.telemetry.addData("Calibrating", Calibrating);
 
