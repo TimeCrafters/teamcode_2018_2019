@@ -1,9 +1,11 @@
 package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
+import org.timecrafters.PINKS_2018.Autonomous.Support.PinksPaddle;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
@@ -20,7 +22,7 @@ public class Step06DropRobot extends State {
     public PinksHardwareConfig PinksHardwareConfig;
     private Servo servoLeft;
     private Servo servoRight;
-    private Servo Paddle;
+    private PinksPaddle Paddle;
     private long WaitTime;
     private int PadDeployPos;
 
@@ -33,13 +35,13 @@ public class Step06DropRobot extends State {
     }
 
     public void init() {
-        servoLeft = PinksHardwareConfig.pDropLeft;
-        servoRight = PinksHardwareConfig.pDropRight;
-        Paddle = PinksHardwareConfig.pPaddle;
-
         //The variables we edit from the phone go here
         WaitTime = AppReader.get(StepID).variable("WaitTime");
         PadDeployPos = AppReader.get(StepID).variable("DeployPos");
+
+        servoLeft = PinksHardwareConfig.pDropLeft;
+        servoRight = PinksHardwareConfig.pDropRight;
+        Paddle = new PinksPaddle(PinksHardwareConfig, PadDeployPos, 0.0, 0.6);
 
         servoLeft.setPosition(1);
         servoRight.setPosition(0);
@@ -55,15 +57,15 @@ public class Step06DropRobot extends State {
 
             //This is the actual code for Dropping the Robot. It opens the drop latch servos before
             //closing them shortly after the robot lands.
-            servoLeft.setPosition(.6);
-            servoRight.setPosition(1);
-            sleep(WaitTime);
+//            servoLeft.setPosition(.6);
+//            servoRight.setPosition(1);
+//            sleep(WaitTime);
 
-            Paddle.setPosition(PadDeployPos);
-            servoLeft.setPosition(1);
-            servoRight.setPosition(0);
-
-            setFinished(true);
+            engine.telemetry.addData("Servo CurrentPos", Paddle.getCurrentPos());
+//            servoLeft.setPosition(1);
+//            servoRight.setPosition(0);
+//
+//            setFinished(true);
 
         } else {
             engine.telemetry.addLine("Skipping Step"+StepID);
