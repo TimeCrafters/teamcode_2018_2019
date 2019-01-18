@@ -3,7 +3,7 @@ package org.timecrafters.PINKS_2018.Autonomous.Engines;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step06DropRobot;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step05DropRobot;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step07MineralPosId;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step08PointTowardGold;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step14DPointToCrater;
@@ -26,7 +26,7 @@ public class AutoDepotDirect2 extends Engine {
     PinksHardwareConfig = new PinksHardwareConfig(this);
     AppReader = new StateConfiguration();
 
-    addState(new Step06DropRobot(this, AppReader, PinksHardwareConfig));
+    addState(new Step05DropRobot(this, AppReader, PinksHardwareConfig));
 
     Step07MineralPosId MPosId = (new Step07MineralPosId(this, AppReader, PinksHardwareConfig));
     addState(MPosId);

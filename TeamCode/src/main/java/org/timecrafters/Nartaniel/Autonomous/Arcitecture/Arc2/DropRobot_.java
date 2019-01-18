@@ -16,7 +16,7 @@ public class DropRobot_ extends SubEngine {
     @Override
     public void setProcesses() {
 
-        addState(new CompleteStepIndicator_(engine, "Step06DropRobot", 1));
+        addState(new CompleteStepIndicator_(engine, "Step05DropRobot", 1));
     }
 
     @Override
