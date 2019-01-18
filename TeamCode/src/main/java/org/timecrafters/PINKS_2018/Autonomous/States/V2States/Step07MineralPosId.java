@@ -92,12 +92,38 @@ public class Step07MineralPosId extends State {
                         } else {
                             GoldPosition = 2;
                         }
+                    }
+                }
 
-                        if (GoldPosition != 0) {
-                            setFinished(true);
+                //It's Possible for the leftmost mineral to not fall into the field of veiw, however,
+                //we can just extrapalate
+                if (Objects.size() == 2) {
+
+                    for (Recognition object : Objects) {
+                        if (object.getLabel().equals("Gold Mineral")) {
+
+                            GoldLeft = object.getBottom();
+                        } else if (SilverLeft == -1) {
+                            SilverLeft = object.getBottom();
+                        } else {
+                            //if two silvers are present, the leftmost mineral must be the gold one
+                            GoldPosition = 1;
+                        }
+
+                        //With the values for the object's positions in view, we determine the position
+                        //of the gold mineral. (assuming gold is visible)
+                        if (GoldLeft < SilverLeft && GoldPosition == 0) {
+                            GoldPosition = 2;
+                        } else {
+                            GoldPosition = 3;
                         }
                     }
                 }
+
+                if (GoldPosition != 0) {
+                    setFinished(true);
+                }
+
             }
 
         } else {

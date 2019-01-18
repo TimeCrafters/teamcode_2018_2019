@@ -81,7 +81,7 @@ public class Step08PointTowardGold extends State {
                 }
             }
 
-            if (GoldPosOnScreen < TargetPos - TargetAlowance) {
+            if (GoldPosOnScreen < TargetPos - TargetAlowance || GoldPosIdentifier.GoldPosition == 1) {
                 engine.telemetry.addLine("LeftSide");
 
                 Drive.RightDrive.setPower(Power);
@@ -99,7 +99,8 @@ public class Step08PointTowardGold extends State {
                 Drive.LeftDrive.setPower(0);
                 Drive.LeftDrive.setPower(0);
                 Drive.reset();
-                //setFinished(true);
+
+                setFinished(true);
             }
 
             engine.telemetry.addData("GoldPosOnScreen", GoldPosOnScreen );

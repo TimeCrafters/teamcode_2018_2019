@@ -49,11 +49,14 @@ public class Step06DeployPaddle extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
+            engine.telemetry.addData("DeployTime", DeployTime);
+            engine.telemetry.update();
+
             Paddle.setPower(Power);
             sleep(DeployTime);
             Paddle.setPower(0);
 
-            setFinished(true);
+            setFinished(true );
 
         } else {
             engine.telemetry.addLine("Skipping Step"+StepID);
