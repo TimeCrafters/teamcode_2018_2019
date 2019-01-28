@@ -47,7 +47,7 @@ public class Step06DropRobot extends State {
             Complete = true;
 
             if (Complete) {
-                engine.telemetry.addLine("Completed Step05DropRobot");
+                engine.telemetry.addLine("Completed DropRobot");
                 engine.telemetry.update();
                 Complete = false;
                 setFinished(true);

@@ -1,7 +1,6 @@
 package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
 
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
@@ -15,18 +14,18 @@ import org.timecrafters.engine.State;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class StepPlaceMarker extends State {
-    private String StepID = "PlaceMarker";
+public class StepExtendArm extends State {
+    private String StepID = "ExtendArm";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    private CRServo MineralCollectionServo;
-    private long PlaceTime;
+    private CRServo ElbowServo;
+    private long ExtendTime;
     private double Power;
 
 
 
 
-    public StepPlaceMarker(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public StepExtendArm(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
@@ -34,10 +33,9 @@ public class StepPlaceMarker extends State {
 
     public void init() {
 
-        //We used the robot's mineral collector to store and release the team marker
-        MineralCollectionServo = PinksHardwareConfig.pMineralCollectServo;
+        ElbowServo = PinksHardwareConfig.pElbowServo;
 
-        PlaceTime = AppReader.get(StepID).variable("PlaceTime");
+        ExtendTime = AppReader.get(StepID).variable("ExtendTime");
         Power = AppReader.get(StepID).variable("Power");
     }
 
@@ -49,9 +47,9 @@ public class StepPlaceMarker extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
-            MineralCollectionServo.setPower(Power);
-            sleep(PlaceTime);
-            MineralCollectionServo.setPower(0);
+            ElbowServo.setPower(Power);
+            sleep(ExtendTime);
+            ElbowServo.setPower(0);
 
             setFinished(true);
 

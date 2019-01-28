@@ -21,18 +21,18 @@ public class PinksDrive {
 
     //A handy conversion from distance on the field to motor ticks using the circumference of the wheal
     //and the number of ticks in a rotation which is always 288
-    private int DistanceConverter(int distanceIN, int WhealDiamiter) {
-        return (int) ((distanceIN * 288) / (WhealDiamiter * Math.PI));
+    private int DistanceConverter(int distanceMM, int WhealDiamiter) {
+        return (int) ((distanceMM * 288) / (WhealDiamiter * Math.PI));
     }
 
     //The main PinksDrive method
-    public void go(double leftPower, double rightPower, int leftInches, int rightInches) {
+    public void go(double leftPower, double rightPower, int leftMM, int rightMM) {
 
         RightCurrentTick = RightDrive.getCurrentPosition();
         LeftCurrentTick = LeftDrive.getCurrentPosition();
 
-        distanceTicksLeft = DistanceConverter(leftInches, 4);
-        distanceTicksRight = DistanceConverter(rightInches, 4);
+        distanceTicksLeft = DistanceConverter(leftMM, 98);
+        distanceTicksRight = DistanceConverter(rightMM, 98);
 
         LeftDrive.setPower(leftPower);
         RightDrive.setPower(rightPower);
@@ -62,6 +62,8 @@ public class PinksDrive {
         RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 }

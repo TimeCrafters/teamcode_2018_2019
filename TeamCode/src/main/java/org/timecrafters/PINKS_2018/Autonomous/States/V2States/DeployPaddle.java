@@ -10,35 +10,37 @@ import org.timecrafters.engine.State;
 
 /**********************************************************************************************
  * Name: DropRobot
- * Inputs: engine, ArchitectureControl
+ * Inputs: engine
  * Outputs: none
- * Use: Opens drop latch to drop robot
+ * Use:
  **********************************************************************************************/
 
-public class StepPlaceMarker extends State {
-    private String StepID = "PlaceMarker";
+public class DeployPaddle extends State {
+    private String StepID = "DeployPaddle";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    private CRServo MineralCollectionServo;
-    private long PlaceTime;
+    private CRServo Paddle;
+    private long DeployTime;
     private double Power;
 
 
 
 
-    public StepPlaceMarker(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public DeployPaddle(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {
-
-        //We used the robot's mineral collector to store and release the team marker
-        MineralCollectionServo = PinksHardwareConfig.pMineralCollectServo;
-
-        PlaceTime = AppReader.get(StepID).variable("PlaceTime");
+        //The variables we edit from the phone go here
+        DeployTime = AppReader.get(StepID).variable("DeployTime");
         Power = AppReader.get(StepID).variable("Power");
+
+        //The Paddle has the phone mounted to the back. when it's deployed, it can by used to both
+        //identify the mineral's position using TensorFlow and consistently hit the mineral.
+        Paddle = PinksHardwareConfig.pPaddle;
+
     }
 
     @Override
@@ -49,11 +51,14 @@ public class StepPlaceMarker extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
-            MineralCollectionServo.setPower(Power);
-            sleep(PlaceTime);
-            MineralCollectionServo.setPower(0);
+            engine.telemetry.addData("DeployTime", DeployTime);
+            engine.telemetry.update();
 
-            setFinished(true);
+            Paddle.setPower(Power);
+            sleep(DeployTime);
+            Paddle.setPower(0);
+
+            setFinished(true );
 
         } else {
             engine.telemetry.addLine("Skipping Step"+StepID);

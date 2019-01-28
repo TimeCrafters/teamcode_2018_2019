@@ -1,22 +1,31 @@
 package org.timecrafters.PINKS_2018.Autonomous.SubEngines;
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater.Step11CLMineralStrait;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.Step09CRMineralBump;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.Step10CRReturnArc;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.Step11CRMineralStrait;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.Step07MineralPosId;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRDriveToCrater;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRDriveToDepot;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRDriveToGold;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRMineralBump;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRPointToGold;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRReturnArc;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRMineralStrait;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRReturnReverse;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRTurnToDepot;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Crater.CRTurnToGold;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
+import org.timecrafters.gfp.state.arm.ExtendArm;
 
 public class CMineralPathRight extends SubEngine {
     Engine engine;
-    private Step07MineralPosId GoldPosIdentifier;
+    private MineralPosId GoldPosIdentifier;
     private PinksHardwareConfig PinksHardwareConfig;
     private StateConfiguration AppReader;
 
-    public CMineralPathRight(Engine engine, Step07MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public CMineralPathRight(Engine engine, MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
@@ -25,9 +34,19 @@ public class CMineralPathRight extends SubEngine {
 
     @Override
     public void setProcesses() {
-        addState(new Step09CRMineralBump(engine, AppReader, PinksHardwareConfig));
-        addState(new Step10CRReturnArc(engine, AppReader, PinksHardwareConfig));
-        addState(new Step11CRMineralStrait(engine, AppReader, PinksHardwareConfig));
+        addState(new CRPointToGold(engine, AppReader, PinksHardwareConfig)); //!
+        addState(new CRDriveToGold(engine, AppReader, PinksHardwareConfig)); //!
+        addState(new CRTurnToGold(engine, AppReader, PinksHardwareConfig)); //!
+        addState(new CRMineralBump(engine, AppReader, PinksHardwareConfig));
+        addState(new CRReturnReverse(engine, AppReader, PinksHardwareConfig)); //!
+        addState(new CRReturnArc(engine, AppReader, PinksHardwareConfig));
+        addState(new CRMineralStrait(engine, AppReader, PinksHardwareConfig));
+        addState(new CRTurnToDepot(engine, AppReader, PinksHardwareConfig)); //!
+        addState(new CRDriveToDepot(engine, AppReader, PinksHardwareConfig)); //!
+        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new StepPlaceMarker(engine, AppReader, PinksHardwareConfig));
+        addState(new CRDriveToCrater(engine, AppReader, PinksHardwareConfig)); //!
+
     }
 
     @Override

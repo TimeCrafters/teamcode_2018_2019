@@ -102,6 +102,8 @@ public class PinksHardwareConfig {
         pMineralCollectServo.setPower(0.0);
         pDropLeft.setPosition(1.0);
         pDropRight.setPosition(0.0);
+        pRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Vuforia initializing
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();

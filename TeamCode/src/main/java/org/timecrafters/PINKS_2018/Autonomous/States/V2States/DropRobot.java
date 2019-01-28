@@ -10,35 +10,38 @@ import org.timecrafters.engine.State;
 
 /**********************************************************************************************
  * Name: DropRobot
- * Inputs: engine, ArchitectureControl
+ * Inputs: engine
  * Outputs: none
- * Use: Opens drop latch to drop robot
+ * Use:
  **********************************************************************************************/
 
-public class StepPlaceMarker extends State {
-    private String StepID = "PlaceMarker";
+public class DropRobot extends State {
+    private String StepID = "DropRobot";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    private CRServo MineralCollectionServo;
-    private long PlaceTime;
-    private double Power;
+    private boolean FirstRun;
+    private Servo servoLeft;
+    private Servo servoRight;
+    private long DropTime;
 
 
-
-
-    public StepPlaceMarker(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public DropRobot(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {
+        //The variables we edit from the phone go here
+        DropTime = AppReader.get(StepID).variable("DropTime");
 
-        //We used the robot's mineral collector to store and release the team marker
-        MineralCollectionServo = PinksHardwareConfig.pMineralCollectServo;
 
-        PlaceTime = AppReader.get(StepID).variable("PlaceTime");
-        Power = AppReader.get(StepID).variable("Power");
+        servoLeft = PinksHardwareConfig.pDropLeft;
+        servoRight = PinksHardwareConfig.pDropRight;
+
+        servoLeft.setPosition(1);
+        servoRight.setPosition(0);
+
     }
 
     @Override
@@ -49,9 +52,16 @@ public class StepPlaceMarker extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
-            MineralCollectionServo.setPower(Power);
-            sleep(PlaceTime);
-            MineralCollectionServo.setPower(0);
+            //This is the actual code for Dropping the Robot. It opens the drop latch servos before
+            //closing them shortly after the robot lands.
+
+            servoLeft.setPosition(.6);
+            servoRight.setPosition(.5);
+
+            sleep(DropTime);
+
+            servoLeft.setPosition(1);
+            servoRight.setPosition(0);
 
             setFinished(true);
 

@@ -1,9 +1,7 @@
-package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
-
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
+package org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot;
 
 import org.cyberarm.NeXT.StateConfiguration;
+import org.timecrafters.PINKS_2018.Autonomous.Support.PinksDrive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
@@ -15,30 +13,31 @@ import org.timecrafters.engine.State;
  * Use: Opens drop latch to drop robot
  **********************************************************************************************/
 
-public class StepPlaceMarker extends State {
-    private String StepID = "PlaceMarker";
+public class DCTurn extends State {
+    private String StepID = "DCTurn";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    private CRServo MineralCollectionServo;
-    private long PlaceTime;
-    private double Power;
+    private PinksDrive Drive;
+    private double LeftPower;
+    private double RightPower;
+    private int LeftMM;
+    private int RightMM;
 
 
 
-
-    public StepPlaceMarker(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public DCTurn(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {
+        Drive = new PinksDrive(PinksHardwareConfig);
 
-        //We used the robot's mineral collector to store and release the team marker
-        MineralCollectionServo = PinksHardwareConfig.pMineralCollectServo;
-
-        PlaceTime = AppReader.get(StepID).variable("PlaceTime");
-        Power = AppReader.get(StepID).variable("Power");
+        LeftPower = AppReader.get(StepID).variable("LeftPower");
+        RightPower = AppReader.get(StepID).variable("RightPower");
+        LeftMM = AppReader.get(StepID).variable("LeftIN");
+        RightMM = AppReader.get(StepID).variable("RightIN");
     }
 
     @Override
@@ -49,11 +48,9 @@ public class StepPlaceMarker extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
-            MineralCollectionServo.setPower(Power);
-            sleep(PlaceTime);
-            MineralCollectionServo.setPower(0);
+            Drive.go(LeftPower, RightPower, LeftMM, RightMM);
 
-            setFinished(true);
+            setFinished(Drive.HasReachedTarget());
 
         } else {
             engine.telemetry.addLine("Skipping Step"+StepID);
