@@ -9,6 +9,8 @@ import org.cyberarm.container.InputChecker;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
+import static java.lang.Math.abs;
+
 public class TeleOpState extends State {
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
@@ -24,8 +26,8 @@ public class TeleOpState extends State {
     private boolean winchToggle;
     private double mineraldivide;
     private double mineralArmPower;
-    private double rightTriggerValue;
-    private double leftTriggerValue;
+    private boolean rightTriggerValue;
+    private boolean leftTriggerValue;
     private double leftStickValue;
     private long captureTime;
     private double capturePower;
@@ -62,8 +64,6 @@ public class TeleOpState extends State {
     private boolean clipArmLastRead;
     private boolean clipArmLastRead2;
     private boolean clipArmToggle;
-    private Servo laserArm;
-    private double laserArmPosition;
 
 
 
@@ -85,12 +85,12 @@ public class TeleOpState extends State {
         mineralCapture = engine.hardwareMap.servo.get("mineralCapture");
         servoRotation = engine.hardwareMap.servo.get("servoRotation");
         servoClamp = engine.hardwareMap.servo.get("servoClamp");
-        laserArm = engine.hardwareMap.servo.get("laserArm");
 
         winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mineralArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mineralArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mineralArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mineralArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         mineralArmCurrentPosition = mineralArm.getCurrentPosition();
         winchPosition = winchUp.getCurrentPosition();
         winchUp.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -151,7 +151,7 @@ public class TeleOpState extends State {
 //**************************************************************************************************
         //CODE FOR RUNNING MINERAL COLLECTION ARM!!!!!
 
-        //power up and down toggles
+   /*     //power up and down toggles
 
         //a toggle to increase the mineral collection arm power
         if (engine.gamepad1.y != y1LastRead &&
@@ -228,9 +228,36 @@ public class TeleOpState extends State {
                 mineralArmTargetPosition = mineralArmCurrentPosition - 75;
                 mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
             }
-        }
+        }*/
         //setting the mineral collection arm power and target position
-        mineralArm.setTargetPosition(mineralArmTargetPosition);
+
+        mineralArmCurrentPosition = abs(mineralArm.getCurrentPosition());
+        rightTriggerValue = engine.gamepad2.right_bumper;
+        leftTriggerValue = engine.gamepad2.left_bumper;
+
+        if (mineralArmCurrentPosition < 288 && rightTriggerValue == true){
+            mineralArmPower = 0.75 * (288.0-(double)mineralArmCurrentPosition)/288.0 + 0.25;
+        }
+        //0.75 * mineralArmCurrentPosition/288 + 0.25
+        if (mineralArmCurrentPosition >= 288 && rightTriggerValue == true){
+            mineralArmPower = 0.25;
+        }
+        if (mineralArmCurrentPosition >= 576 && leftTriggerValue == true){
+            mineralArmPower = -1.0;
+        }
+        if (mineralArmCurrentPosition < 576 && mineralArmCurrentPosition > 288 && leftTriggerValue == true){
+            mineralArmPower = -0.75 * ((double)mineralArmCurrentPosition-288.0)/288.0 - 0.25;
+        }
+
+        if (mineralArmCurrentPosition < 288 && leftTriggerValue == true){
+            mineralArmPower = -0.25;
+        }
+
+        if (leftTriggerValue == false && rightTriggerValue == false){
+            mineralArmPower = 0.0;
+        }
+
+        //mineralArm.setTargetPosition(mineralArmTargetPosition);
         mineralArm.setPower(mineralArmPower);
 //**************************************************************************************************
 
@@ -276,20 +303,7 @@ public class TeleOpState extends State {
         winchUp.setTargetPosition(winchTargetPosition);
         winchUp.setPower(1);
 
-        //laser arm
-        if (engine.gamepad2.right_bumper == true){
-            //laser arm out
-            laserArmPosition = 1.0;
-        }
-        if (engine.gamepad2.left_bumper == true){
-            //laser arm in
-            laserArmPosition = 0;
-        }
-        //setting laser arm position
-        laserArm.setPosition(laserArmPosition);
-
-
-        //drive train controls
+          //drive train controls
         RightDrive.setPower(engine.gamepad1.right_stick_y);
         LeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
 

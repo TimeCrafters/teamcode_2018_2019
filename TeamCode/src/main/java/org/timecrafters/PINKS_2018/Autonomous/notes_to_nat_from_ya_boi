@@ -1,0 +1,12 @@
+1. Numbers do not belong in java naming convention this isn't 1998
+    https://www.oracle.com/technetwork/java/codeconventions-135099.html
+2. States should only contains basic operations i.e drive and then have constructors which
+    determine what the operations outcome is ie how far and how fast.
+3. Use sub engines to make assessments on which path you should be going to i.e block is at
+    index 0 so this sub engine is active.
+4. If you are using the word step in a state then it is no longer a basic operation and
+    should be offloaded to a sub engine process. If everything is a step then just remove
+    the word step from the file name, it is implied that it is a step.
+5. What is the point of comment blocks if they are all going to be the same?
+6. If you are abbreviating a long word or sentence re-think why you are naming it that way.
+7. Watch https://www.youtube.com/watch?v=jM8gOF6Oi-U
