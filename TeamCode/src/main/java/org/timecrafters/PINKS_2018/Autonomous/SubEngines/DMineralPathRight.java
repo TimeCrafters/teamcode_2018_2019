@@ -11,8 +11,8 @@ import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Depot.DR
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Depot.DRMineralStrait;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.RightPath.Depot.DRReturnReverse;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.ExtendArm;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PlaceMarker;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
@@ -36,8 +36,8 @@ public class DMineralPathRight extends SubEngine {
         addState(new DRMineralBump(engine, AppReader, PinksHardwareConfig));
         addState(new DRPointToDepot(engine, AppReader, PinksHardwareConfig));
         addState(new DRDriveToDepot(engine, AppReader, PinksHardwareConfig));
-        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new StepPlaceMarker(engine, AppReader, PinksHardwareConfig));
+        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
         addState(new DRReturnReverse(engine, AppReader, PinksHardwareConfig));
         addState(new DRReturnArc(engine, AppReader, PinksHardwareConfig));
         addState(new DRMineralStrait(engine, AppReader, PinksHardwareConfig));

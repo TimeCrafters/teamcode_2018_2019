@@ -1,6 +1,7 @@
 package org.timecrafters.PINKS_2018.Autonomous.SubEngines;
 
 import org.cyberarm.NeXT.StateConfiguration;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.ExtendArm;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater.CLDriveToCrater;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater.CLDriveToDepot;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater.CLDriveToGold;
@@ -12,8 +13,7 @@ import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater.CL
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater.CLTurnToDepot;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Crater.CLTurnToGold;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PlaceMarker;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
@@ -42,8 +42,8 @@ public class CMineralPathLeft extends SubEngine {
         addState(new CLMineralStrait(engine, AppReader, PinksHardwareConfig));
         addState(new CLTurnToDepot(engine, AppReader, PinksHardwareConfig)); //!
         addState(new CLDriveToDepot(engine, AppReader, PinksHardwareConfig)); //!
-        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new StepPlaceMarker(engine, AppReader, PinksHardwareConfig)); //!
+        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig)); //!
         addState(new CLDriveToCrater(engine, AppReader, PinksHardwareConfig)); //!
     }
 

@@ -9,13 +9,13 @@ import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
 
-public class DMineralPathRight extends SubEngine {
+public class CMineralPathLeft extends SubEngine {
     Engine engine;
     private MineralPosId GoldPosIdentifier;
     private PinksHardwareConfig PinksHardwareConfig;
     private StateConfiguration AppReader;
 
-    public DMineralPathRight(Engine engine, MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public CMineralPathLeft(Engine engine, MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
@@ -24,23 +24,23 @@ public class DMineralPathRight extends SubEngine {
 
     @Override
     public void setProcesses() {
-
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRPointToGold"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRMineralBump"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRPointToDepot"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRDriveToDepot"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLPointToGold"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLDriveToGold"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLTurnToGold"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLMineralBump"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLReturnReverse"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLReturnArc"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLMineralStrait"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLTurnToDepot"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLDriveToDepot"));
         addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
         addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRReturnReverse"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRReturnArc"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRMineralStrait"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRPointToCrater"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRDriveToCrater"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLDriveToCrater"));
     }
 
     @Override
     public void evaluate() {
-        if (GoldPosIdentifier.GoldPosition == 3) {
+        if (GoldPosIdentifier.GoldPosition == 1) {
             setRunable(true);
         }
     }

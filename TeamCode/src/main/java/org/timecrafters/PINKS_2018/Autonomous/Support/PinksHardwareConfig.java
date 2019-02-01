@@ -19,6 +19,8 @@ public class PinksHardwareConfig {
     public Engine engine;
     private String szLeftMotor = "leftDrive";      // REV exp hub 2 motor port 0
     private String szRightMotor = "rightDrive";     // REV exp hub 3 motor port 0
+    private String szLeftFrontMotor = "frontLeftDrive";
+    private String szRightFrontMotor = "frontRightDrive";
     private String szLaserArmServo = "laserArm";       // REV exp hub 3 servo port 5 180 servo
     private String szMineralDetect0 = "distance0";      // REV exp hub 3 i2c bus 0 port 1
     private String szMineralDetect1 = "distance1";      // REV exp hub 3 i2c bus 1 port 0
@@ -39,6 +41,8 @@ public class PinksHardwareConfig {
     /*create pointers for hardware*/
     public DcMotor pLeftMotor;
     public DcMotor pRightMotor;
+    public DcMotor pFrontLeftMotor;
+    public DcMotor pFrontRightMotor;
     public Servo pLaserArmServo;
     public DistanceSensor pMineralDetect0;
     public DistanceSensor pMineralDetect1;
@@ -69,6 +73,8 @@ public class PinksHardwareConfig {
         /* get pointers */
         pLeftMotor = engine.hardwareMap.dcMotor.get(szLeftMotor);
         pRightMotor = engine.hardwareMap.dcMotor.get(szRightMotor);
+        pFrontLeftMotor = engine.hardwareMap.dcMotor.get(szLeftFrontMotor);
+        pFrontRightMotor = engine.hardwareMap.dcMotor.get(szRightFrontMotor);
         //pLaserArmServo = engine.hardwareMap.servo.get(szLaserArmServo);
         //pMineralDetect0 = engine.hardwareMap.get(DistanceSensor.class, szMineralDetect0);
         //pMineralDetect1 = engine.hardwareMap.get(DistanceSensor.class, szMineralDetect1);
@@ -104,6 +110,8 @@ public class PinksHardwareConfig {
         pDropRight.setPosition(0.0);
         pRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        pFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Vuforia initializing
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();

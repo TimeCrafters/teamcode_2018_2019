@@ -11,10 +11,12 @@ import org.timecrafters.engine.State;
  * Name: DropRobot
  * Inputs: engine, ArchitectureControl
  * Outputs: none
- * Use: Opens drop latch to drop robot
+ * Use: Extends Mineral collection arm so that t
+ * History:
+ * 1/24/19 - Created
  **********************************************************************************************/
 
-public class StepExtendArm extends State {
+public class ExtendArm extends State {
     private String StepID = "ExtendArm";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
@@ -25,7 +27,7 @@ public class StepExtendArm extends State {
 
 
 
-    public StepExtendArm(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public ExtendArm(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;

@@ -9,8 +9,8 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 /**********************************************************************************************
- * Name: DropRobot
- * Inputs: engine
+ * Name: DeployPaddle
+ * Inputs: engine, appreader
  * Outputs: none
  * Use:
  **********************************************************************************************/
