@@ -14,6 +14,8 @@ import static java.lang.Math.abs;
 public class TeleOpState extends State {
     private DcMotor RightDrive;
     private DcMotor LeftDrive;
+    private DcMotor frontLeftDrive;
+    private DcMotor frontRightDrive;
     private CRServo collectionServo;
     private CRServo ElbowServo;
     private DcMotor mineralArm;
@@ -85,6 +87,8 @@ public class TeleOpState extends State {
         mineralCapture = engine.hardwareMap.servo.get("mineralCapture");
         servoRotation = engine.hardwareMap.servo.get("servoRotation");
         servoClamp = engine.hardwareMap.servo.get("servoClamp");
+        frontLeftDrive = engine.hardwareMap.dcMotor.get("frontLeftDrive");
+        frontRightDrive = engine.hardwareMap.dcMotor.get("frontRightDrive");
 
         winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -306,6 +310,8 @@ public class TeleOpState extends State {
           //drive train controls
         RightDrive.setPower(engine.gamepad1.right_stick_y);
         LeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
+        frontRightDrive.setPower(engine.gamepad1.right_stick_y);
+        frontLeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
 
 
         //toggle for mineral capture
