@@ -75,38 +75,48 @@ public class Drive extends State {
             distanceTicksRight = DistanceConverter(RightMM, 98);
 
 
-            LeftDrive.setPower(LeftPower);
-            RightDrive.setPower(RightPower);
             FrontLeftDrive.setPower(LeftPower);
             FrontRightDrive.setPower(RightPower);
 
             //run each motor until they reach their targets
-            if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
+            if (Math.abs(RightCurrentTick) < distanceTicksRight) {
+                RightDrive.setPower(RightPower);
+            } else {
                 RightDrive.setPower(0);
-                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
+            if (Math.abs(LeftCurrentTick) < distanceTicksLeft) {
+                LeftDrive.setPower(LeftPower);
+            } else {
                 LeftDrive.setPower(0);
-                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (Math.abs(FrontLeftCurrentTick) >= distanceTicksLeft) {
+            if (Math.abs(FrontLeftCurrentTick) < distanceTicksLeft) {
+                FrontLeftDrive.setPower(LeftPower);
+            } else {
                 FrontLeftDrive.setPower(0);
-                FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                FrontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (Math.abs(FrontRightCurrentTick) >= distanceTicksRight) {
+            if (Math.abs(FrontRightCurrentTick) < distanceTicksRight) {
+                FrontRightDrive.setPower(RightPower);
+            } else {
                 FrontRightDrive.setPower(0);
-                FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                FrontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
 
             if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft && Math.abs(FrontLeftCurrentTick) >= distanceTicksLeft && Math.abs(FrontRightCurrentTick) >= distanceTicksRight) {
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                FrontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                FrontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
                 setFinished(true);
             }
 

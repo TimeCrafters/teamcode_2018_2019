@@ -94,10 +94,18 @@ public class PinksHardwareConfig {
         /* initialize hardware modes*/
         pLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pFrontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         pLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         pRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        pFrontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        pFrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         pLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pFrontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pFrontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         /* initialize hardware positions*/
         pLeftMotor.setPower(0.0);
