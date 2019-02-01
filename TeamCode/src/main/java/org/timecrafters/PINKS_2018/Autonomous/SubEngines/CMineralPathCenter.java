@@ -8,8 +8,8 @@ import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCMineralStrait;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCReturnReverse;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCTurnToDepot;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.ExtendArm;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
@@ -35,8 +35,8 @@ public class CMineralPathCenter extends SubEngine {
         addState(new CCMineralStrait(engine, AppReader, PinksHardwareConfig));
         addState(new CCTurnToDepot(engine, AppReader, PinksHardwareConfig)); //!
         addState(new CCDriveToDepot(engine, AppReader, PinksHardwareConfig)); //!
-        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
         addState(new CCDriveToCrater(engine, AppReader, PinksHardwareConfig)); //!
     }
 

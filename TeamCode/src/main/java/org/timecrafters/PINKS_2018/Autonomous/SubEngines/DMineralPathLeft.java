@@ -7,11 +7,9 @@ import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLD
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLPointToCrater;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLPointToDepot;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLPointToGold;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLReturnArc;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLMineralStrait;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.ExtendArm;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PlaceMarker;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
@@ -35,8 +33,8 @@ public class DMineralPathLeft extends SubEngine {
         addState(new DLMineralBump(engine, AppReader, PinksHardwareConfig));
         addState(new DLPointToDepot(engine, AppReader, PinksHardwareConfig));
         addState(new DLDriveToDepot(engine, AppReader, PinksHardwareConfig));
-        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new StepPlaceMarker(engine, AppReader, PinksHardwareConfig));
+        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
         addState(new DLPointToCrater(engine,AppReader, PinksHardwareConfig));
         addState(new DLDriveToCrater(engine, AppReader, PinksHardwareConfig));
     }

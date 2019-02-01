@@ -10,16 +10,15 @@ import org.timecrafters.engine.State;
 
 /**********************************************************************************************
  * Name: DropRobot
- * Inputs: engine
+ * Inputs: engine, appreader,
  * Outputs: none
- * Use:
+ * Use: Rotates drop latch servos to release the robot from the lander
  **********************************************************************************************/
 
 public class DropRobot extends State {
     private String StepID = "DropRobot";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    private boolean FirstRun;
     private Servo servoLeft;
     private Servo servoRight;
     private long DropTime;
@@ -52,8 +51,7 @@ public class DropRobot extends State {
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
-            //This is the actual code for Dropping the Robot. It opens the drop latch servos before
-            //closing them shortly after the robot lands.
+            //opens the drop latch servos before closing them shortly after the robot lands.
 
             servoLeft.setPosition(.6);
             servoRight.setPosition(.5);

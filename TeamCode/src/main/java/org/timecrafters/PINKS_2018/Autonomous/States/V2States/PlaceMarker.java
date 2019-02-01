@@ -9,13 +9,16 @@ import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.State;
 
 /**********************************************************************************************
- * Name: DropRobot
- * Inputs: engine, ArchitectureControl
+ * Name: PlaceMarker
+ * Inputs: engine, appReader, pinksHardwareConfig
  * Outputs: none
- * Use: Opens drop latch to drop robot
+ * Use: Spins mineral collection wheel to drop team marker.
+ * History:
+ * 1/24/19 - added functionality to use mineral the collector
+ * 1/1/19 - Created State: method of marker placement unknown
  **********************************************************************************************/
 
-public class StepPlaceMarker extends State {
+public class PlaceMarker extends State {
     private String StepID = "PlaceMarker";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
@@ -23,18 +26,13 @@ public class StepPlaceMarker extends State {
     private long PlaceTime;
     private double Power;
 
-
-
-
-    public StepPlaceMarker(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public PlaceMarker(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
         this.AppReader = appReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {
-
-        //We used the robot's mineral collector to store and release the team marker
         MineralCollectionServo = PinksHardwareConfig.pMineralCollectServo;
 
         PlaceTime = AppReader.get(StepID).variable("PlaceTime");
@@ -48,6 +46,9 @@ public class StepPlaceMarker extends State {
         // toggled on or off.
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
+
+            //Our Team marker is stored in our mineral collection system and is removed by rotating
+            //the collection wheel so it falls out.
 
             MineralCollectionServo.setPower(Power);
             sleep(PlaceTime);

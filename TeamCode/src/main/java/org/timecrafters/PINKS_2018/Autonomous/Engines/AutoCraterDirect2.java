@@ -6,12 +6,6 @@ import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DropRobot;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DeployPaddle;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PointTowardGold;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CTurnToDepot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CDriveToDepot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CDriveToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathCenter;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathLeft;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathRight;
@@ -44,8 +38,8 @@ public class AutoCraterDirect2 extends Engine {
 
 //    addState(new CTurnToDepot(this, AppReader, PinksHardwareConfig));
 //    addState(new CDriveToDepot(this, AppReader, PinksHardwareConfig));
-//    addState(new StepExtendArm(this, AppReader, PinksHardwareConfig));
-//    addState(new StepPlaceMarker(this, AppReader, PinksHardwareConfig));
+//    addState(new ExtendArm(this, AppReader, PinksHardwareConfig));
+//    addState(new PlaceMarker(this, AppReader, PinksHardwareConfig));
 //    addState(new CDriveToCrater(this, AppReader, PinksHardwareConfig));
 
 

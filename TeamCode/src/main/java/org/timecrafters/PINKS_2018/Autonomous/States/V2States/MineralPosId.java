@@ -1,5 +1,19 @@
 package org.timecrafters.PINKS_2018.Autonomous.States.V2States;
 
+/**********************************************************************************************
+ * Name: MineralPosId
+ * Inputs: engine, PinksHardwareConfig, AppReader
+ * Outputs: GoldPosition
+ * Use: Observe the set of minerals and determine the position of gold as 1, 2 ,or 3 (Left, Center,
+ * RightDrive)
+ * History:
+ * 1/20/19 - Made Position Identification work when silver minerals aren't detected
+ * 1/19/19 - Made Position Identification work when the leftmost mineral is out of frame
+ * 12/27/18 - Used sample code to create basic position identifier
+ * 12/15/18 - Tensor Flow Experiment
+ * 12/13/18 - Created State
+ **********************************************************************************************/
+
 import org.cyberarm.NeXT.StateConfiguration;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -10,19 +24,10 @@ import org.timecrafters.engine.State;
 
 import java.util.List;
 
-/**********************************************************************************************
- * Name: MineralPosId
- * Inputs: engine, PinksHardwareConfig, AppReader
- * Outputs: GoldPosition
- * Use: Observe the set of minerals and determine the position of gold as 1, 2 ,or 3 (Left, Center,
- * RightDrive)
- **********************************************************************************************/
-
 public class MineralPosId extends State {
     private String StepID = "MineralPosId";
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
-    private VuforiaLocalizer VuForia;
     private TFObjectDetector ObjectDetector;
     private List<Recognition> Objects;
     private boolean FirstRun;
@@ -45,8 +50,6 @@ public class MineralPosId extends State {
     }
 
     public void init() {
-
-        VuForia = PinksHardwareConfig.pVuForia;
 
         ObjectDetector = PinksHardwareConfig.pObjectDetector;
 

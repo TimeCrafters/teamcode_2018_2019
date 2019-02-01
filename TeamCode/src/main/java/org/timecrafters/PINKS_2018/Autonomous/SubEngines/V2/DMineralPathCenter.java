@@ -1,16 +1,10 @@
 package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.DCDriveToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.DCMineralBump;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.DCMineralStrait;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.DCPointToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.DCPointToGold;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.DCReverse;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Depot.DCTurn;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.ExtendArm;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.Support.Drive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
@@ -30,14 +24,14 @@ public class DMineralPathCenter extends SubEngine {
 
     @Override
     public void setProcesses() {
-        addState(new DCMineralBump(engine, AppReader, PinksHardwareConfig));
-        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new StepPlaceMarker(engine, AppReader, PinksHardwareConfig));
-        addState(new DCReverse(engine, AppReader, PinksHardwareConfig));
-        addState(new DCTurn(engine, AppReader, PinksHardwareConfig));
-        addState(new DCMineralStrait(engine, AppReader, PinksHardwareConfig));
-        addState(new DCPointToCrater(engine, AppReader, PinksHardwareConfig));
-        addState(new DCDriveToCrater(engine, AppReader, PinksHardwareConfig));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCMineralBump"));
+        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCReverse"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCTurn"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCMineralStrait"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCPointToCrater"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCDriveToCrater"));
     }
 
     @Override

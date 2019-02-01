@@ -8,26 +8,36 @@ import org.timecrafters.engine.State;
 
 /**********************************************************************************************
  * Name: Drive
- * Inputs: engine, pinksHardwareConfig, stepID
+ * Inputs: engine, appReader, pinksHardwareConfig, stepID
  * Outputs: none
  * Use: Drive the motors based on the drive variables from the phone
+ * History:
+ * 1/31/19 - Added four wheel drive.
+ * 1/29/19 - Converted PinksDrive into a single State to replace the many repetitive drive States
+ * 1/12/19 - Added PinksDrive to necessary States
+ * 1/5/19 - Created PinksDrive to use in States
  **********************************************************************************************/
 
 public class Drive extends State {
+    //The StepID refers to a set of values in a file we can edit on the phones. In this case, the
+    //StepID determines what set of distance and power values are used for a given state.
     private String StepID;
     public StateConfiguration AppReader;
     public PinksHardwareConfig PinksHardwareConfig;
     private double LeftPower;
     private double RightPower;
-    private int LeftInches;
-    private int RightInches;
-    public DcMotor RightDrive;
-    public DcMotor LeftDrive;
+    private int LeftMM;
+    private int RightMM;
+    private DcMotor RightDrive;
+    private DcMotor LeftDrive;
+    private DcMotor FrontRightDrive;
+    private DcMotor FrontLeftDrive;
     private int RightCurrentTick;
     private int LeftCurrentTick;
+    private int FrontRightCurrentTick;
+    private int FrontLeftCurrentTick;
     private int distanceTicksRight;
     private int distanceTicksLeft;
-
 
     public Drive(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig, String stepID) {
         this.engine = engine;
@@ -39,11 +49,13 @@ public class Drive extends State {
     public void init() {
         RightDrive = PinksHardwareConfig.pRightMotor;
         LeftDrive = PinksHardwareConfig.pLeftMotor;
+        FrontRightDrive = PinksHardwareConfig.pFrontRightMotor;
+        FrontLeftDrive = PinksHardwareConfig.pFrontLeftMotor;
 
         LeftPower = AppReader.get(StepID).variable("LeftPower");
         RightPower = AppReader.get(StepID).variable("RightPower");
-        LeftInches = AppReader.get(StepID).variable("LeftIN");
-        RightInches = AppReader.get(StepID).variable("RightIN");
+        LeftMM = AppReader.get(StepID).variable("LeftMM");
+        RightMM = AppReader.get(StepID).variable("RightMM");
     }
 
     @Override
@@ -56,28 +68,45 @@ public class Drive extends State {
 
             RightCurrentTick = RightDrive.getCurrentPosition();
             LeftCurrentTick = LeftDrive.getCurrentPosition();
+            FrontRightCurrentTick = FrontRightDrive.getCurrentPosition();
+            FrontLeftCurrentTick = FrontLeftDrive.getCurrentPosition();
 
-            distanceTicksLeft = DistanceConverter(LeftInches, 4);
-            distanceTicksRight = DistanceConverter(RightInches, 4);
+            distanceTicksLeft = DistanceConverter(LeftMM, 98);
+            distanceTicksRight = DistanceConverter(RightMM, 98);
+
 
             LeftDrive.setPower(LeftPower);
             RightDrive.setPower(RightPower);
+            FrontLeftDrive.setPower(LeftPower);
+            FrontRightDrive.setPower(RightPower);
 
-            //run the motor until it reaches it's target
+            //run each motor until they reach their targets
             if (Math.abs(RightCurrentTick) >= distanceTicksRight) {
                 RightDrive.setPower(0);
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             if (Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
                 LeftDrive.setPower(0);
+                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft) {
-                LeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                RightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                LeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                RightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if (Math.abs(FrontLeftCurrentTick) >= distanceTicksLeft) {
+                FrontLeftDrive.setPower(0);
+                FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                FrontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
 
+            if (Math.abs(FrontRightCurrentTick) >= distanceTicksRight) {
+                FrontRightDrive.setPower(0);
+                FrontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                FrontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+
+            if (Math.abs(RightCurrentTick) >= distanceTicksRight && Math.abs(LeftCurrentTick) >= distanceTicksLeft && Math.abs(FrontLeftCurrentTick) >= distanceTicksLeft && Math.abs(FrontRightCurrentTick) >= distanceTicksRight) {
                 setFinished(true);
             }
 
@@ -89,8 +118,8 @@ public class Drive extends State {
         engine.telemetry.update();
     }
 
-    private int DistanceConverter(int distanceIN, int WhealDiamiter) {
-        return (int) ((distanceIN * 288) / (WhealDiamiter * Math.PI));
+    private int DistanceConverter(int distanceMM, int WhealDiamiter) {
+        return (int) ((distanceMM * 288) / (WhealDiamiter * Math.PI));
     }
 
 }

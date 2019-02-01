@@ -1,15 +1,10 @@
 package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLDriveToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLDriveToDepot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLMineralBump;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLPointToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLPointToDepot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.LeftPath.Depot.DLPointToGold;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.ExtendArm;
 import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepExtendArm;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.StepPlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.Support.Drive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;
@@ -29,14 +24,15 @@ public class DMineralPathLeft extends SubEngine {
 
     @Override
     public void setProcesses() {
-        addState(new DLPointToGold(engine, AppReader, PinksHardwareConfig));
-        addState(new DLMineralBump(engine, AppReader, PinksHardwareConfig));
-        addState(new DLPointToDepot(engine, AppReader, PinksHardwareConfig));
-        addState(new DLDriveToDepot(engine, AppReader, PinksHardwareConfig));
-        addState(new StepExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new StepPlaceMarker(engine, AppReader, PinksHardwareConfig));
-        addState(new DLPointToCrater(engine,AppReader, PinksHardwareConfig));
-        addState(new DLDriveToCrater(engine, AppReader, PinksHardwareConfig));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLPointToGold"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLMineralBump"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLPointToDepot"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLDriveToDepot"));
+        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLPointToCrater"));
+        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLDriveToCrater"));
+
     }
 
     @Override
