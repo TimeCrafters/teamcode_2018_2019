@@ -66,6 +66,8 @@ public class TeleOpState extends State {
     private boolean clipArmLastRead;
     private boolean clipArmLastRead2;
     private boolean clipArmToggle;
+    private double drivePercentage;
+    private String speed;
 
 
 
@@ -116,6 +118,7 @@ public class TeleOpState extends State {
         servoClampPosition = 1;
 
         clipArmLastPosition = clipArm.getCurrentPosition();
+        drivePercentage = 1;
 
 
     }
@@ -155,85 +158,6 @@ public class TeleOpState extends State {
 //**************************************************************************************************
         //CODE FOR RUNNING MINERAL COLLECTION ARM!!!!!
 
-   /*     //power up and down toggles
-
-        //a toggle to increase the mineral collection arm power
-        if (engine.gamepad1.y != y1LastRead &&
-                engine.gamepad1.y == true &&
-                mineralArmPowerMaxUp < 1.0){
-            mineralArmPowerMaxUp += 0.1;
-        }
-        y1LastRead = engine.gamepad1.y;
-
-        //a toggle to decrease the mineral collection arm power
-        if (engine.gamepad1.a != a1LastRead &&
-                engine.gamepad1.a == true &&
-                mineralArmPowerMaxUp > 0.0){
-            mineralArmPowerMaxUp -= 0.1;
-        }
-        a1LastRead = engine.gamepad1.a;
-
-
-        //Game mode toggle - a switch for who is driving the mineral collection arm
-        if (engine.gamepad1.x != mineralModeLastRead && engine.gamepad1.x == true){
-            gameMode = !gameMode;
-        }
-        mineralModeLastRead = engine.gamepad1.x;
-
-        //if controller 2 has control of the mineral collection arm
-        if (gameMode == true) {
-
-            rightTriggerValue = engine.gamepad2.right_trigger;
-            leftTriggerValue = engine.gamepad2.left_trigger;
-
-            if (leftTriggerValue < 0.05 && rightTriggerValue < 0.05) {
-                //no triggers
-                mineralArmPower = 0.1;
-            } else {
-                //at least one trigger
-                mineralArmCurrentPosition = mineralArm.getCurrentPosition();
-            }
-
-            if (rightTriggerValue > 0.05) {
-                //down - setting the arm power times the right trigger and setting the position
-                //to the current position minus 75
-                mineralArmPower = 0.25 * rightTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition - 75;
-            }
-
-            if (leftTriggerValue > 0.05) {
-                //up - setting the arm power times the left trigger and setting the position
-                //to the current position plus 75
-                mineralArmTargetPosition = mineralArmCurrentPosition + 75;
-                mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
-            }
-        }else{
-            //if controller 1 has control of the mineral collection arm
-            rightTriggerValue = engine.gamepad1.right_trigger;
-            leftTriggerValue = engine.gamepad1.left_trigger;
-
-            if (leftTriggerValue < 0.05 && rightTriggerValue < 0.05) {
-                //no triggers
-            } else {
-                //at least one trigger
-                mineralArmCurrentPosition = mineralArm.getCurrentPosition();
-            }
-
-            if (rightTriggerValue > 0.05) {
-                //down - setting the arm power times the left trigger and setting the position
-                //to the current position plus 75
-                mineralArmPower = 0.25 * rightTriggerValue;
-                mineralArmTargetPosition = mineralArmCurrentPosition + 75;
-            }
-
-            if (leftTriggerValue > 0.05) {
-                //up - setting the arm power times the right trigger and setting the position
-                //to the current position minus 75
-                mineralArmTargetPosition = mineralArmCurrentPosition - 75;
-                mineralArmPower = mineralArmPowerMaxUp * leftTriggerValue;
-            }
-        }*/
-        //setting the mineral collection arm power and target position
 
         mineralArmCurrentPosition = abs(mineralArm.getCurrentPosition());
         rightTriggerValue = engine.gamepad2.right_bumper;
@@ -308,10 +232,22 @@ public class TeleOpState extends State {
         winchUp.setPower(1);
 
           //drive train controls
-        RightDrive.setPower(engine.gamepad1.right_stick_y);
-        LeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
-        frontRightDrive.setPower(engine.gamepad1.right_stick_y);
-        frontLeftDrive.setPower(engine.gamepad1.left_stick_y * -1);
+        if (engine.gamepad1.y != y1LastRead &&
+                engine.gamepad1.y == true){
+            if (drivePercentage == 1.0){
+                speed = "slow";
+                drivePercentage = 2.0;
+            }else if (drivePercentage == 2.0){
+                drivePercentage = 1.0;
+                speed = "fast";
+            }
+        }
+        y1LastRead = engine.gamepad1.y;
+
+        RightDrive.setPower((engine.gamepad1.right_stick_y)/drivePercentage);
+        LeftDrive.setPower((engine.gamepad1.left_stick_y * -1)/drivePercentage);
+        frontRightDrive.setPower((engine.gamepad1.right_stick_y)/drivePercentage);
+        frontLeftDrive.setPower((engine.gamepad1.left_stick_y * -1)/drivePercentage);
 
 
         //toggle for mineral capture
@@ -373,6 +309,7 @@ public class TeleOpState extends State {
     }
 
     public void telemetry() {
+        engine.telemetry.addData("drive speed",speed);
         engine.telemetry.addData("mineral arm position", mineralArmCurrentPosition);
         engine.telemetry.addData("arm motor power", mineralArmPower);
         engine.telemetry.addData("RightDrive Trigger Value", rightTriggerValue);
@@ -384,5 +321,5 @@ public class TeleOpState extends State {
         engine.telemetry.addData("clip target position", clipArmLastPosition);
         engine.telemetry.addData("current clip position",clipArm.getCurrentPosition());
         engine.telemetry.addData("clip power!!!",clipArm.getPower());
-    }
+            }
 }
