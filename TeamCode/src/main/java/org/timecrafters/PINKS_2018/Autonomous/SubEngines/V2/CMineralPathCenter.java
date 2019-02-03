@@ -15,17 +15,10 @@ package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCDriveToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCDriveToDepot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCMineralBump;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCMineralStrait;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCReturnArc;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCReturnReverse;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.CenterPath.Crater.CCTurnToDepot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.ExtendArm;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PlaceMarker;
-import org.timecrafters.PINKS_2018.Autonomous.Support.Drive;
+import org.timecrafters.PINKS_2018.Autonomous.States.ExtendArm;
+import org.timecrafters.PINKS_2018.Autonomous.States.MineralPosId;
+import org.timecrafters.PINKS_2018.Autonomous.States.PlaceMarker;
+import org.timecrafters.PINKS_2018.Autonomous.States.Drive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 import org.timecrafters.engine.SubEngine;

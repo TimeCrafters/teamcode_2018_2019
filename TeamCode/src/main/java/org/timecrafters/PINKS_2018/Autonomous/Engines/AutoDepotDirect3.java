@@ -13,19 +13,14 @@ package org.timecrafters.PINKS_2018.Autonomous.Engines;
  **********************************************************************************************/
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DDriveToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DPointToCrater;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DeployPaddle;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DropRobot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.PointTowardGold;
+import org.timecrafters.PINKS_2018.Autonomous.States.DeployPaddle;
+import org.timecrafters.PINKS_2018.Autonomous.States.DropRobot;
+import org.timecrafters.PINKS_2018.Autonomous.States.MineralPosId;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2.DMineralPathCenter;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2.DMineralPathLeft;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2.DMineralPathRight;
-import org.timecrafters.PINKS_2018.Autonomous.Support.Drive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
 

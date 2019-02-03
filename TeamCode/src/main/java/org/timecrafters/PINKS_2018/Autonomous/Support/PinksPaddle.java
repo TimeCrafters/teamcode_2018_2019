@@ -13,7 +13,7 @@ public class PinksPaddle {
     public PinksPaddle(PinksHardwareConfig pinksHardwareConfig, double deployPos, double storePos, double paddlePower ) {
         DeployPos = deployPos;
         StorePos = storePos;
-        PaddleServo = pinksHardwareConfig.pPaddle;
+        PaddleServo = pinksHardwareConfig.Paddle;
         Power = paddlePower;
     }
 

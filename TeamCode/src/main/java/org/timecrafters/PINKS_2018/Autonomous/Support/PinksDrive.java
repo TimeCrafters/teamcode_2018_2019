@@ -13,8 +13,8 @@ public class PinksDrive {
 
 
     public PinksDrive(PinksHardwareConfig pinksHardwareConfig) {
-        LeftDrive = pinksHardwareConfig.pLeftMotor;
-        RightDrive = pinksHardwareConfig.pRightMotor;
+        LeftDrive = pinksHardwareConfig.LeftMotor;
+        RightDrive = pinksHardwareConfig.RightMotor;
         RightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 

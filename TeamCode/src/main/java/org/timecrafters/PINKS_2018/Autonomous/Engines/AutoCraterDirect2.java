@@ -1,17 +1,18 @@
 package org.timecrafters.PINKS_2018.Autonomous.Engines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.cyberarm.NeXT.StateConfiguration;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DropRobot;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.DeployPaddle;
-import org.timecrafters.PINKS_2018.Autonomous.States.V2States.MineralPosId;
+import org.timecrafters.PINKS_2018.Autonomous.States.DropRobot;
+import org.timecrafters.PINKS_2018.Autonomous.States.DeployPaddle;
+import org.timecrafters.PINKS_2018.Autonomous.States.MineralPosId;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathCenter;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathLeft;
 import org.timecrafters.PINKS_2018.Autonomous.SubEngines.CMineralPathRight;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
 import org.timecrafters.engine.Engine;
-
+@Disabled
 @Autonomous (name = "Autonomous: Crater")
 public class AutoCraterDirect2 extends Engine {
 

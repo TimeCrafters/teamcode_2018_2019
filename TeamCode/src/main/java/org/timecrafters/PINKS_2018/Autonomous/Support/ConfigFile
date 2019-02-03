@@ -1,6 +1,7 @@
 [{"enabled":true,"name":"DropRobot","variables":{"DeployPos":"Ix0","DropTime":"Lx500"}},
   {"enabled":true,"name":"DeployPaddle","variables":{"Power":"Dx0.5","DeployTime":"Lx1600"}},
   {"enabled":true,"name":"MineralPosId","variables":{"ScanTime":"Lx3000","LCB":"Fx1100","DefaultPath":"Ix1","CRB":"Fx430"}},
+  {"enabled":true,"name":"ClearLander","variables":{"RightPower":"Dx-0.8","LeftPower":"Dx-0.8","RightMM":"Ix60","LeftMM":"Ix60"}},
   {"enabled":true,"name":"PlaceMarker","variables":{"PlaceTime":"Lx1000","Power":"Dx0.8"}},
   {"enabled":true,"name":"ExtendArm","variables":{"Power":"Dx0.8","ExtendTime":"Lx1500"}},
 
