@@ -30,6 +30,8 @@ public class AutoDepotDirect3 extends Engine {
   public PinksHardwareConfig PinksHardwareConfig;
   public StateConfiguration AppReader;
 
+  //"setProcesses" Runs through each State in the order they are added
+
   @Override
   public void setProcesses() {
 
@@ -42,6 +44,7 @@ public class AutoDepotDirect3 extends Engine {
     MineralPosId MPosId = (new MineralPosId(this, AppReader, PinksHardwareConfig));
     addState(MPosId);
 
+    //SubEnginges are like Engines that go inside other Engines and can be turned on and off.
     addSubEngine(new DMineralPathCenter(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new DMineralPathLeft(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new DMineralPathRight(this, MPosId, AppReader, PinksHardwareConfig));

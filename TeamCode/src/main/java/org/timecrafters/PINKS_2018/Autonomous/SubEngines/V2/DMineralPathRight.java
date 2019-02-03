@@ -1,5 +1,17 @@
 package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 
+/**********************************************************************************************
+ * Name: DMineralPathRight
+ * Inputs: engine, mineralPosId, appReader, pinksHardwareConfig
+ * Use: Runs States to complete the Right Path
+ * History:
+ * 1/29/19 - replaced repetitive states with the "Drive" state
+ * 1/26/19 - edited power and distance variables on the phone file
+ * 1/24/19 - added and reorganized States to follow a more specific drive path.
+ * 1/10/19 - fixed issue of every States creating a new instance of PinksHardwareConfig
+ * 1/1/19 - Created DMineralPathRight
+ **********************************************************************************************/
+
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.States.ExtendArm;
 import org.timecrafters.PINKS_2018.Autonomous.States.MineralPosId;
@@ -22,6 +34,7 @@ public class DMineralPathRight extends SubEngine {
         this.GoldPosIdentifier = mineralPosId;
     }
 
+    //Works the same as in the Engine: Runs through each State in the order they are added
     @Override
     public void setProcesses() {
 
@@ -38,8 +51,12 @@ public class DMineralPathRight extends SubEngine {
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRDriveToCrater"));
     }
 
+    //Runs through before setProcesses to determine if the subEngine should be run. If not, it is
+    //skipped.
     @Override
     public void evaluate() {
+
+        //If the gold mineral is in the Right position, run this subEngine.
         if (GoldPosIdentifier.GoldPosition == 3) {
             setRunable(true);
         }

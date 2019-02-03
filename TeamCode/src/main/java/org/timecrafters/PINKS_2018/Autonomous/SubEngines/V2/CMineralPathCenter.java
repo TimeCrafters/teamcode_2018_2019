@@ -3,16 +3,13 @@ package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 /**********************************************************************************************
  * Name: CMineralPathCenter
  * Inputs: engine, mineralPosId, appReader, pinksHardwareConfig
- * Outputs: none
- * Use: Perform the drive path corresponding to a center gold mineral
+ * Use: Runs States to complete the Center Path for Crater Side
  * History:
- * 1/20/19 - Made Position Identification work when silver minerals aren't detected
- * 1/19/19 - Made Position Identification work when the leftmost mineral is out of frame
- * 12/27/18 - Used sample code to create basic position identifier
- * 12/15/18 - Tensor Flow Experiment
- * 12/13/18 - Created State
+ * 1/29/19 - replaced repetitive states with the "Drive" state
+ * 1/27/19 - added and reorganized States and edited power and distance variables on the phone file.
+ * 1/10/19 - fixed issue of every states creating a new instance of PinksHardwareConfig
+ * 1/3/19 - Created CMineralPathCenter
  **********************************************************************************************/
-
 
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.States.ExtendArm;
@@ -36,10 +33,11 @@ public class CMineralPathCenter extends SubEngine {
         this.GoldPosIdentifier = mineralPosId;
     }
 
+    //Works the same as in the Engine: Runs through each State in the order they are added
+
     @Override
     public void setProcesses() {
-        //The first Letter in the StepID indicates crater side or depot side (C/D). The second,
-        //letter indicates the mineral drive paths Left, Right, or Center (L/R/C).
+
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCMineralBump"));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCReturnReverse"));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCReturnArc"));
@@ -51,9 +49,12 @@ public class CMineralPathCenter extends SubEngine {
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCDriveToCrater"));
     }
 
-    //
+    //Runs through before setProcesses to determine if the subEngine should be run. If not, it is
+    //skipped.
     @Override
     public void evaluate() {
+
+        //If the gold mineral is in the Center position, run this subEngine.
         if (GoldPosIdentifier.GoldPosition == 2) {
             setRunable(true);
         }

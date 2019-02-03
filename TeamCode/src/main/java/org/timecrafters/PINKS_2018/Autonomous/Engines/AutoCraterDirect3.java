@@ -26,8 +26,10 @@ import org.timecrafters.engine.Engine;
 @Autonomous (name = "Autonomous: Crater 3")
 public class AutoCraterDirect3 extends Engine {
 
-  public org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig PinksHardwareConfig;
+  public PinksHardwareConfig PinksHardwareConfig;
   public StateConfiguration AppReader;
+
+  //"setProcesses" Runs through each State in the order they are added
 
   @Override
   public void setProcesses() {
@@ -41,6 +43,7 @@ public class AutoCraterDirect3 extends Engine {
     MineralPosId MPosId = (new MineralPosId(this, AppReader, PinksHardwareConfig));
     addState(MPosId);
 
+    //SubEnginges are like Engines that go inside Engines that can be turned on and off.
     addSubEngine(new CMineralPathCenter(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new CMineralPathLeft(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new CMineralPathRight(this, MPosId, AppReader, PinksHardwareConfig));

@@ -1,5 +1,16 @@
 package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 
+/**********************************************************************************************
+ * Name: CMineralPathLeft
+ * Inputs: engine, mineralPosId, appReader, pinksHardwareConfig
+ * Use: Runs States to complete the Left Path for Crater Side
+ * History:
+ * 1/29/19 - replaced repetitive states with the "Drive" state
+ * 1/27/19 - added and reorganized States and edited power and distance variables on the phone file.
+ * 1/10/19 - fixed issue of every states creating a new instance of PinksHardwareConfig
+ * 1/3/19 - Created CMineralPathLeft
+ **********************************************************************************************/
+
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.States.ExtendArm;
 import org.timecrafters.PINKS_2018.Autonomous.States.MineralPosId;
@@ -22,6 +33,8 @@ public class CMineralPathLeft extends SubEngine {
         this.GoldPosIdentifier = mineralPosId;
     }
 
+    //Works the same as in the Engine: Runs through each State in the order they are added
+
     @Override
     public void setProcesses() {
 
@@ -39,8 +52,12 @@ public class CMineralPathLeft extends SubEngine {
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLDriveToCrater"));
     }
 
+    //Runs through before setProcesses to determine if the subEngine should be run. If not, it is
+    //skipped.
     @Override
     public void evaluate() {
+
+        //If the gold mineral is in the Left position, run this subEngine.
         if (GoldPosIdentifier.GoldPosition == 1) {
             setRunable(true);
         }
