@@ -51,7 +51,7 @@ public class Step11TeamMarkerDriveV2 extends State {
     public void init() {
         LeftDrive = Control.PinksHardwareConfig.LeftMotor;
         RightDrive = Control.PinksHardwareConfig.RightMotor;
-        LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
+        //LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
         ReadTime = Control.AppReader.get("RunTeamMarkerDrive").variable("CorrectionTime");
         TargetWallDistance = Control.AppReader.get("RunTeamMarkerDrive").variable("TargetWallDistance");
         CorrectionAmount = Control.AppReader.get("RunTeamMarkerDrive").variable("CAmount");

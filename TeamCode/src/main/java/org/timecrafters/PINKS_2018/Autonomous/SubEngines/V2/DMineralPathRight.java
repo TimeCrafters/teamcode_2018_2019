@@ -15,6 +15,7 @@ package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.States.ExtendArm;
 import org.timecrafters.PINKS_2018.Autonomous.States.MineralPosId;
+import org.timecrafters.PINKS_2018.Autonomous.States.Paddle;
 import org.timecrafters.PINKS_2018.Autonomous.States.PlaceMarker;
 import org.timecrafters.PINKS_2018.Autonomous.States.Drive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
@@ -48,6 +49,7 @@ public class DMineralPathRight extends SubEngine {
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRReturnArc"));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRMineralStrait"));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRPointToCrater"));
+        addThreadedState(new Paddle(engine, AppReader, PinksHardwareConfig, false));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DRDriveToCrater"));
     }
 

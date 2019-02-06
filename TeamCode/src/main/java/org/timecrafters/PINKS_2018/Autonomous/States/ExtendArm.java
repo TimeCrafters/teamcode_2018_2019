@@ -1,8 +1,8 @@
 package org.timecrafters.PINKS_2018.Autonomous.States;
 
 /**********************************************************************************************
- * Name: DropRobot
- * Inputs: engine, ArchitectureControl
+ * Name: ExtendArm
+ * Inputs: engine, appReader, pinksHardwareConfig
  * Outputs: none
  * Use: Extends Mineral collection arm so that t
  * History:

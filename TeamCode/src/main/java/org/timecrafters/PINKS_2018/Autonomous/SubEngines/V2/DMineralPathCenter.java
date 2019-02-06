@@ -15,6 +15,7 @@ package org.timecrafters.PINKS_2018.Autonomous.SubEngines.V2;
 import org.cyberarm.NeXT.StateConfiguration;
 import org.timecrafters.PINKS_2018.Autonomous.States.MineralPosId;
 import org.timecrafters.PINKS_2018.Autonomous.States.ExtendArm;
+import org.timecrafters.PINKS_2018.Autonomous.States.Paddle;
 import org.timecrafters.PINKS_2018.Autonomous.States.PlaceMarker;
 import org.timecrafters.PINKS_2018.Autonomous.States.Drive;
 import org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig;
@@ -45,6 +46,7 @@ public class DMineralPathCenter extends SubEngine {
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCTurn"));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCMineralStrait"));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCPointToCrater"));
+        addThreadedState(new Paddle(engine, AppReader, PinksHardwareConfig, false));
         addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCDriveToCrater"));
     }
 

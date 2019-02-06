@@ -151,6 +151,8 @@ public class Drive extends State {
         engine.telemetry.update();
     }
 
+    //A handy conversion from distance on the field to motor ticks using the circumference of the
+    //wheal and the number of ticks in a rotation which is always 288
     private int DistanceConverter(int distanceMM, int WhealDiamiter) {
         return (int) ((distanceMM * 288) / (WhealDiamiter * Math.PI));
     }

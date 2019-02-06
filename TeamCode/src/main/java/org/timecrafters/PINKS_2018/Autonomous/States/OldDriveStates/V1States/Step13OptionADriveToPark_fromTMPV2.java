@@ -52,7 +52,7 @@ public class Step13OptionADriveToPark_fromTMPV2 extends State {
         LeftDrive = Control.PinksHardwareConfig.LeftMotor;
         RightDrive = Control.PinksHardwareConfig.RightMotor;
         ClipArm = Control.PinksHardwareConfig.ClipArm;
-        LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
+        //LeftUSSensor = Control.PinksHardwareConfig.pLeftUSSensor;
         ReadTime = Control.AppReader.get("RunTeamMarkerDrive").variable("CorrectionTime");
         TargetWallDistance = Control.AppReader.get("RunTeamMarkerDrive").variable("TargetWallDistance");
         CorrectionAmount = Control.AppReader.get("RunTeamMarkerDrive").variable("CAmount");
