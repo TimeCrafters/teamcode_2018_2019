@@ -25,7 +25,7 @@ public class Drive extends State {
     //there are so may uses of the Drive state, their StepID's are named based on the path they
     //are used in: C and D for Crater and Depot and L, C, and R for Left, Center, and Right.
     private String StepID;
-    public StateConfiguration AppReader;
+    public StateConfiguration FileReader;
     public org.timecrafters.PINKS_2018.Autonomous.Support.PinksHardwareConfig PinksHardwareConfig;
     private double LeftPower;
     private double RightPower;
@@ -42,9 +42,9 @@ public class Drive extends State {
     private int distanceTicksRight;
     private int distanceTicksLeft;
 
-    public Drive(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig, String stepID) {
+    public Drive(Engine engine, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig, String stepID) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
         this.StepID = stepID;
     }
@@ -55,18 +55,18 @@ public class Drive extends State {
         FrontRightDrive = PinksHardwareConfig.FrontRightMotor;
         FrontLeftDrive = PinksHardwareConfig.FrontLeftMotor;
 
-        LeftPower = AppReader.get(StepID).variable("LeftPower");
-        RightPower = AppReader.get(StepID).variable("RightPower");
-        LeftMM = AppReader.get(StepID).variable("LeftMM");
-        RightMM = AppReader.get(StepID).variable("RightMM");
+        LeftPower = FileReader.get(StepID).variable("LeftPower");
+        RightPower = FileReader.get(StepID).variable("RightPower");
+        LeftMM = FileReader.get(StepID).variable("LeftMM");
+        RightMM = FileReader.get(StepID).variable("RightMM");
     }
 
     @Override
     public void exec() {
-        //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        //variables from the phone. "AppReader.allow" returns true or false depending on if we have
+        //The FileReader reads the file we edit on the phones, allowing us to skip steps and edit
+        //variables from the phone. "FileReader.allow" returns true or false depending on if we have
         //a step toggled on or off.
-        if (AppReader.allow(StepID)) {
+        if (FileReader.allow(StepID)) {
 
 
             RightCurrentTick = RightDrive.getCurrentPosition();

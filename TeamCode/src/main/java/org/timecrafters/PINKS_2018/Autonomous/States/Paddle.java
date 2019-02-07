@@ -17,7 +17,7 @@ import org.timecrafters.engine.State;
 
 public class Paddle extends State {
     private String StepID = "DeployPaddle";
-    public StateConfiguration AppReader;
+    public StateConfiguration FileReader;
     public PinksHardwareConfig PinksHardwareConfig;
     private CRServo Paddle;
     private long DeployTime;
@@ -28,17 +28,17 @@ public class Paddle extends State {
 
 
 
-    public Paddle(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig, boolean deploy) {
+    public Paddle(Engine engine, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig, boolean deploy) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
         this.Deploy = deploy;
     }
 
     public void init() {
         //The variables we edit from the phone go here
-        DeployTime = AppReader.get(StepID).variable("DeployTime");
-        Power = AppReader.get(StepID).variable("Power");
+        DeployTime = FileReader.get(StepID).variable("DeployTime");
+        Power = FileReader.get(StepID).variable("Power");
 
 
         //The Paddle has the phone mounted to the back. when it's deployed, it can by used to both
@@ -49,10 +49,10 @@ public class Paddle extends State {
 
     @Override
     public void exec() {
-        //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        //variables from the phone. "AppReader.allow" returns true or false depending on if we have
+        //The FileReader reads the file we edit on the phones, allowing us to skip steps and edit
+        //variables from the phone. "FileReader.allow" returns true or false depending on if we have
         //a step toggled on or off.
-        if (AppReader.allow(StepID)) {
+        if (FileReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
             engine.telemetry.addData("DeployTime", DeployTime);

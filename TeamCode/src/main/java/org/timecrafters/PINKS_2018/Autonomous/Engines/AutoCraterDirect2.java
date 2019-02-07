@@ -26,22 +26,22 @@ public class AutoCraterDirect2 extends Engine {
     AppReader = new StateConfiguration();
 
     addState(new DropRobot(this, AppReader, PinksHardwareConfig));
-    addState(new Paddle(this, AppReader, PinksHardwareConfig));
+    addState(new Paddle(this, AppReader, PinksHardwareConfig, true));
 
     MineralPosId MPosId = (new MineralPosId(this, AppReader, PinksHardwareConfig));
     addState(MPosId);
 
-//    addState(new PointTowardGold(this, MPosId, AppReader, PinksHardwareConfig));
+//    addState(new PointTowardGold(this, MPosId, FileReader, PinksHardwareConfig));
 
     addSubEngine(new CMineralPathCenter(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new CMineralPathLeft(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new CMineralPathRight(this, MPosId, AppReader, PinksHardwareConfig));
 
-//    addState(new CTurnToDepot(this, AppReader, PinksHardwareConfig));
-//    addState(new CDriveToDepot(this, AppReader, PinksHardwareConfig));
-//    addState(new ExtendArm(this, AppReader, PinksHardwareConfig));
-//    addState(new PlaceMarker(this, AppReader, PinksHardwareConfig));
-//    addState(new CDriveToCrater(this, AppReader, PinksHardwareConfig));
+//    addState(new CTurnToDepot(this, FileReader, PinksHardwareConfig));
+//    addState(new CDriveToDepot(this, FileReader, PinksHardwareConfig));
+//    addState(new ExtendArm(this, FileReader, PinksHardwareConfig));
+//    addState(new PlaceMarker(this, FileReader, PinksHardwareConfig));
+//    addState(new CDriveToCrater(this, FileReader, PinksHardwareConfig));
 
 
   }

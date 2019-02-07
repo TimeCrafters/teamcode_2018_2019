@@ -25,11 +25,11 @@ public class CMineralPathLeft extends SubEngine {
     Engine engine;
     private MineralPosId GoldPosIdentifier;
     private PinksHardwareConfig PinksHardwareConfig;
-    private StateConfiguration AppReader;
+    private StateConfiguration FileReader;
 
-    public CMineralPathLeft(Engine engine, MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public CMineralPathLeft(Engine engine, MineralPosId mineralPosId, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
         this.GoldPosIdentifier = mineralPosId;
     }
@@ -39,19 +39,19 @@ public class CMineralPathLeft extends SubEngine {
     @Override
     public void setProcesses() {
 
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLPointToGold"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLDriveToGold"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLTurnToGold"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLMineralBump"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLReturnReverse"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLReturnArc"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLMineralStrait"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLTurnToDepot"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLDriveToDepot"));
-        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
-        addThreadedState(new Paddle(engine, AppReader, PinksHardwareConfig, false));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CLDriveToCrater"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLPointToGold"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLDriveToGold"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLTurnToGold"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLMineralBump"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLReturnReverse"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLReturnArc"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLMineralStrait"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLTurnToDepot"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLDriveToDepot"));
+        addState(new ExtendArm(engine, FileReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, FileReader, PinksHardwareConfig));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CLDriveToCrater"));
+        addThreadedState(new Paddle(engine, FileReader, PinksHardwareConfig, false));
     }
 
     //Runs through before setProcesses to determine if the subEngine should be run. If not, it is

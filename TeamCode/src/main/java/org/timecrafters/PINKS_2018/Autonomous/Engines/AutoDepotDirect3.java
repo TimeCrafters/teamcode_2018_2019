@@ -28,7 +28,7 @@ import org.timecrafters.engine.Engine;
 public class AutoDepotDirect3 extends Engine {
 
   public PinksHardwareConfig PinksHardwareConfig;
-  public StateConfiguration AppReader;
+  public StateConfiguration FileReader;
 
   //"setProcesses" Runs through each State in the order they are added
 
@@ -36,18 +36,18 @@ public class AutoDepotDirect3 extends Engine {
   public void setProcesses() {
 
     PinksHardwareConfig = new PinksHardwareConfig(this);
-    AppReader = new StateConfiguration();
+    FileReader = new StateConfiguration();
 
-    addState(new DropRobot(this, AppReader, PinksHardwareConfig));
-    addState(new Paddle(this, AppReader, PinksHardwareConfig, true));
+    addState(new DropRobot(this, FileReader, PinksHardwareConfig));
+    addState(new Paddle(this, FileReader, PinksHardwareConfig, true));
 
-    MineralPosId MPosId = (new MineralPosId(this, AppReader, PinksHardwareConfig));
+    MineralPosId MPosId = (new MineralPosId(this, FileReader, PinksHardwareConfig));
     addState(MPosId);
 
     //SubEnginges are like Engines that go inside other Engines and can be turned on and off.
-    addSubEngine(new DMineralPathCenter(this, MPosId, AppReader, PinksHardwareConfig));
-    addSubEngine(new DMineralPathLeft(this, MPosId, AppReader, PinksHardwareConfig));
-    addSubEngine(new DMineralPathRight(this, MPosId, AppReader, PinksHardwareConfig));
+    addSubEngine(new DMineralPathCenter(this, MPosId, FileReader, PinksHardwareConfig));
+    addSubEngine(new DMineralPathLeft(this, MPosId, FileReader, PinksHardwareConfig));
+    addSubEngine(new DMineralPathRight(this, MPosId, FileReader, PinksHardwareConfig));
 
 
 

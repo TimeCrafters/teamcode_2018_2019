@@ -25,11 +25,11 @@ public class CMineralPathCenter extends SubEngine {
     Engine engine;
     private MineralPosId GoldPosIdentifier;
     private PinksHardwareConfig PinksHardwareConfig;
-    private StateConfiguration AppReader;
+    private StateConfiguration FileReader;
 
-    public CMineralPathCenter(Engine engine, MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public CMineralPathCenter(Engine engine, MineralPosId mineralPosId, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
         this.GoldPosIdentifier = mineralPosId;
     }
@@ -39,16 +39,16 @@ public class CMineralPathCenter extends SubEngine {
     @Override
     public void setProcesses() {
 
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCMineralBump"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCReturnReverse"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCReturnArc"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCMineralStrait"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCTurnToDepot"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCDriveToDepot"));
-        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
-        addThreadedState(new Paddle(engine, AppReader, PinksHardwareConfig, false));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "CCDriveToCrater"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CCMineralBump"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CCReturnReverse"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CCReturnArc"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CCMineralStrait"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CCTurnToDepot"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CCDriveToDepot"));
+        addState(new ExtendArm(engine, FileReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, FileReader, PinksHardwareConfig));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "CCDriveToCrater"));
+        addThreadedState(new Paddle(engine, FileReader, PinksHardwareConfig, false));
     }
 
     //Runs through before setProcesses to determine if the subEngine should be run. If not, it is

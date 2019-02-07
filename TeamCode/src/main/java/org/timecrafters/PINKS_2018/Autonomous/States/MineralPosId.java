@@ -2,7 +2,7 @@ package org.timecrafters.PINKS_2018.Autonomous.States;
 
 /**********************************************************************************************
  * Name: MineralPosId
- * Inputs: engine, PinksHardwareConfig, AppReader
+ * Inputs: engine, PinksHardwareConfig, FileReader
  * Outputs: GoldPosition
  * Use: Observe the set of minerals and determine the position of gold as 1, 2 ,or 3 (Left, Center,
  * RightDrive) Using TensorFlow
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class MineralPosId extends State {
     private String StepID = "MineralPosId";
-    public StateConfiguration AppReader;
+    public StateConfiguration FileReader;
     public PinksHardwareConfig PinksHardwareConfig;
     private TFObjectDetector ObjectDetector;
     private List<Recognition> Objects;
@@ -44,9 +44,9 @@ public class MineralPosId extends State {
 
 
 
-    public MineralPosId(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public MineralPosId(Engine engine, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
@@ -54,9 +54,9 @@ public class MineralPosId extends State {
 
         ObjectDetector = PinksHardwareConfig.ObjectDetector;
 
-        CRBoundary = AppReader.get(StepID).variable("CRB");
-        LCBoundary = AppReader.get(StepID).variable("LCB");
-        ObserveTime = AppReader.get(StepID).variable("ScanTime");
+        CRBoundary = FileReader.get(StepID).variable("CRB");
+        LCBoundary = FileReader.get(StepID).variable("LCB");
+        ObserveTime = FileReader.get(StepID).variable("ScanTime");
 
         FirstRun = true;
         GoldPosInView = -1;
@@ -67,10 +67,10 @@ public class MineralPosId extends State {
 
     @Override
     public void exec() {
-        //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        //variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
+        //The FileReader reads the file we edit on the phones, allowing us to skip steps and edit
+        //variables from the phone. "FileReader.allow" returns true or false depending on if we have a step
         //toggled on or off.
-        if (AppReader.allow(StepID)) {
+        if (FileReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
             engine.telemetry.addData("GoldPosInView", GoldPosInView);
             engine.telemetry.addData("SilverPosInView", SilverPosInView);
@@ -139,7 +139,7 @@ public class MineralPosId extends State {
         } else {
             //since the rest of the program depends on the decision of this step, if the step is
             //toggled off, we run whatever path we set on the phone.
-            GoldPosition = AppReader.get(StepID).variable("DefaultPath");
+            GoldPosition = FileReader.get(StepID).variable("DefaultPath");
             engine.telemetry.addLine("Skipping Step"+StepID);
             sleep(1000);
             setFinished(true);

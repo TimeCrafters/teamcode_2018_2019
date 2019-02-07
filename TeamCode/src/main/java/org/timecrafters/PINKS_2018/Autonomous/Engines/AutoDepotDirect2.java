@@ -26,19 +26,19 @@ public class AutoDepotDirect2 extends Engine {
     AppReader = new StateConfiguration();
 
     addState(new DropRobot(this, AppReader, PinksHardwareConfig));
-    addState(new Paddle(this, AppReader, PinksHardwareConfig));
+    addState(new Paddle(this, AppReader, PinksHardwareConfig, true));
 
     MineralPosId MPosId = (new MineralPosId(this, AppReader, PinksHardwareConfig));
     addState(MPosId);
 
-    //addState(new PointTowardGold(this, MPosId, AppReader, PinksHardwareConfig));
+    //addState(new PointTowardGold(this, MPosId, FileReader, PinksHardwareConfig));
 
     addSubEngine(new DMineralPathCenter(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new DMineralPathLeft(this, MPosId, AppReader, PinksHardwareConfig));
     addSubEngine(new DMineralPathRight(this, MPosId, AppReader, PinksHardwareConfig));
 
-//    addState(new DPointToCrater(this, AppReader, PinksHardwareConfig));
-//    addState(new DDriveToCrater(this, AppReader, PinksHardwareConfig));
+//    addState(new DPointToCrater(this, FileReader, PinksHardwareConfig));
+//    addState(new DDriveToCrater(this, FileReader, PinksHardwareConfig));
 
 
 

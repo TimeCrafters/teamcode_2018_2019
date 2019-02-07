@@ -17,22 +17,22 @@ import org.timecrafters.engine.State;
 
 public class DropRobot extends State {
     private String StepID = "DropRobot";
-    public StateConfiguration AppReader;
+    public StateConfiguration FileReader;
     public PinksHardwareConfig PinksHardwareConfig;
     private Servo servoLeft;
     private Servo servoRight;
     private long DropTime;
 
 
-    public DropRobot(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public DropRobot(Engine engine, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
     public void init() {
         //The variables we edit from the phone go here
-        DropTime = AppReader.get(StepID).variable("DropTime");
+        DropTime = FileReader.get(StepID).variable("DropTime");
 
 
         servoLeft = PinksHardwareConfig.DropLeft;
@@ -45,10 +45,10 @@ public class DropRobot extends State {
 
     @Override
     public void exec() {
-        //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        //variables from the phone. "AppReader.allow" returns true or false depending on if we have
+        //The FileReader reads the file we edit on the phones, allowing us to skip steps and edit
+        //variables from the phone. "FileReader.allow" returns true or false depending on if we have
         //a step toggled on or off.
-        if (AppReader.allow(StepID)) {
+        if (FileReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
             //opens the drop latch servos before closing them shortly after the robot lands.

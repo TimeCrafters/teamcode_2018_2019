@@ -26,11 +26,11 @@ public class DMineralPathCenter extends SubEngine {
     Engine engine;
     private MineralPosId GoldPosIdentifier;
     private PinksHardwareConfig PinksHardwareConfig;
-    private StateConfiguration AppReader;
+    private StateConfiguration FileReader;
 
-    public DMineralPathCenter(Engine engine, MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public DMineralPathCenter(Engine engine, MineralPosId mineralPosId, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
         this.GoldPosIdentifier = mineralPosId;
     }
@@ -39,15 +39,15 @@ public class DMineralPathCenter extends SubEngine {
 
     @Override
     public void setProcesses() {
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCMineralBump"));
-        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCReverse"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCTurn"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCMineralStrait"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCPointToCrater"));
-        addThreadedState(new Paddle(engine, AppReader, PinksHardwareConfig, false));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DCDriveToCrater"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DCMineralBump"));
+        addState(new ExtendArm(engine, FileReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, FileReader, PinksHardwareConfig));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DCReverse"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DCTurn"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DCMineralStrait"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DCPointToCrater"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DCDriveToCrater"));
+        addThreadedState(new Paddle(engine, FileReader, PinksHardwareConfig, false));
     }
 
     //Runs through before setProcesses to determine if the subEngine should be run. If not, it is

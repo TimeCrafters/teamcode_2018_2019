@@ -41,8 +41,8 @@ public class CRReturnReverse extends State {
 
     @Override
     public void exec() {
-        //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        // variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
+        //The FileReader reads the file we edit on the phones, allowing us to skip steps and edit
+        // variables from the phone. "FileReader.allow" returns true or false depending on if we have a step
         // toggled on or off.
         if (AppReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);

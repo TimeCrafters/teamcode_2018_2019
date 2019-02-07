@@ -17,7 +17,7 @@ import org.timecrafters.engine.State;
 
 public class ExtendArm extends State {
     private String StepID = "ExtendArm";
-    public StateConfiguration AppReader;
+    public StateConfiguration FileReader;
     public PinksHardwareConfig PinksHardwareConfig;
     private CRServo ElbowServo;
     private long ExtendTime;
@@ -26,9 +26,9 @@ public class ExtendArm extends State {
 
 
 
-    public ExtendArm(Engine engine, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public ExtendArm(Engine engine, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
     }
 
@@ -36,16 +36,16 @@ public class ExtendArm extends State {
 
         ElbowServo = PinksHardwareConfig.ElbowServo;
 
-        ExtendTime = AppReader.get(StepID).variable("ExtendTime");
-        Power = AppReader.get(StepID).variable("Power");
+        ExtendTime = FileReader.get(StepID).variable("ExtendTime");
+        Power = FileReader.get(StepID).variable("Power");
     }
 
     @Override
     public void exec() {
-        //The AppReader reads the file we edit on the phones, allowing us to skip steps and edit
-        // variables from the phone. "AppReader.allow" returns true or false depending on if we have a step
+        //The FileReader reads the file we edit on the phones, allowing us to skip steps and edit
+        // variables from the phone. "FileReader.allow" returns true or false depending on if we have a step
         // toggled on or off.
-        if (AppReader.allow(StepID)) {
+        if (FileReader.allow(StepID)) {
             engine.telemetry.addLine("Running Step"+StepID);
 
             //Since you can't "getPosition" with CRServos, we just use time and an Elbow locking

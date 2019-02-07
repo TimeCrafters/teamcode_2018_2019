@@ -26,11 +26,11 @@ public class DMineralPathLeft extends SubEngine {
     private Engine engine;
     private MineralPosId GoldPosIdentifier;
     private PinksHardwareConfig PinksHardwareConfig;
-    private StateConfiguration AppReader;
+    private StateConfiguration FileReader;
 
-    public DMineralPathLeft(Engine engine, MineralPosId mineralPosId, StateConfiguration appReader, PinksHardwareConfig pinksHardwareConfig) {
+    public DMineralPathLeft(Engine engine, MineralPosId mineralPosId, StateConfiguration fileReader, PinksHardwareConfig pinksHardwareConfig) {
         this.engine = engine;
-        this.AppReader = appReader;
+        this.FileReader = fileReader;
         this.PinksHardwareConfig = pinksHardwareConfig;
         this.GoldPosIdentifier = mineralPosId;
     }
@@ -39,16 +39,15 @@ public class DMineralPathLeft extends SubEngine {
     @Override
     public void setProcesses() {
 
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLPointToGold"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLMineralBump"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLPointToDepot"));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLDriveToDepot"));
-        addState(new ExtendArm(engine, AppReader, PinksHardwareConfig));
-        addState(new PlaceMarker(engine, AppReader, PinksHardwareConfig));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLPointToCrater"));
-        addThreadedState(new Paddle(engine, AppReader, PinksHardwareConfig, false));
-        addState(new Drive(engine, AppReader, PinksHardwareConfig, "DLDriveToCrater"));
-
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DLPointToGold"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DLMineralBump"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DLPointToDepot"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DLDriveToDepot"));
+        addState(new ExtendArm(engine, FileReader, PinksHardwareConfig));
+        addState(new PlaceMarker(engine, FileReader, PinksHardwareConfig));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DLPointToCrater"));
+        addState(new Drive(engine, FileReader, PinksHardwareConfig, "DLDriveToCrater"));
+        addThreadedState(new Paddle(engine, FileReader, PinksHardwareConfig, false));
     }
 
     //Runs through before setProcesses to determine if the subEngine should be run. If not, it is
