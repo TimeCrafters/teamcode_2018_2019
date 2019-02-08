@@ -68,6 +68,7 @@ public class TeleOpState extends State {
     private boolean clipArmToggle;
     private double drivePercentage;
     private String speed;
+    private CRServo Paddle;
 
 
 
@@ -91,6 +92,7 @@ public class TeleOpState extends State {
         servoClamp = engine.hardwareMap.servo.get("servoClamp");
         frontLeftDrive = engine.hardwareMap.dcMotor.get("frontLeftDrive");
         frontRightDrive = engine.hardwareMap.dcMotor.get("frontRightDrive");
+        Paddle = engine.hardwareMap.crservo.get("Paddle");
 
         winchUp.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winchUp.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -303,6 +305,17 @@ public class TeleOpState extends State {
 
         //setting servo position
         servoClamp.setPosition(servoClampPosition);
+
+//--------------------------------------------------------------------------------------------------
+        //paddle controle
+
+        if (engine.gamepad1.a) {
+            Paddle.setPower(1.0);
+        } else if (engine.gamepad1.b) {
+            Paddle.setPower(-1.0);
+        } else {
+            Paddle.setPower(0);
+        }
 
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
