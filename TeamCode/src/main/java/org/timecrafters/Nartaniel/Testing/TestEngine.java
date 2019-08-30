@@ -8,6 +8,6 @@ import org.timecrafters.engine.Engine;
 public class TestEngine extends Engine {
     @Override
     public void setProcesses() {
-        addState(new PinksPaddleTest(this));
+        addState(new ConfigTestState(this));
     }
 }
